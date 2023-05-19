@@ -3,9 +3,10 @@
 #include <string.h>
 #include <postgresql/libpq-fe.h>
 #include <json-c/json.h>
+#include <stdbool.h>
 
 // Funzione per il parsing di un JSON e la mappatura dei valori
-void parseJSONMap(const char* json, void (*callback)(const char*, const char*, void*), void* data) {
+void jsonMap(const char* json, void (*callback)(const char*, const char*, void*), void* data) {
     struct json_object* root = json_tokener_parse(json);
     enum json_type type = json_object_get_type(root);
 
@@ -20,7 +21,7 @@ void parseJSONMap(const char* json, void (*callback)(const char*, const char*, v
 }
 
 // Funzione per il parsing di un JSON e la fold dei valori
-void parseJSONFold(const char* json, void (*callback)(const char*, const char*, void*), void* accumulator) {
+void jsonFold(const char* json, void (*callback)(const char*, const char*, void*), void* accumulator) {
     struct json_object* root = json_tokener_parse(json);
     enum json_type type = json_object_get_type(root);
 
@@ -74,4 +75,34 @@ char* formatQueryResultToJson(PGresult* result) {
     json_object_put(json);
 
     return formattedJsonString;
+}
+
+
+typedef struct {
+    const char* desired_key;
+    const char* desired_value;
+    bool match_found;
+} JSONCompareContext;
+
+void compareKeyValueCallback(const char* key, const char* value, void* context) {
+    JSONCompareContext* ctx = (JSONCompareContext*)context;
+
+    // Verifica se la chiave corrisponde a quella desiderata
+    if (strcmp(key, ctx->desired_key) == 0) {
+        // Confronta il valore della chiave con quello desiderato
+        if (strcmp(value, ctx->desired_value) == 0) {
+            ctx->match_found = true;
+        }
+    }
+}
+
+bool jsonCompare(const char* json, const char* desired_key, const char* desired_value) {
+    JSONCompareContext context;
+    context.desired_key = desired_key;
+    context.desired_value = desired_value;
+    context.match_found = false;
+
+    jsonFold(json, compareKeyValueCallback, &context);
+
+    return context.match_found;
 }
