@@ -1,3 +1,5 @@
+.vscode
+!.vscode/launch.json
 # Gradle files
 .gradle/
 build/
@@ -28,3 +30,4 @@ google-services.json
 
 # Android Profiling
 *.hprof
+.vscode/settings.json
