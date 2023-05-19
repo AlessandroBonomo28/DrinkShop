@@ -8,18 +8,13 @@
 #include <postgresql/libpq-fe.h>
 #include "utils/json_helper.hpp"
 
-#define MAX_CLIENTS 10
-/*
 // PRODUCTION CONFIGURATION 
-#define DATABASE "host=postgres-db port=5432 dbname=drinks user=docker password=12345"
-#define PORT 4040
-*/
-
+//#define DATABASE "host=postgres-db port=5432 dbname=drinks user=docker password=12345"
 
 // DEBUG CONFIGURATION 
 #define DATABASE "host=127.0.0.1 port=42069 dbname=drinks user=docker password=12345"
 #define PORT 4040
-
+#define MAX_CLIENTS 100
 
 typedef struct {
     int client_socket;
@@ -31,45 +26,83 @@ void *client_thread(void *arg) {
 
     // Esegui le operazioni del thread connesso al client
     // Utilizza thread_data->client_socket per interagire con il client
-    printf("CLIENT QUERY\n");
+
+    printf("NEW CLIENT CONNECTED\n");
+    fflush(stdout);
+
+    // Imposta il timeout di 5 secondi per la ricezione
+    struct timeval timeout;
+    timeout.tv_sec = 5;
+    timeout.tv_usec = 0;
+    setsockopt(thread_data->client_socket, SOL_SOCKET, SO_RCVTIMEO, (const char *)&timeout, sizeof(timeout));
+
+    // Buffer per la ricezione dei dati dal client
+    char buffer[1024];
+    memset(buffer, 0, sizeof(buffer));
+
+    // Ricezione della richiesta dal client
+    ssize_t bytesRead = recv(thread_data->client_socket, buffer, sizeof(buffer) - 1, 0);
+    if (bytesRead == -1) {
+        perror("Errore nella ricezione della richiesta dal client");
+        close(thread_data->client_socket);
+        free(thread_data);
+        pthread_exit(NULL);
+    }
+
+    // Decodifica della richiesta HTTP
+    char method[10];
+    char path[1024];
+    char body[1024];
+    char authorization[256];
+
+    sscanf(buffer, "%9s %1023s", method, path);
+
+    // Esempio di stampa dei dati ricevuti
+    printf("Metodo: %s\n", method);
+    printf("Percorso: %s\n", path);
+
+    // Ottieni l'intestazione di autorizzazione (Authorization)
+    char *authorizationHeader = strstr(buffer, "Authorization: ");
+    if (authorizationHeader != NULL) {
+        sscanf(authorizationHeader, "Authorization: %255s", authorization);
+        printf("Authorization: %s\n", authorization);
+    }
+
+    // Ottieni il corpo della richiesta (se presente)
+    char *bodyStart = strstr(buffer, "\r\n\r\n");
+    if (bodyStart != NULL) {
+        strncpy(body, bodyStart + 4, sizeof(body) - 1);
+        printf("Body: %s\n", body);
+    }
+
     // Esempio di esecuzione di una query sul database
     PGresult *result = PQexec(thread_data->connection, "SELECT * FROM \"Users\";");
-    printf("result json = %s\n",formatQueryResultToJson(result));
-    fflush(stdout);
+
     if (PQresultStatus(result) == PGRES_TUPLES_OK) {
-        
         int rows = PQntuples(result);
         int columns = PQnfields(result);
-        printf("rows = %d\n",rows);
-        fflush(stdout); 
-        /* svuota il buffer (sei in un thread e le print )
-        l'output di printf viene memorizzato in un buffer interno,
-         che potrebbe non essere immediatamente svuotato sullo stdout. 
-        */
-        printf("cols = %d\n",columns);
-        fflush(stdout); 
-        // Invia il numero di righe al client
-        char rows_str[10];
-        snprintf(rows_str, sizeof(rows_str), "%d\n", rows);
-        write(thread_data->client_socket, rows_str, strlen(rows_str));
+        const char * json_result = formatQueryResultToJson(result);
 
-        // Invia il risultato della query al client
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < columns; j++) {
-                const char* value = PQgetvalue(result, i, j);
-                printf("%s\n",value);
-                fflush(stdout); 
-                write(thread_data->client_socket, value, strlen(value));
-                write(thread_data->client_socket, "\t", 1);
-            }
-            write(thread_data->client_socket, "\n", 1);
-        }
+        printf("result json = %s\n",json_result);
+        fflush(stdout);
+
+        // Invia il risultato al client
+        //write(thread_data->client_socket,json_result,strlen(json_result));
+
+        // Creazione della risposta HTTP con il risultato JSON nel corpo
+        char response[4096];
+        snprintf(response, sizeof(response), "HTTP/1.1 200 OK\r\nContent-Length: %zu\r\n\r\n%s", strlen(json_result), json_result);
+        
+        // Invia la risposta al client
+        send(thread_data->client_socket, response, strlen(response), 0);
     }
     else 
     {
-        printf("error");
+        printf("Errore durante l'esecuzione della query");
         fflush(stdout); 
-        //write(thread_data->client_socket, "ERROR", 5);
+        // Gestione dell'errore
+        const char *error_response = "HTTP/1.1 500 Internal Server Error\r\nContent-Length: 0\r\n\r\n";
+        send(thread_data->client_socket, error_response, strlen(error_response), 0);
     }
 
     PQclear(result);
@@ -81,7 +114,11 @@ void *client_thread(void *arg) {
     close(thread_data->client_socket);
 
     free(thread_data);
-    pthread_exit(NULL);
+
+    printf("CLIENT DISCONNECTED\n");
+    fflush(stdout);
+    
+    pthread_exit(NULL); // Chiudi thread 
 }
 
 int main() {
