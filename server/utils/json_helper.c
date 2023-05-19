@@ -4,6 +4,36 @@
 #include <postgresql/libpq-fe.h>
 #include <json-c/json.h>
 
+// Funzione per il parsing di un JSON e la mappatura dei valori
+void parseJSONMap(const char* json, void (*callback)(const char*, const char*, void*), void* data) {
+    struct json_object* root = json_tokener_parse(json);
+    enum json_type type = json_object_get_type(root);
+
+    if (type == json_type_object) {
+        json_object_object_foreach(root, key, val) {
+            const char* value = json_object_get_string(val);
+            callback(key, value, data);
+        }
+    }
+
+    json_object_put(root);
+}
+
+// Funzione per il parsing di un JSON e la fold dei valori
+void parseJSONFold(const char* json, void (*callback)(const char*, const char*, void*), void* accumulator) {
+    struct json_object* root = json_tokener_parse(json);
+    enum json_type type = json_object_get_type(root);
+
+    if (type == json_type_object) {
+        json_object_object_foreach(root, key, val) {
+            const char* value = json_object_get_string(val);
+            callback(key, value, accumulator);
+        }
+    }
+
+    json_object_put(root);
+}
+
 // Funzione per formattare il risultato della query in JSON
 char* formatQueryResultToJson(PGresult* result) {
     int rows = PQntuples(result);
