@@ -1,0 +1,22 @@
+version: '3.9'
+
+services:
+  server-c:
+    container_name: server-c
+    restart: on-failure
+    build: server/.
+    ports:
+      - "3000:4040"
+    depends_on:
+      - postgres-db
+  postgres-db:
+    container_name: postgres-db
+    image: postgres
+    ports:
+      - "42069:5432"
+    environment:
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_DB=drinks
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
