@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "json_helper.hpp": "c",
+        "stdlib.h": "c"
+    }
+}

@@ -7,7 +7,7 @@
 #include <arpa/inet.h>
 #include <postgresql/libpq-fe.h>
 #include "utils/json_helper.hpp"
-
+#include "routing/router.hpp"
 // PRODUCTION CONFIGURATION 
 //#define DATABASE "host=postgres-db port=5432 dbname=drinks user=docker password=12345"
 
@@ -64,7 +64,7 @@ void *client_thread(void *arg) {
     // Ottieni l'intestazione di autorizzazione (Authorization)
     char *authorizationHeader = strstr(buffer, "Authorization: ");
     if (authorizationHeader != NULL) {
-        sscanf(authorizationHeader, "Authorization: %255s", authorization);
+        sscanf(authorizationHeader, "Authorization: Bearer %255s", authorization);
         printf("Authorization: %s\n", authorization);
     }
 
@@ -74,6 +74,8 @@ void *client_thread(void *arg) {
         strncpy(body, bodyStart + 4, sizeof(body) - 1);
         printf("Body: %s\n", body);
     }
+
+    routeRequest(thread_data->client_socket,method,path,body,authorization);
 
     // Esempio di esecuzione di una query sul database
     PGresult *result = PQexec(thread_data->connection, "SELECT * FROM \"Users\";");
@@ -94,7 +96,7 @@ void *client_thread(void *arg) {
         snprintf(response, sizeof(response), "HTTP/1.1 200 OK\r\nContent-Length: %zu\r\n\r\n%s", strlen(json_result), json_result);
         
         // Invia la risposta al client
-        send(thread_data->client_socket, response, strlen(response), 0);
+        //send(thread_data->client_socket, response, strlen(response), 0);
     }
     else 
     {
