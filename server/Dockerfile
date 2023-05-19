@@ -4,7 +4,7 @@ FROM gcc:latest
 # installa libreria postgres
 RUN apt-get update && apt-get install -y libpq-dev
 # installa libreria json
-RUN apt-get install libjson-c-dev
+RUN apt-get install libjson-c-dev -y
 
 # Copia il contenuto nella directory /src del container
 COPY . /src

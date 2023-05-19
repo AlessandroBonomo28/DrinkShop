@@ -9,10 +9,10 @@
 #include "utils/json_helper.hpp"
 #include "routing/router.hpp"
 // PRODUCTION CONFIGURATION 
-//#define DATABASE "host=postgres-db port=5432 dbname=drinks user=docker password=12345"
+#define DATABASE "host=postgres-db port=5432 dbname=drinks user=docker password=12345"
 
 // DEBUG CONFIGURATION 
-#define DATABASE "host=127.0.0.1 port=42069 dbname=drinks user=docker password=12345"
+//#define DATABASE "host=127.0.0.1 port=42069 dbname=drinks user=docker password=12345"
 #define PORT 4040
 #define MAX_CLIENTS 100
 
