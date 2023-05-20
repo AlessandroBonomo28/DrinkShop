@@ -136,7 +136,7 @@ void print(const char* key, const char* value, void* data) {
     fflush(stdout);
 }
 
-void printJSON(const char* json) {
+void printJsonKeysAndValues(const char* json) {
     printf("JSON PRINT:\n");
     fflush(stdout);
     jsonMap(json, print, NULL);

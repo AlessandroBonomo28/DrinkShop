@@ -29,7 +29,7 @@ void loginHandler(RequestParams params) {
 }
 
 void registerHandler(RequestParams params) {
-    printJSON(params.body);
+    printJsonKeysAndValues(params.body);
     //TODO crea un nuovo metodo che utilizza extractJSON+split e ritorna NULL oppure la lista di char
     char* jsonStrList = extractJSONListAsString(params.body,"lista");
     if(jsonStrList!=NULL){
