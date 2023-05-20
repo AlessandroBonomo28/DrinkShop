@@ -21,4 +21,7 @@ void jsonMap(const char* json, JSONMapCallback callback, void* result);
 char* formatQueryResultToJson(PGresult* result);
 // Altre dichiarazioni delle funzioni relative a JSON
 
+const char* getValueFromJSON(const char* json, const char* key);
+
+bool existsKeyInJSON(const char* json,const char* key);
 #endif

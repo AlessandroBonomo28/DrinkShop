@@ -23,12 +23,12 @@ void routeRequest(int client_socket, const char *method, const char *path, const
 
     for (int i = 0; i < numRoutes; i++) {
         if (strcmp(method, routes[i].method) == 0 && strcmp(path, routes[i].path) == 0) {
-            // Esegue il middleware se presente
-            if (routes[i].middleware != NULL) {
-                routes[i].middleware(client_socket, body, authorization, routes[i].handler);
-            } else {
+            if (routes[i].middleware == NO_MIDDLEWARE) {
                 // Se non è presente il middleware, chiama direttamente la funzione handler
                 routes[i].handler(client_socket, body, authorization);
+            } else { 
+                // Altrimenti esegue il middleware
+                routes[i].middleware(client_socket, body, authorization, routes[i].handler);
             }
             return;
         }

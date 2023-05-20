@@ -33,6 +33,12 @@ void loginHandler(int client_socket, const char *body, const char *authorization
 }
 
 void registerHandler(int client_socket, const char *body, const char *authorization) {
+    if(existsKeyInJSON(body,"user"))
+        printf("user exists = %s\n\n",getValueFromJSON(body,"user"));
+    else
+        printf("user does not exist\n\n");
+    
+
     const char *response = "HTTP/1.1 200 OK\r\nContent-Length: 13\r\n\r\nHello, World!";
     send(client_socket, response, strlen(response), 0);
 }

@@ -107,5 +107,25 @@ bool jsonCompare(const char* json, const char* desired_key, const char* desired_
     return context.match_found;
 }
 
-// TODO funzione bool hasKey(key) usa funzione getValue(key) == NULL
-// TODO funzione char* getValue(key) ritorna NULL o value
+void compareKeyCallback(const char* key, const char* value, void* context) {
+    JSONCompareContext* ctx = (JSONCompareContext*)context;
+    // Verifica se la chiave corrisponde a quella desiderata
+    if (strcmp(key, ctx->desired_key) == 0) {
+        ctx->desired_value = value;
+        ctx->match_found = true;
+    }
+}
+
+const char* getValueFromJSON(const char* json, const char* key){
+    JSONCompareContext context;
+    context.desired_key = key;
+    context.desired_value = NULL;
+    context.match_found = false;
+
+    jsonFold(json, compareKeyCallback, &context);
+
+    return context.desired_value;
+}
+bool existsKeyInJSON(const char* json,const char* key){
+    return !(getValueFromJSON(json,key) == NULL);
+}
