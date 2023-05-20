@@ -76,7 +76,7 @@ void *client_thread(void *arg) {
     }
 
     routeRequest(thread_data->client_socket,method,path,body,authorization);
-
+    //TODO togliere la query da qua e fare route di select users
     // Esempio di esecuzione di una query sul database
     PGresult *result = PQexec(thread_data->connection, "SELECT * FROM \"Users\";");
 
