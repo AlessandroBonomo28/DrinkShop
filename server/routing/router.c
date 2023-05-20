@@ -1,7 +1,7 @@
 #include <string.h>
 #include <sys/socket.h>
-#include "router.hpp"
-#include "handlers.hpp"
+#include "router.h"
+#include "handlers.h"
 
 #define NO_MIDDLEWARE NULL
 

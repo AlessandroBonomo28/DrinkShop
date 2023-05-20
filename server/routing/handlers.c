@@ -4,8 +4,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <postgresql/libpq-fe.h>
-#include "../utils/json_helper.hpp"
-#include "router.hpp"
+#include "../utils/json_helper.h"
+#include "router.h"
 
 void homeHandler(RequestParams params) {
     const char *response = "HTTP/1.1 200 OK\r\nContent-Length: 13\r\n\r\nHello, World!";

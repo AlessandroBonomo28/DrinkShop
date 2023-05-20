@@ -1,6 +1,6 @@
 #ifndef HANDLERS_H
 #define HANDLERS_H
-#include "router.hpp"
+#include "router.h"
 
 void requiresAuth(RequestParams params, void (*next)(RequestParams params));
 
