@@ -29,15 +29,35 @@ void loginHandler(RequestParams params) {
 }
 
 void registerHandler(RequestParams params) {
-    if(existsKeyInJSON(params.body,"user"))
-        printf("user exists = %s\n\n",getValueFromJSON(params.body,"user"));
-    else
-        printf("user does not exist\n\n");
-    
+    printJSON(params.body);
+    //TODO crea un nuovo metodo che utilizza extractJSON+split e ritorna NULL oppure la lista di char
+    char* jsonStrList = extractJSONListAsString(params.body,"lista");
+    if(jsonStrList!=NULL){
+        int count;
+        char** stringList = splitListJSON(jsonStrList, &count);
 
+        if (stringList != NULL) {
+            printf("String List:\n");
+            for (int i = 0; i < count; i++) {
+                printf("%s\n", stringList[i]);
+            }
+
+            for (int i = 0; i < count; i++) {
+                free(stringList[i]);
+            }
+            free(stringList);
+        } else {
+            printf("Invalid JSON format.\n");
+        }
+    } else {
+        printf("Did not find list");
+    }
+    
+    
     const char *response = "HTTP/1.1 200 OK\r\nContent-Length: 13\r\n\r\nHello, World!";
     send(params.client_socket, response, strlen(response), 0);
 }
+
 // TODO creare una cartella per ogni c,hpp
 // TODO mettere middleware in file separato
 void requiresAuth(RequestParams params, void (*next)(RequestParams params)) {

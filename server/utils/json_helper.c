@@ -129,3 +129,54 @@ const char* getValueFromJSON(const char* json, const char* key){
 bool existsKeyInJSON(const char* json,const char* key){
     return !(getValueFromJSON(json,key) == NULL);
 }
+
+
+void print(const char* key, const char* value, void* data) {
+    printf("%s: %s\n", key, value);
+    fflush(stdout);
+}
+
+void printJSON(const char* json) {
+    printf("JSON PRINT:\n");
+    fflush(stdout);
+    jsonMap(json, print, NULL);
+}
+
+char** splitListJSON(const char* json, int* count) {
+    struct json_object* root = json_tokener_parse(json);
+    enum json_type type = json_object_get_type(root);
+
+    if (type == json_type_array) {
+        int arrLen = json_object_array_length(root);
+        char** list = malloc(arrLen * sizeof(char*));
+        *count = arrLen;
+
+        for (int i = 0; i < arrLen; i++) {
+            struct json_object* item = json_object_array_get_idx(root, i);
+            const char* jsonString = json_object_to_json_string(item);
+            list[i] = strdup(jsonString);
+        }
+
+        json_object_put(root);
+        return list;
+    }
+
+    json_object_put(root);
+    *count = 0;
+    return NULL;
+}
+
+char* extractJSONListAsString(const char* json, const char* key) {
+    struct json_object* root = json_tokener_parse(json);
+    struct json_object* listObj;
+    char* listString;
+
+    if (json_object_object_get_ex(root, key, &listObj)) {
+        listString = strdup(json_object_to_json_string(listObj));
+    } else {
+        listString = NULL;
+    }
+
+    json_object_put(root);
+    return listString;
+}

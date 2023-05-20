@@ -24,4 +24,9 @@ char* formatQueryResultToJson(PGresult* result);
 const char* getValueFromJSON(const char* json, const char* key);
 
 bool existsKeyInJSON(const char* json,const char* key);
+
+void printJSON(const char* json);
+
+char** splitListJSON(const char* json, int* count);
+char* extractJSONListAsString(const char* json, const char* key);
 #endif
