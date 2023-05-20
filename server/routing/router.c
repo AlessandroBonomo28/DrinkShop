@@ -1,15 +1,9 @@
 #include <string.h>
 #include <sys/socket.h>
+#include "router.hpp"
 #include "handlers.hpp"
 
 #define NO_MIDDLEWARE NULL
-//TODO sistema i tipi con typedef per ridurre il numero di parametri di middleware e delle routes, il router non fa niente
-typedef struct {
-    const char *method;
-    const char *path;
-    void (*middleware)(int client_socket, const char *body, const char *authorization, void (*next)(int client_socket, const char *body, const char *authorization));
-    void (*handler)(int client_socket, const char *body, const char *authorization);
-} Route;
 
 Route routes[] = {
     { "GET", "/", requiresAuth, homeHandler },
@@ -20,15 +14,18 @@ Route routes[] = {
 
 void routeRequest(int client_socket, const char *method, const char *path, const char *body, const char *authorization) {
     int numRoutes = sizeof(routes) / sizeof(Route);
-
+    RequestParams params;
+    params.client_socket = client_socket;
+    params.body = body;
+    params.authorization = authorization;
     for (int i = 0; i < numRoutes; i++) {
         if (strcmp(method, routes[i].method) == 0 && strcmp(path, routes[i].path) == 0) {
             if (routes[i].middleware == NO_MIDDLEWARE) {
                 // Se non è presente il middleware, chiama direttamente la funzione handler
-                routes[i].handler(client_socket, body, authorization);
+                routes[i].handler(params);
             } else { 
                 // Altrimenti esegue il middleware
-                routes[i].middleware(client_socket, body, authorization, routes[i].handler);
+                routes[i].middleware(params, routes[i].handler);
             }
             return;
         }

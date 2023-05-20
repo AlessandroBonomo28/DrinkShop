@@ -1,10 +1,11 @@
 #ifndef HANDLERS_H
 #define HANDLERS_H
+#include "router.hpp"
 
-void requiresAuth(int client_socket, const char *body, const char *authorization, void (*next)(int client_socket, const char *body, const char *authorization));
+void requiresAuth(RequestParams params, void (*next)(RequestParams params));
 
-void homeHandler(int client_socket, const char *body, const char *authorization);
-void loginHandler(int client_socket, const char *body, const char *authorization);
-void registerHandler(int client_socket, const char *body, const char *authorization);
+void homeHandler(RequestParams params);
+void loginHandler(RequestParams params);
+void registerHandler(RequestParams params);
 
 #endif
