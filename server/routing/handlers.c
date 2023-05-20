@@ -36,3 +36,20 @@ void registerHandler(int client_socket, const char *body, const char *authorizat
     const char *response = "HTTP/1.1 200 OK\r\nContent-Length: 13\r\n\r\nHello, World!";
     send(client_socket, response, strlen(response), 0);
 }
+
+void requiresAuth(int client_socket, const char *body, const char *authorization, void (*next)(int client_socket, const char *body, const char *authorization)) {
+    printf("Middleware auth Body: %s\n", body);
+    printf("Middleware auth Authorization: %s\n", authorization);
+    
+    bool user = jsonCompare(body,"user","alex");
+    bool pw = jsonCompare(body,"password","123");
+    if(user && pw) {
+        next(client_socket, body, authorization);
+        printf("Authorized\n");
+    }
+    else {
+        printf("NOT Authorized\n");
+        const char *response = "HTTP/1.1 401 Unauthorized\r\nContent-Length: 15\r\n\r\nNot Authorized!";
+        send(client_socket, response, strlen(response), 0);
+    }
+}

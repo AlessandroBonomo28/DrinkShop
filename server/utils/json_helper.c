@@ -106,3 +106,6 @@ bool jsonCompare(const char* json, const char* desired_key, const char* desired_
 
     return context.match_found;
 }
+
+// TODO funzione bool hasKey(key) usa funzione getValue(key) == NULL
+// TODO funzione char* getValue(key) ritorna NULL o value
