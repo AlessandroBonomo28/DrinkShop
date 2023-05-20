@@ -30,41 +30,37 @@ void loginHandler(RequestParams params) {
 
 void registerHandler(RequestParams params) {
     printJsonKeysAndValues(params.body);
-    //TODO crea un nuovo metodo che utilizza extractJSON+split e ritorna NULL oppure la lista di char
-    char* jsonStrList = extractJSONListAsString(params.body,"lista");
-    if(jsonStrList!=NULL){
-        int count;
-        char** stringList = splitListJSON(jsonStrList, &count);
+    int count = 0;
 
-        if (stringList != NULL) {
-            printf("String List:\n");
-            for (int i = 0; i < count; i++) {
-                printf("%s\n", stringList[i]);
-            }
+    char** list = getListFromJson(params.body, "list", &count);
 
-            for (int i = 0; i < count; i++) {
-                free(stringList[i]);
-            }
-            free(stringList);
-        } else {
-            printf("Invalid JSON format.\n");
+    if (list != NULL) {
+        printf("List:\n");
+        for (int i = 0; i < count; i++) {
+            printf("%s\n", list[i]);
         }
+
+        // Deallocazione della memoria
+        for (int i = 0; i < count; i++) {
+            free(list[i]);
+        }
+        free(list);
     } else {
-        printf("Did not find list");
+        printf("Key not found in JSON.\n");
     }
-    
     
     const char *response = "HTTP/1.1 200 OK\r\nContent-Length: 13\r\n\r\nHello, World!";
     send(params.client_socket, response, strlen(response), 0);
 }
-
+// TODO utility per le date: utils/date_helper
+// TODO utility per jwt: utils/jwt_helper
 // TODO creare una cartella per ogni c,hpp
-// TODO mettere middleware in file separato
+// TODO mettere middleware in file separato: /routing/middleware/
 void requiresAuth(RequestParams params, void (*next)(RequestParams params)) {
     printf("Middleware auth Body: %s\n", params.body);
     printf("Middleware auth Authorization: %s\n", params.authorization);
     
-
+    // TODO autorizza con jwt
     if(strcmp(params.authorization,"secret")==0) {
         next(params);
         printf("Authorized\n");

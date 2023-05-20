@@ -86,10 +86,7 @@ typedef struct {
 
 void compareKeyValueCallback(const char* key, const char* value, void* context) {
     JSONCompareContext* ctx = (JSONCompareContext*)context;
-
-    // Verifica se la chiave corrisponde a quella desiderata
     if (strcmp(key, ctx->desired_key) == 0) {
-        // Confronta il valore della chiave con quello desiderato
         if (strcmp(value, ctx->desired_value) == 0) {
             ctx->match_found = true;
         }
@@ -109,14 +106,13 @@ bool jsonCompare(const char* json, const char* desired_key, const char* desired_
 
 void compareKeyCallback(const char* key, const char* value, void* context) {
     JSONCompareContext* ctx = (JSONCompareContext*)context;
-    // Verifica se la chiave corrisponde a quella desiderata
     if (strcmp(key, ctx->desired_key) == 0) {
         ctx->desired_value = value;
         ctx->match_found = true;
     }
 }
 
-const char* getValueFromJSON(const char* json, const char* key){
+const char* getValueFromJson(const char* json, const char* key){
     JSONCompareContext context;
     context.desired_key = key;
     context.desired_value = NULL;
@@ -126,8 +122,8 @@ const char* getValueFromJSON(const char* json, const char* key){
 
     return context.desired_value;
 }
-bool existsKeyInJSON(const char* json,const char* key){
-    return !(getValueFromJSON(json,key) == NULL);
+bool existsKeyInJson(const char* json,const char* key){
+    return !(getValueFromJson(json,key) == NULL);
 }
 
 
@@ -179,4 +175,13 @@ char* extractJSONListAsString(const char* json, const char* key) {
 
     json_object_put(root);
     return listString;
+}
+
+char** getListFromJson(const char* json, const char* key, int* out_count){
+    *out_count = 0;
+    char* jsonStrList = extractJSONListAsString(json,key);
+    if(jsonStrList!=NULL){
+        return splitListJSON(jsonStrList, out_count);
+    }
+    else return NULL;
 }
