@@ -138,7 +138,7 @@ void printJsonKeysAndValues(const char* json) {
     jsonMap(json, print, NULL);
 }
 
-char** splitListJSON(const char* json, int* count) {
+char** splitJsonStringIntoList(const char* json, int* count) {
     struct json_object* root = json_tokener_parse(json);
     enum json_type type = json_object_get_type(root);
 
@@ -162,7 +162,7 @@ char** splitListJSON(const char* json, int* count) {
     return NULL;
 }
 
-char* extractJSONListAsString(const char* json, const char* key) {
+char* extractJsonListAsString(const char* json, const char* key) {
     struct json_object* root = json_tokener_parse(json);
     struct json_object* listObj;
     char* listString;
@@ -179,9 +179,9 @@ char* extractJSONListAsString(const char* json, const char* key) {
 
 char** getListFromJson(const char* json, const char* key, int* out_count){
     *out_count = 0;
-    char* jsonStrList = extractJSONListAsString(json,key);
+    char* jsonStrList = extractJsonListAsString(json,key);
     if(jsonStrList!=NULL){
-        return splitListJSON(jsonStrList, out_count);
+        return splitJsonStringIntoList(jsonStrList, out_count);
     }
     else return NULL;
 }
