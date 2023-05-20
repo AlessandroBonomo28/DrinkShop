@@ -38,7 +38,8 @@ void registerHandler(RequestParams params) {
     const char *response = "HTTP/1.1 200 OK\r\nContent-Length: 13\r\n\r\nHello, World!";
     send(params.client_socket, response, strlen(response), 0);
 }
-
+// TODO creare una cartella per ogni c,hpp
+// TODO mettere middleware in file separato
 void requiresAuth(RequestParams params, void (*next)(RequestParams params)) {
     printf("Middleware auth Body: %s\n", params.body);
     printf("Middleware auth Authorization: %s\n", params.authorization);
