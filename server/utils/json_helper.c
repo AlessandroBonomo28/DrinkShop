@@ -191,7 +191,23 @@ char* formatJsonPairs(JsonPair* pairs, int count) {
     json_object* json = json_object_new_object();
 
     for (int i = 0; i < count; i++) {
-        json_object* jsonValue = json_object_new_string(pairs[i].value);
+        json_object* jsonValue = NULL;
+
+        switch (pairs[i].type) {
+            case STRING:
+                jsonValue = json_object_new_string((const char*)pairs[i].value);
+                break;
+            case BOOL:
+                jsonValue = json_object_new_boolean(*(bool*)pairs[i].value);
+                break;
+            case FLOAT:
+                jsonValue = json_object_new_double(*(float*)pairs[i].value);
+                break;
+            case INT:
+                jsonValue = json_object_new_int(*(int*)pairs[i].value);
+                break;
+        }
+
         json_object_object_add(json, pairs[i].key, jsonValue);
     }
 

@@ -50,9 +50,16 @@ void registerHandler(RequestParams params) {
     }
 
     // json pairs example
+    const char* stringValue = "ciao mondo";
+    bool boolValue = false;
+    float floatValue = 123.0;
+    int intValue = 123;
+
     JsonPair pairs[] = {
-        {"field1", "value1"},
-        {"something", "23"}
+        {"stringa", &stringValue, STRING},
+        {"intero", &intValue, INT},
+        {"float", &floatValue, FLOAT},
+        {"booleano", &boolValue, BOOL}
     };
 
     int pairCount = sizeof(pairs) / sizeof(pairs[0]);

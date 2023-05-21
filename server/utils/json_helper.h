@@ -1,9 +1,17 @@
 #ifndef JSON_HELPER_H
 #define JSON_HELPER_H
 #include <stdbool.h>
+enum JSON_TYPE {
+    STRING,
+    BOOL,
+    FLOAT,
+    INT
+};
+
 typedef struct {
     const char* key;
-    const char* value;
+    void* value;
+    enum JSON_TYPE type;
 } JsonPair;
 
 // Funzione per comparare chiave e valore
