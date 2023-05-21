@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include "json_helper.h"
 
+
 // Funzione per il parsing di un JSON e la mappatura dei valori
 void jsonMap(const char* json, void (*callback)(const char*, const char*, void*), void* data) {
     struct json_object* root = json_tokener_parse(json);
@@ -186,29 +187,29 @@ char** getListFromJson(const char* json, const char* key, int* out_count){
     }
     else return NULL;
 }
-
-char* formatJsonPairs(JsonPair* pairs, int count) {
+char* formatJsonPairs(JsonProperty* pairs, int count) {
     json_object* json = json_object_new_object();
 
     for (int i = 0; i < count; i++) {
         json_object* jsonValue = NULL;
+        void* value = pairs[i].value;
 
-        switch (pairs[i].type) {
-            case STRING:
-                jsonValue = json_object_new_string((const char*)pairs[i].value);
-                break;
-            case BOOL:
-                jsonValue = json_object_new_boolean(*(bool*)pairs[i].value);
-                break;
-            case FLOAT:
-                jsonValue = json_object_new_double(*(float*)pairs[i].value);
-                break;
-            case INT:
-                jsonValue = json_object_new_int(*(int*)pairs[i].value);
-                break;
+        // Verifica il tipo del valore
+        if (value != NULL) {
+            if (pairs[i].type == STRING) {
+                jsonValue = json_object_new_string((const char*)value);
+            } else if (pairs[i].type == BOOL) {
+                jsonValue = json_object_new_boolean(*(bool*)value);
+            } else if (pairs[i].type == FLOAT) {
+                jsonValue = json_object_new_double(*(float*)value);
+            } else if (pairs[i].type == INT) {
+                jsonValue = json_object_new_int(*(int*)value);
+            }
         }
 
-        json_object_object_add(json, pairs[i].key, jsonValue);
+        if (jsonValue != NULL) {
+            json_object_object_add(json, pairs[i].key, jsonValue);
+        }
     }
 
     const char* jsonString = json_object_to_json_string(json);

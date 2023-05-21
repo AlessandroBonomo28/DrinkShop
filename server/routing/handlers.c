@@ -55,15 +55,15 @@ void registerHandler(RequestParams params) {
     float floatValue = 123.0;
     int intValue = 123;
 
-    JsonPair pairs[] = {
-        {"stringa", &stringValue, STRING},
+    JsonProperty props[] = {
+        {"stringa", "ciao mondo", STRING}, // TODO risolvi che devo scriverlo per forza qua
         {"intero", &intValue, INT},
         {"float", &floatValue, FLOAT},
         {"booleano", &boolValue, BOOL}
     };
 
-    int pairCount = sizeof(pairs) / sizeof(pairs[0]);
-    char* formattedJson = formatJsonPairs(pairs, pairCount);
+    int pairCount = sizeof(props) / sizeof(props[0]);
+    char* formattedJson = formatJsonPairs(props, pairCount);
 
     printf("Formatted JSON: %s\n", formattedJson);
 

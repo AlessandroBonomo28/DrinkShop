@@ -1,7 +1,7 @@
 #ifndef JSON_HELPER_H
 #define JSON_HELPER_H
 #include <stdbool.h>
-enum JSON_TYPE {
+enum JSON_PROPERTY_TYPE {
     STRING,
     BOOL,
     FLOAT,
@@ -11,8 +11,8 @@ enum JSON_TYPE {
 typedef struct {
     const char* key;
     void* value;
-    enum JSON_TYPE type;
-} JsonPair;
+    enum JSON_PROPERTY_TYPE type;
+} JsonProperty;
 
 // Funzione per comparare chiave e valore
 bool jsonCompare(const char* json, const char* desired_key, const char* desired_value);
@@ -36,6 +36,6 @@ bool existsKeyInJson(const char* json,const char* key);
 
 void printJsonKeysAndValues(const char* json);
 
-char* formatJsonPairs(JsonPair* pairs, int count);
+char* formatJsonPairs(JsonProperty* pairs, int count);
 
 #endif
