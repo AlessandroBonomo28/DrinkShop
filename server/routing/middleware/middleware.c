@@ -5,19 +5,15 @@
 #include <stdbool.h>
 #include <postgresql/libpq-fe.h>
 #include "middleware.h"
+#include "../../utils/jwt_helper/jwt_helper.h"
 
 void requiresAuth(RequestParams params, void (*next)(RequestParams params)) {
-    printf("Middleware auth Body: %s\n", params.body);
-    printf("Middleware auth Authorization: %s\n", params.authorization);
-    
-    // TODO autorizza con jwt
-    if(strcmp(params.authorization,"secret")==0) {
+    if (verifyToken(params.authorization)) {
         next(params);
         printf("Authorized\n");
-    }
-    else {
+    } else {
         printf("NOT Authorized\n");
-        const char *response = "HTTP/1.1 401 Unauthorized\r\nContent-Length: 15\r\n\r\nNot Authorized!";
+        const char* response = "HTTP/1.1 401 Unauthorized\r\nContent-Length: 15\r\n\r\nNot Authorized!";
         send(params.client_socket, response, strlen(response), 0);
     }
 }

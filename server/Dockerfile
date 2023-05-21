@@ -5,6 +5,8 @@ FROM gcc:latest
 RUN apt-get update && apt-get install -y libpq-dev
 # installa libreria json
 RUN apt-get install libjson-c-dev -y
+# installa libreria jwt token
+RUN sudo apt-get install libjwt-dev -y
 
 # Copia il contenuto nella directory /src del container
 COPY . /src

@@ -9,6 +9,7 @@ Route routes[] = {
     { "GET", "/", requiresAuth, homeHandler },
     { "POST", "/login", NO_MIDDLEWARE, loginHandler },
     { "GET", "/register", NO_MIDDLEWARE, registerHandler },
+    { "GET", "/hello", NO_MIDDLEWARE, sayHello }
     // TODO POST /order
     // TODO GET /drinks
     // altre routes...

@@ -36,6 +36,6 @@ bool existsKeyInJson(const char* json,const char* key);
 
 void printJsonKeysAndValues(const char* json);
 
-char* formatJsonPairs(JsonProperty* pairs, int count);
+char* formatJsonProps(JsonProperty* pairs, int count);
 
 #endif

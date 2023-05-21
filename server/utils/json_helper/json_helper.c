@@ -187,7 +187,7 @@ char** getListFromJson(const char* json, const char* key, int* out_count){
     }
     else return NULL;
 }
-char* formatJsonPairs(JsonProperty* pairs, int count) {
+char* formatJsonProps(JsonProperty* pairs, int count) {
     json_object* json = json_object_new_object();
 
     for (int i = 0; i < count; i++) {
