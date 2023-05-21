@@ -48,6 +48,19 @@ void registerHandler(RequestParams params) {
     } else {
         printf("Key not found in JSON.\n");
     }
+
+    // json pairs example
+    JsonPair pairs[] = {
+        {"field1", "value1"},
+        {"something", "23"}
+    };
+
+    int pairCount = sizeof(pairs) / sizeof(pairs[0]);
+    char* formattedJson = formatJsonPairs(pairs, pairCount);
+
+    printf("Formatted JSON: %s\n", formattedJson);
+
+    free(formattedJson);
     
     const char *response = "HTTP/1.1 200 OK\r\nContent-Length: 13\r\n\r\nHello, World!";
     send(params.client_socket, response, strlen(response), 0);

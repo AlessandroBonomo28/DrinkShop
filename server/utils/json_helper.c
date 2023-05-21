@@ -4,6 +4,7 @@
 #include <postgresql/libpq-fe.h>
 #include <json-c/json.h>
 #include <stdbool.h>
+#include "json_helper.h"
 
 // Funzione per il parsing di un JSON e la mappatura dei valori
 void jsonMap(const char* json, void (*callback)(const char*, const char*, void*), void* data) {
@@ -184,4 +185,20 @@ char** getListFromJson(const char* json, const char* key, int* out_count){
         return parseJsonStringIntoList(jsonStrList, out_count);
     }
     else return NULL;
+}
+
+char* formatJsonPairs(JsonPair* pairs, int count) {
+    json_object* json = json_object_new_object();
+
+    for (int i = 0; i < count; i++) {
+        json_object* jsonValue = json_object_new_string(pairs[i].value);
+        json_object_object_add(json, pairs[i].key, jsonValue);
+    }
+
+    const char* jsonString = json_object_to_json_string(json);
+    char* formattedJsonString = strdup(jsonString);
+
+    json_object_put(json);
+
+    return formattedJsonString;
 }
