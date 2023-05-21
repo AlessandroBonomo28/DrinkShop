@@ -56,7 +56,7 @@ void registerHandler(RequestParams params) {
     int intValue = 123;
 
     JsonProperty props[] = {
-        {"stringa", "ciao mondo", STRING}, // TODO risolvi che devo scriverlo per forza qua
+        {"stringa", (void*)stringValue, STRING}, 
         {"intero", &intValue, INT},
         {"float", &floatValue, FLOAT},
         {"booleano", &boolValue, BOOL}
