@@ -12,6 +12,8 @@ Route routes[] = {
     { "GET", "/hello", NO_MIDDLEWARE, sayHello }
     // TODO POST /order
     // TODO GET /drinks
+    // TODO GET /user/:id (esempio user/1)
+    // TODO GET /drinks/:datetime/:user_id (drinks ordinati il giorno date, dall'utente id drinks/30-02-2001:00:00:00/1)
     // altre routes...
 };
 
