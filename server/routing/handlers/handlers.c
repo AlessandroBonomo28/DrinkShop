@@ -9,8 +9,20 @@
 #include "../../utils/jwt_helper/jwt_helper.h"
 
 void homeHandler(RequestParams params) {
-    const char *response = "HTTP/1.1 200 OK\r\nContent-Length: 13\r\n\r\nWelcome, user";
-    send(params.client_socket, response, strlen(response), 0);
+    TokenPayload* token = decodeToken(params.authorization);
+    if(token!= NULL){
+        const char* decoded_username = token->username;
+        char response[1024];
+        snprintf(response, sizeof(response),
+            "HTTP/1.1 200 OK\r\nContent-Length: %zu\r\n\r\nWelcome, %s",
+            strlen(decoded_username) +9,
+            decoded_username);
+        send(params.client_socket, response, strlen(response), 0);
+        free(token);
+    } else {
+        const char *response = "HTTP/1.1 500 Server Error\r\nContent-Length: 0\r\n\r\n";
+        send(params.client_socket, response, strlen(response), 0);
+    }
 }
 
 void loginHandler(RequestParams params) {
@@ -31,7 +43,7 @@ void loginHandler(RequestParams params) {
             char* jsonValue = formatJsonProps(props,1);
 
             // Creazione della risposta HTTP includendo il JSON formattato
-            char responseBuffer[1024];
+            char responseBuffer[1024];// TODO utility per formattare risposta http
             snprintf(responseBuffer, sizeof(responseBuffer),
                 "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: %zu\r\n\r\n%s",
                 strlen(jsonValue),
@@ -57,8 +69,6 @@ void registerHandler(RequestParams params) {
         for (int i = 0; i < count; i++) {
             printf("%s\n", list[i]);
         }
-
-        // Deallocazione della memoria
         for (int i = 0; i < count; i++) {
             free(list[i]);
         }
@@ -70,7 +80,6 @@ void registerHandler(RequestParams params) {
     send(params.client_socket, response, strlen(response), 0);
 }
 // TODO utility per le date: utils/date_helper
-// TODO utility per jwt: utils/jwt_helper
 void sayHello(RequestParams params) {
     const char* stringValue = "Hello world";
     bool boolValue = false;

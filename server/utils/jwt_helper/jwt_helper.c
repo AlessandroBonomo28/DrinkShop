@@ -6,7 +6,7 @@
 char* encodeToken(const TokenPayload* payload) {
     jwt_t* jwt = NULL;
     jwt_new(&jwt);
-    jwt_add_grant(jwt, "username", payload->username);
+    jwt_add_grant(jwt, "username", payload->username); // TODO generalizzare encode payload jwt_add_grant_bool
     jwt_set_alg(jwt, JWT_ALG_HS256, SECRET, strlen(SECRET));
     char* token = jwt_encode_str(jwt);
     jwt_free(jwt);
@@ -31,7 +31,7 @@ TokenPayload* decodeToken(const char* token) {
     
     if (decoded != NULL) {
         TokenPayload* payload = (TokenPayload*)malloc(sizeof(TokenPayload));
-        
+        // TODO generalizzare decode payload
         const char* username = jwt_get_grant(decoded, "username");
         if (username != NULL) {
             payload->username = strdup(username);

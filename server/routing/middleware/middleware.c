@@ -10,9 +10,7 @@
 void requiresAuth(RequestParams params, void (*next)(RequestParams params)) {
     if (verifyToken(params.authorization)) {
         next(params);
-        printf("Authorized\n");
     } else {
-        printf("NOT Authorized\n");
         const char* response = "HTTP/1.1 401 Unauthorized\r\nContent-Length: 15\r\n\r\nNot Authorized!";
         send(params.client_socket, response, strlen(response), 0);
     }
