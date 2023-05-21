@@ -6,8 +6,8 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <postgresql/libpq-fe.h>
-#include "utils/json_helper.h"
-#include "routing/router.h"
+#include "utils/json_helper/json_helper.h"
+#include "routing/router/router.h"
 // PRODUCTION CONFIGURATION 
 //#define DATABASE "host=postgres-db port=5432 dbname=drinks user=docker password=12345"
 

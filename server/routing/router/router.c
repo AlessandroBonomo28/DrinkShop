@@ -1,8 +1,8 @@
 #include <string.h>
 #include <sys/socket.h>
 #include "router.h"
-#include "handlers.h"
-
+#include "../handlers/handlers.h"
+#include "../middleware/middleware.h"
 #define NO_MIDDLEWARE NULL
 
 Route routes[] = {

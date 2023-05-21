@@ -4,8 +4,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <postgresql/libpq-fe.h>
-#include "../utils/json_helper.h"
-#include "router.h"
+#include "../../utils/json_helper/json_helper.h"
+#include "../router/router.h"
 
 void homeHandler(RequestParams params) {
     const char *response = "HTTP/1.1 200 OK\r\nContent-Length: 13\r\n\r\nHello, World!";
@@ -74,20 +74,3 @@ void registerHandler(RequestParams params) {
 }
 // TODO utility per le date: utils/date_helper
 // TODO utility per jwt: utils/jwt_helper
-// TODO creare una cartella per ogni c,hpp
-// TODO mettere middleware in file separato: /routing/middleware/
-void requiresAuth(RequestParams params, void (*next)(RequestParams params)) {
-    printf("Middleware auth Body: %s\n", params.body);
-    printf("Middleware auth Authorization: %s\n", params.authorization);
-    
-    // TODO autorizza con jwt
-    if(strcmp(params.authorization,"secret")==0) {
-        next(params);
-        printf("Authorized\n");
-    }
-    else {
-        printf("NOT Authorized\n");
-        const char *response = "HTTP/1.1 401 Unauthorized\r\nContent-Length: 15\r\n\r\nNot Authorized!";
-        send(params.client_socket, response, strlen(response), 0);
-    }
-}

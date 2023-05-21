@@ -5,9 +5,10 @@
 # Compila il server
 gcc -o server \
     server.c \
-    routing/router.c \
-    routing/handlers.c \
-    utils/json_helper.c \
+    routing/router/router.c \
+    routing/handlers/handlers.c \
+    routing/middleware/middleware.c \
+    utils/json_helper/json_helper.c \
     -ljson-c \
     -lpq
 
