@@ -16,8 +16,9 @@ CREATE TABLE "Payments" (
   "id" SERIAL PRIMARY KEY,
   "id_order" int NOT NULL UNIQUE,
   "id_user" int NOT NULL,
-  "card_name" VARCHAR(50),
-  "creation_timestamp" timestamp DEFAULT CURRENT_TIMESTAMP
+  "provider" VARCHAR(50),
+  "creation_timestamp" timestamp DEFAULT CURRENT_TIMESTAMP,
+  "amount" float NOT NULL
 );
 
 CREATE TABLE "Orders" (
@@ -113,6 +114,11 @@ CREATE TRIGGER check_last_order_payment_status_trigger
 BEFORE INSERT ON "Orders"
 FOR EACH ROW
 EXECUTE FUNCTION check_last_order_payment_status();
+
+-- Aggiungo indici di accesso per migliorare performance
+CREATE INDEX idx_orders_user ON "Orders" ("id_user");
+CREATE INDEX idx_order_items_order ON "OrderItems" ("id_order");
+CREATE INDEX idx_order_items_item ON "OrderItems" ("id_item");
 
 INSERT INTO "Users" ("email","password") VALUES
     ('alex@gmail.com','123'),
