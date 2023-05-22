@@ -47,7 +47,7 @@ void loginHandler(RouterParams params) {
             char* jsonValue = formatJsonProps(props,1);
 
             // Creazione della risposta HTTP includendo il JSON formattato
-            char responseBuffer[1024];// TODO utility per formattare risposta http
+            char responseBuffer[1024];
             snprintf(responseBuffer, sizeof(responseBuffer),
                 "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: %zu\r\n\r\n%s",
                 strlen(jsonValue),
