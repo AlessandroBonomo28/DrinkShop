@@ -7,17 +7,21 @@
 #include "../../utils/json_helper/json_helper.h"
 #include "../router/router.h"
 #include "../../utils/jwt_helper/jwt_helper.h"
+#include "../../utils/http_helper/http_helper.h"
 
-void homeHandler(RequestParams params) {
+void homeHandler(HandlerParams params) {
     TokenPayload* token = decodeToken(params.authorization);
     if(token!= NULL){
         const char* decoded_username = token->username;
-        char response[1024];
-        snprintf(response, sizeof(response),
-            "HTTP/1.1 200 OK\r\nContent-Length: %zu\r\n\r\nWelcome, %s",
-            strlen(decoded_username) +9,
-            decoded_username);
-        send(params.client_socket, response, strlen(response), 0);
+        char buffer[1024];
+        char body[100];
+        snprintf(body, sizeof(body),"Hello, %s",decoded_username);
+        HttpResponse response;
+        response.code = "200 OK";
+        response.contentType = "application/json";
+        response.body = body;
+        formatHttpResponse(buffer, sizeof(buffer), &response);
+        send(params.client_socket, buffer, strlen(buffer), 0);
         free(token);
     } else {
         const char *response = "HTTP/1.1 500 Server Error\r\nContent-Length: 0\r\n\r\n";
@@ -25,7 +29,7 @@ void homeHandler(RequestParams params) {
     }
 }
 
-void loginHandler(RequestParams params) {
+void loginHandler(HandlerParams params) {
     char *response = "HTTP/1.1 401 Unauthorized\r\nContent-Length: 15\r\n\r\nNot Authorized!";
     bool user = jsonCompare(params.body,"user","alex");
     bool pw = jsonCompare(params.body,"password","123");
@@ -59,7 +63,7 @@ void loginHandler(RequestParams params) {
     send(params.client_socket, response, strlen(response), 0);
 }
 
-void registerHandler(RequestParams params) {
+void registerHandler(HandlerParams params) {
     printJsonKeysAndValues(params.body);
     int count;
     char** list = getListFromJson(params.body, "list", &count);
@@ -80,7 +84,7 @@ void registerHandler(RequestParams params) {
     send(params.client_socket, response, strlen(response), 0);
 }
 // TODO utility per le date: utils/date_helper
-void sayHello(RequestParams params) {
+void sayHello(HandlerParams params) {
     const char* stringValue = "Hello world";
     bool boolValue = false;
     float floatValue = 123.0;

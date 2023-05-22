@@ -7,7 +7,7 @@
 #include "middleware.h"
 #include "../../utils/jwt_helper/jwt_helper.h"
 
-void requiresAuth(RequestParams params, void (*next)(RequestParams params)) {
+void requiresAuth(HandlerParams params, void (*next)(HandlerParams params)) {
     if (verifyToken(params.authorization)) {
         next(params);
     } else {

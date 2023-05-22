@@ -17,10 +17,11 @@ Route routes[] = {
     // altre routes...
 };
 
-void routeRequest(int client_socket, const char *method, const char *path, const char *body, const char *authorization) {
+void routeRequest(int client_socket,PGconn *connection, const char *method, const char *path, const char *body, const char *authorization) {
     int numRoutes = sizeof(routes) / sizeof(Route);
-    RequestParams params;
+    HandlerParams params;
     params.client_socket = client_socket;
+    params.connection = connection;
     params.body = body;
     params.authorization = authorization;
     for (int i = 0; i < numRoutes; i++) {

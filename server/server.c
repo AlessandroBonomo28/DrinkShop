@@ -7,7 +7,9 @@
 #include <arpa/inet.h>
 #include <postgresql/libpq-fe.h>
 #include "utils/json_helper/json_helper.h"
+#include "utils/http_helper/http_helper.h"
 #include "routing/router/router.h"
+
 // PRODUCTION CONFIGURATION 
 //#define DATABASE "host=postgres-db port=5432 dbname=drinks user=docker password=12345"
 
@@ -49,33 +51,10 @@ void *client_thread(void *arg) {
         pthread_exit(NULL);
     }
 
-    // Decodifica della richiesta HTTP
-    char method[10];
-    char path[1024];
-    char body[1024];
-    char authorization[256];
-
-    sscanf(buffer, "%9s %1023s", method, path);
-
-    // Esempio di stampa dei dati ricevuti
-    printf("Metodo: %s\n", method);
-    printf("Percorso: %s\n", path);
-
-    // Ottieni l'intestazione di autorizzazione (Authorization)
-    char *authorizationHeader = strstr(buffer, "Authorization: ");
-    if (authorizationHeader != NULL) {
-        sscanf(authorizationHeader, "Authorization: Bearer %255s", authorization);
-        printf("Authorization: %s\n", authorization);
-    }
-
-    // Ottieni il corpo della richiesta (se presente)
-    char *bodyStart = strstr(buffer, "\r\n\r\n");
-    if (bodyStart != NULL) {
-        strncpy(body, bodyStart + 4, sizeof(body) - 1);
-        printf("Body: %s\n", body);
-    }
-
-    routeRequest(thread_data->client_socket,method,path,body,authorization);
+    HttpRequest request; 
+    decodeHttpRequest(buffer,&request);
+    printHttpRequest(&request);
+    routeRequest(thread_data->client_socket,thread_data->connection,request.method,request.path,request.body,request.authorization);
     //TODO togliere la query da qua e fare route di select users
     // Esempio di esecuzione di una query sul database
     PGresult *result = PQexec(thread_data->connection, "SELECT * FROM \"Users\";");
@@ -85,7 +64,7 @@ void *client_thread(void *arg) {
         int columns = PQnfields(result);
         const char * json_result = formatQueryResultToJson(result);
 
-        printf("result json = %s\n",json_result);
+        //printf("result json = %s\n",json_result);
         fflush(stdout);
 
         // Invia il risultato al client

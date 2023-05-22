@@ -11,6 +11,7 @@ gcc -o server \
     routing/middleware/middleware.c \
     utils/json_helper/json_helper.c \
     utils/jwt_helper/jwt_helper.c \
+    utils/http_helper/http_helper.c \
     -ljson-c \
     -lpq \
     -ljwt
