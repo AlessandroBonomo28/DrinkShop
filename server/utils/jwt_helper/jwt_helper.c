@@ -6,7 +6,12 @@
 char* encodeToken(const TokenPayload* payload) {
     jwt_t* jwt = NULL;
     jwt_new(&jwt);
-    jwt_add_grant(jwt, "username", payload->username); // TODO generalizzare encode payload jwt_add_grant_bool
+    jwt_add_grant(jwt, "email", payload->email);
+    jwt_add_grant_int(jwt, "id", (long)payload->id);
+    /* ipotetici attributi di tipo bool e float
+    //jwt_add_grant_bool(jwt, "premium", (int)payload->premium);
+    //jwt_add_grant_double(jwt, "id", (double)payload->id);
+    */
     jwt_set_alg(jwt, JWT_ALG_HS256, SECRET, strlen(SECRET));
     char* token = jwt_encode_str(jwt);
     jwt_free(jwt);
@@ -31,18 +36,30 @@ TokenPayload* decodeToken(const char* token) {
     
     if (decoded != NULL) {
         TokenPayload* payload = (TokenPayload*)malloc(sizeof(TokenPayload));
-        // TODO generalizzare decode payload
-        const char* username = jwt_get_grant(decoded, "username");
-        if (username != NULL) {
-            payload->username = strdup(username);
+        
+        const char* email = jwt_get_grant(decoded, "email");
+        if (email != NULL) {
+            payload->email = strdup(email);
         } else {
-            // Errore nel recuperare l'attributo "username" dal token
+            // Errore nel recuperare l'attributo "email" dal token
             free(payload);
             payload = NULL;
             jwt_free(decoded);
             return NULL;
         }
-        
+
+        long id = jwt_get_grant_int(decoded, "id");
+        payload->id = (int)id;
+
+        /*
+        // ipotetico attributo bool
+        int premium = jwt_get_grant_bool(decoded, "premium");
+        payload->premium = (bool)premium;
+
+        // ipotetico attributo float
+        double val = jwt_get_grant_double(decoded, "val");
+        payload->val = (float)val;
+        */
         jwt_free(decoded);
         return payload;
     } else {

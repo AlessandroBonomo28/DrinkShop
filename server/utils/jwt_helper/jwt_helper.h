@@ -6,8 +6,8 @@
 #define SECRET "YOUR_SECRET_HERE"
 
 typedef struct {
-    const char* username;
-
+    int id;
+    const char* email;
 } TokenPayload;
 
 char* encodeToken(const TokenPayload* payload);

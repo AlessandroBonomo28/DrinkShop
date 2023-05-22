@@ -12,7 +12,7 @@ Route routes[] = {
     { "POST", "/login", NO_MIDDLEWARE, loginHandler },
     { "GET", "/register", NO_MIDDLEWARE, registerHandler },
     { "GET", "/hello", NO_MIDDLEWARE, sayHello },
-    { "GET", "/drink/image", NO_MIDDLEWARE, drinkImage } // TODO /drink/:id/image/ (convenzione /<var>/<value>)
+    { "GET", "/drink/image", NO_MIDDLEWARE, drinkImage } // TODO /drink/image/:id (convenzione /<var>/<value>)
     // TODO POST /order
     // TODO GET /drinks
     // TODO GET /user/:id (esempio user/1)

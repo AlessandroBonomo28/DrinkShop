@@ -13,10 +13,11 @@
 void homeHandler(RouterParams params) {
     TokenPayload* token = decodeToken(params.request.authorization);
     if(token!= NULL){
-        const char* decoded_username = token->username;
+        const char* decoded_email = token->email;
+        int decoded_id = token->id;
         char buffer[1024];
         char body[100];
-        snprintf(body, sizeof(body),"Hello, %s",decoded_username);
+        snprintf(body, sizeof(body),"Hello, %s. Your id:%d",decoded_email,decoded_id);
         HttpResponse response;
         response.code = "200 OK";
         response.contentType = "application/json";
@@ -36,7 +37,8 @@ void loginHandler(RouterParams params) {
     bool pw = jsonCompare(params.request.body,"password","123");
     if(user && pw){
         TokenPayload payload;
-        payload.username = "alex";
+        payload.email = "alex";
+        payload.id = 69;
         char* token = encodeToken(&payload);
         if (token == NULL) {
             response = "HTTP/1.1 500 Internal Server Error\r\nContent-Length: 23\r\n\r\nToken generation failed!";
