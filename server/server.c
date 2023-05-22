@@ -5,23 +5,11 @@
 #include <pthread.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
-#include <postgresql/libpq-fe.h>
+#include "server.h"
 #include "utils/json_helper/json_helper.h"
 #include "utils/http_helper/http_helper.h"
 #include "routing/router/router.h"
 
-// PRODUCTION CONFIGURATION 
-//#define DATABASE "host=postgres-db port=5432 dbname=drinks user=docker password=12345"
-
-// DEBUG CONFIGURATION 
-#define DATABASE "host=127.0.0.1 port=42069 dbname=drinks user=docker password=12345"
-#define PORT 4040
-#define MAX_CLIENTS 100
-
-typedef struct {
-    int client_socket;
-    PGconn *connection;
-} ThreadData;
 
 void *client_thread(void *arg) {
     ThreadData *thread_data = (ThreadData *)arg;
@@ -34,7 +22,7 @@ void *client_thread(void *arg) {
 
     // Imposta il timeout di 5 secondi per la ricezione
     struct timeval timeout;
-    timeout.tv_sec = 5;
+    timeout.tv_sec = TIMEOUT_SECONDS_ABORT_CONNECTION;
     timeout.tv_usec = 0;
     setsockopt(thread_data->client_socket, SOL_SOCKET, SO_RCVTIMEO, (const char *)&timeout, sizeof(timeout));
 

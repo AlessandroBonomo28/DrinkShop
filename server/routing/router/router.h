@@ -1,6 +1,6 @@
 #ifndef ROUTER_H
 #define ROUTER_H
-#include <postgresql/libpq-fe.h>
+#include "../../server.h"
 typedef struct {
     int client_socket;
     PGconn *connection;
