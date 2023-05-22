@@ -22,10 +22,10 @@ typedef void (*JSONFoldCallback)(const char* key, const char* value, void* accum
 // Funzione per il parsing di un JSON e la fold dei valori
 void jsonFold(const char* json, JSONFoldCallback callback, void* accumulator);
 
-typedef void (*JSONMapCallback)(const char* key, const char* value, void* result);
+typedef void (*JSONMapCallback)(const char* key, const char* value);
 
 // Funzione per il parsing di un JSON e la map dei valori
-void jsonMap(const char* json, JSONMapCallback callback, void* result);
+void jsonMap(const char* json, JSONMapCallback callback);
 
 char* formatQueryResultToJson(PGresult* result);
 

@@ -8,14 +8,14 @@
 
 
 // Funzione per il parsing di un JSON e la mappatura dei valori
-void jsonMap(const char* json, void (*callback)(const char*, const char*, void*), void* data) {
+void jsonMap(const char* json, JSONMapCallback callback) {
     struct json_object* root = json_tokener_parse(json);
     enum json_type type = json_object_get_type(root);
 
     if (type == json_type_object) {
         json_object_object_foreach(root, key, val) {
             const char* value = json_object_get_string(val);
-            callback(key, value, data);
+            callback(key, value);
         }
     }
 
@@ -23,7 +23,7 @@ void jsonMap(const char* json, void (*callback)(const char*, const char*, void*)
 }
 
 // Funzione per il parsing di un JSON e la fold dei valori
-void jsonFold(const char* json, void (*callback)(const char*, const char*, void*), void* accumulator) {
+void jsonFold(const char* json, JSONFoldCallback callback, void* accumulator) {
     struct json_object* root = json_tokener_parse(json);
     enum json_type type = json_object_get_type(root);
 
@@ -129,7 +129,7 @@ bool existsKeyInJson(const char* json,const char* key){
 }
 
 
-void print(const char* key, const char* value, void* data) {
+void mapPrint(const char* key, const char* value) {
     printf("%s: %s\n", key, value);
     fflush(stdout);
 }
@@ -137,7 +137,7 @@ void print(const char* key, const char* value, void* data) {
 void printJsonKeysAndValues(const char* json) {
     printf("JSON PRINT:\n");
     fflush(stdout);
-    jsonMap(json, print, NULL);
+    jsonMap(json, mapPrint);
 }
 
 char** parseJsonStringIntoList(const char* json, int* count) {
