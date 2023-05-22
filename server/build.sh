@@ -12,6 +12,7 @@ gcc -o server \
     utils/json_helper/json_helper.c \
     utils/jwt_helper/jwt_helper.c \
     utils/http_helper/http_helper.c \
+    utils/file_helper/file_helper.c \
     -ljson-c \
     -lpq \
     -ljwt

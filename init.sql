@@ -8,6 +8,7 @@ CREATE TABLE "Drinks" (
   "id" SERIAL PRIMARY KEY,
   "name" VARCHAR(50),
   "description" VARCHAR(250),
+  "image_url" VARCHAR(250),
   "price" float CHECK ("price" > 0)
 );
 
@@ -32,6 +33,11 @@ CREATE TABLE "OrderItems" (
   "id_item" int NOT NULL,
   "quantity" float CHECK ("quantity" > 0)
 );
+
+-- Aggiunta del constraint per il formato dell'email
+ALTER TABLE "Users"
+ADD CONSTRAINT "check_email_format"
+CHECK ("email" ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$');
 
 ALTER TABLE "OrderItems" ADD FOREIGN KEY ("id_order") REFERENCES "Orders" ("id");
 ALTER TABLE "OrderItems" ADD FOREIGN KEY ("id_item") REFERENCES "Drinks" ("id");

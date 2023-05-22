@@ -8,6 +8,7 @@
 #include "../router/router.h"
 #include "../../utils/jwt_helper/jwt_helper.h"
 #include "../../utils/http_helper/http_helper.h"
+#include "../../utils/file_helper/file_helper.h"
 
 void homeHandler(RouterParams params) {
     TokenPayload* token = decodeToken(params.request.authorization);
@@ -112,4 +113,14 @@ void sayHello(RouterParams params) {
     send(params.thread_data->client_socket, response, strlen(response), 0);
 
     free(formattedJson);
+}
+
+void drinkImage(RouterParams params) {
+    const char* path = "images/drinks/negroni.jpg";
+    if(fileExists(path))
+        serveFile(path,params.thread_data->client_socket);
+    else {
+        const char *response = "HTTP/1.1 404 Not Found\r\nContent-Length: 0\r\n\r\n";
+        send(params.thread_data->client_socket, response, strlen(response), 0);
+    }
 }
