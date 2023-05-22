@@ -9,8 +9,8 @@
 #include "../../utils/jwt_helper/jwt_helper.h"
 #include "../../utils/http_helper/http_helper.h"
 
-void homeHandler(HandlerParams params) {
-    TokenPayload* token = decodeToken(params.authorization);
+void homeHandler(RouterParams params) {
+    TokenPayload* token = decodeToken(params.request.authorization);
     if(token!= NULL){
         const char* decoded_username = token->username;
         char buffer[1024];
@@ -21,18 +21,18 @@ void homeHandler(HandlerParams params) {
         response.contentType = "application/json";
         response.body = body;
         formatHttpResponse(buffer, sizeof(buffer), &response);
-        send(params.client_socket, buffer, strlen(buffer), 0);
+        send(params.thread_data->client_socket, buffer, strlen(buffer), 0);
         free(token);
     } else {
         const char *response = "HTTP/1.1 500 Server Error\r\nContent-Length: 0\r\n\r\n";
-        send(params.client_socket, response, strlen(response), 0);
+        send(params.thread_data->client_socket, response, strlen(response), 0);
     }
 }
 
-void loginHandler(HandlerParams params) {
+void loginHandler(RouterParams params) {
     char *response = "HTTP/1.1 401 Unauthorized\r\nContent-Length: 15\r\n\r\nNot Authorized!";
-    bool user = jsonCompare(params.body,"user","alex");
-    bool pw = jsonCompare(params.body,"password","123");
+    bool user = jsonCompare(params.request.body,"user","alex");
+    bool pw = jsonCompare(params.request.body,"password","123");
     if(user && pw){
         TokenPayload payload;
         payload.username = "alex";
@@ -53,20 +53,20 @@ void loginHandler(HandlerParams params) {
                 strlen(jsonValue),
                 jsonValue);
 
-            send(params.client_socket, responseBuffer, strlen(responseBuffer), 0);
+            send(params.thread_data->client_socket, responseBuffer, strlen(responseBuffer), 0);
 
             free(jsonValue);
             free(token);
             return;
         }
     }
-    send(params.client_socket, response, strlen(response), 0);
+    send(params.thread_data->client_socket, response, strlen(response), 0);
 }
 
-void registerHandler(HandlerParams params) {
-    printJsonKeysAndValues(params.body);
+void registerHandler(RouterParams params) {
+    printJsonKeysAndValues(params.request.body);
     int count;
-    char** list = getListFromJson(params.body, "list", &count);
+    char** list = getListFromJson(params.request.body, "list", &count);
 
     if (list != NULL) {
         printf("List:\n");
@@ -81,10 +81,10 @@ void registerHandler(HandlerParams params) {
         printf("Key not found in JSON.\n");
     }
     const char *response = "HTTP/1.1 200 OK\r\nContent-Length: 13\r\n\r\nHello, World!";
-    send(params.client_socket, response, strlen(response), 0);
+    send(params.thread_data->client_socket, response, strlen(response), 0);
 }
 // TODO utility per le date: utils/date_helper
-void sayHello(HandlerParams params) {
+void sayHello(RouterParams params) {
     const char* stringValue = "Hello world";
     bool boolValue = false;
     float floatValue = 123.0;
@@ -109,7 +109,7 @@ void sayHello(HandlerParams params) {
         strlen(formattedJson),
         formattedJson);
 
-    send(params.client_socket, response, strlen(response), 0);
+    send(params.thread_data->client_socket, response, strlen(response), 0);
 
     free(formattedJson);
 }

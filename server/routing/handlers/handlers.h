@@ -2,10 +2,10 @@
 #define HANDLERS_H
 #include "../router/router.h"
 
-void requiresAuth(HandlerParams params, void (*next)(HandlerParams params));
+void requiresAuth(RouterParams params, void (*next)(RouterParams params));
 
-void homeHandler(HandlerParams params);
-void loginHandler(HandlerParams params);
-void registerHandler(HandlerParams params);
-void sayHello(HandlerParams params);
+void homeHandler(RouterParams params);
+void loginHandler(RouterParams params);
+void registerHandler(RouterParams params);
+void sayHello(RouterParams params);
 #endif

@@ -42,7 +42,11 @@ void *client_thread(void *arg) {
     HttpRequest request; 
     decodeHttpRequest(buffer,&request);
     printHttpRequest(&request);
-    routeRequest(thread_data->client_socket,thread_data->connection,request.method,request.path,request.body,request.authorization);
+
+    RouterParams params;
+    params.thread_data = thread_data;
+    params.request = request;
+    routeRequest(params);
     //TODO togliere la query da qua e fare route di select users
     // Esempio di esecuzione di una query sul database
     PGresult *result = PQexec(thread_data->connection, "SELECT * FROM \"Users\";");
