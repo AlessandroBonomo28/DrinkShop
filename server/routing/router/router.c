@@ -4,6 +4,7 @@
 #include "router.h"
 #include "../handlers/handlers.h"
 #include "../middleware/middleware.h"
+#include "../../utils/file_helper/file_helper.h"
 #define NO_MIDDLEWARE NULL
 #define MAX_PATH_LENGTH 1024
 #define ROUTES_PREFIX "" // for example "/api"
@@ -12,10 +13,15 @@ Route routes[] = {
     { "POST", "/login", NO_MIDDLEWARE, loginHandler },
     { "POST", "/register", NO_MIDDLEWARE, registerHandler },
     { "GET", "/", requiresAuth, homeHandler },
-    { "GET", "/user/:id", requiresAuth, getUserHandler }, // TODO /user/:id
-    { "GET", "/drink/image/:id", requiresAuth, getDrinkImageHandler } // TODO /drink/image/:id
-    // TODO POST /order
+    { "GET", "/user/:id", requiresAuth, getUserHandler }, 
+    { "GET", "/drink/image/:id", requiresAuth, getDrinkImageHandler }
+    // TODO GET /drink/:id
     // TODO GET /drinks
+    // TODO POST /order (crea un ordine di una lista di drink con le quantita)
+    // TODO POST /pay (paga l'ordine corrente)
+    // TODO GET /order/last (ritorna l'ultimo ordine)
+    // TODO GET /orders
+    // TODO PUT /order/current (modifica l'ordine in corso)
     // altre routes...
 };
 
@@ -36,8 +42,7 @@ void routeRequest(RouterParams params) {
         }
     }
     // Se nessuna route corrispondente è stata trovata, invia una risposta 404 Not Found al client
-    const char *response = "HTTP/1.1 404 Not Found\r\nContent-Length: 14\r\n\r\nPath not found";
-    send(params.thread_data->client_socket, response, strlen(response), 0);
+    serveFileWithResponseCode( "images/404.jpg", "404 Not Found",params.thread_data->client_socket);
 }
 
 // match per routes con sintassi "basepath/:param"

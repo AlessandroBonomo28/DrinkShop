@@ -5,6 +5,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <stdbool.h>
+#include "file_helper.h"
 
 #define BUFFER_SIZE 1024
 
@@ -16,8 +17,8 @@ bool fileExists(const char* path) {
     }
     return false;
 }
-
-void serveFile(const char* path, int client_socket) {
+void serveFileWithResponseCode(const char* path,const char* response_code, int client_socket)
+{
     // Apri il file in modalità di lettura binaria
     FILE* file = fopen(path, "rb");
     if (file == NULL) {
@@ -49,7 +50,8 @@ void serveFile(const char* path, int client_socket) {
 
     // Invia l'intestazione HTTP al browser con il tipo di contenuto corretto
     char header[256];
-    snprintf(header, sizeof(header), "HTTP/1.1 200 OK\r\nContent-Type: %s\r\nContent-Length: %ld\r\n\r\n", contentType, fileSize);
+    snprintf(header, sizeof(header), "HTTP/1.1 %s\r\nContent-Type: %s\r\nContent-Length: %ld\r\n\r\n",response_code, contentType, fileSize);
+    //snprintf(header, sizeof(header), "HTTP/1.1 200 OK\r\nContent-Type: %s\r\nContent-Length: %ld\r\n\r\n", contentType, fileSize);
     send(client_socket, header, strlen(header), 0);
 
     // Leggi e invia il contenuto del file sulla socket
@@ -61,4 +63,9 @@ void serveFile(const char* path, int client_socket) {
 
     // Chiudi il file dopo averlo letto
     fclose(file);
+
 }
+void serveFile(const char* path, int client_socket) {
+    serveFileWithResponseCode(path, "200 OK", client_socket);
+}
+

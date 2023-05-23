@@ -10,7 +10,7 @@
 #include "../../utils/http_helper/http_helper.h"
 #include "../../utils/file_helper/file_helper.h"
 #include "../../models/models.h"
-
+//TODO sistemare il body delle risposte http
 void homeHandler(RouterParams params) {
     TokenPayload* token = decodeToken(params.request.authorization);
     if(token!= NULL){
