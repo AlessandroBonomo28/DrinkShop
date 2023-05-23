@@ -144,18 +144,24 @@ void getUserHandler(RouterParams params) {
 void getDrinkImageHandler(RouterParams params) {
     // ottieni il parametro id dalla path
     const char* str_drink_id = getPathParameter(params.request.path);
-    if(str_drink_id == NULL){
-        // 400 Bad Request
+    if(str_drink_id == NULL){ 
         const char *response = "HTTP/1.1 400 Bad Request\r\nContent-Length: 0\r\n\r\n";
         send(params.thread_data->client_socket, response, strlen(response), 0);
         return;
     }
-    printf("id drink: %s\n",str_drink_id);
-    const char* path = "images/drinks/negroni.jpg";
+    Drink* drink = getDrinkById(params.thread_data->connection,atoi(str_drink_id));
+    if(drink == NULL){
+        // 404 Drink not found
+        const char *response = "HTTP/1.1 404 Not Found\r\nContent-Length: 0\r\n\r\n";
+        send(params.thread_data->client_socket, response, strlen(response), 0);
+        return;
+    }
+    const char* path = drink->image_url;
     if(fileExists(path))
         serveFile(path,params.thread_data->client_socket);
     else {
         const char *response = "HTTP/1.1 404 Not Found\r\nContent-Length: 0\r\n\r\n";
         send(params.thread_data->client_socket, response, strlen(response), 0);
     }
+    free(drink);
 }

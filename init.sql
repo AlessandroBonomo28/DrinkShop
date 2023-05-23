@@ -124,10 +124,10 @@ INSERT INTO "Users" ("email","password") VALUES
     ('alex@gmail.com','123'),
     ('mario@gmail.com','123');
 
-INSERT INTO "Drinks" ("name", "description", "price") VALUES
-    ('Bevanda 1', 'Descrizione bevanda 1', 2.5),
-    ('Bevanda 2', 'Descrizione bevanda 2', 3.0),
-    ('Bevanda 3', 'Descrizione bevanda 3', 2.0),
-    ('Bevanda 4', 'Descrizione bevanda 4', 2.75),
-    ('Bevanda 5', 'Descrizione bevanda 5', 3.5);
+INSERT INTO "Drinks" ("name", "description", "image_url", "price") VALUES
+    ('Negroni', 'Descrizione bevanda 1','images/drinks/negroni.jpg', 2.5),
+    ('Bevanda 2', 'Descrizione bevanda 2','images/drinks/negroni.jpg', 3.0),
+    ('Bevanda 3', 'Descrizione bevanda 3','images/drinks/negroni.jpg', 2.0),
+    ('Bevanda 4', 'Descrizione bevanda 4','images/drinks/negroni.jpg', 2.75),
+    ('Bevanda 5', 'Descrizione bevanda 5','images/drinks/negroni.jpg', 3.5);
 

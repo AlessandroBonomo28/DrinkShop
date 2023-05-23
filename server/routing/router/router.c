@@ -79,6 +79,9 @@ bool matchesPath(const char* requestPath, const char* routePath) {
 
 
 const char* getPathParameter(const char* path) {
+    if (path == NULL || *path == '\0') {
+        return NULL;
+    }
     const char* lastSlash = strrchr(path, '/');
     if (lastSlash != NULL && *(lastSlash + 1) != '\0') {
         return lastSlash + 1;

@@ -11,6 +11,7 @@ typedef struct {
     int id;
     const char* name;
     const char* description;
+    const char* image_url;
     float price;
 } Drink;
 
@@ -40,4 +41,6 @@ typedef struct {
 User* authenticateUser(PGconn* connection, const char* email, const char* password);
 User* registerUser(PGconn* connection, const char* email, const char* password);
 User* getUserById(PGconn* connection, int id);
+
+Drink* getDrinkById(PGconn* connection, int id);
 #endif
