@@ -29,8 +29,6 @@ User* authenticateUser(PGconn* connection, const char* email, const char* passwo
     } else {
         return NULL; // error
     }
-
-    PQclear(result);
 }
 
 User* registerUser(PGconn* connection, const char* email, const char* password) {
@@ -57,8 +55,6 @@ User* registerUser(PGconn* connection, const char* email, const char* password) 
     } else {
         return NULL; // error
     }
-
-    PQclear(result);
 }
 
 User* getUserById(PGconn* connection, int id) {
@@ -86,8 +82,6 @@ User* getUserById(PGconn* connection, int id) {
     } else {
         return NULL; // error
     }
-
-    PQclear(result);
 }
 
 Drink* getDrinkById(PGconn* connection, int id) {
@@ -117,8 +111,6 @@ Drink* getDrinkById(PGconn* connection, int id) {
     } else {
         return NULL; // error
     }
-
-    PQclear(result);
 }
 
 PGresult* getDrinks(PGconn* connection) {
@@ -127,8 +119,49 @@ PGresult* getDrinks(PGconn* connection) {
     return result;
 }
 
-PGresult* getUserOrders(PGconn* connection,int id) {
+PGresult* getOrdersMadeByUser(PGconn* connection,int id) {
     const char* query = "SELECT * FROM \"Orders\" WHERE \"user_id\" = $1 ORDER BY \"id\" ASC;";
+    const char* param_values[1];
+    char id_str[10];
+    sprintf(id_str, "%d", id);
+    param_values[0] = id_str;
+    const int param_lengths[1] = { strlen(id_str) };
+    const int param_formats[1] = { 0 };
+
+    PGresult* result = PQexecParams(connection, query, 1, NULL, param_values, param_lengths, param_formats, 0);
+    return result;
+}
+
+Order* getLastOrderMadeByUser(PGconn* connection, int id) {
+    const char* query = "SELECT * FROM \"Orders\" WHERE \"id_user\" = $1 ORDER BY \"id\" DESC LIMIT 1;";
+    const char* param_values[1];
+    char id_str[10];
+    sprintf(id_str, "%d", id);
+    param_values[0] = id_str;
+    const int param_lengths[1] = { strlen(id_str) };
+    const int param_formats[1] = { 0 };
+
+    PGresult* result = PQexecParams(connection, query, 1, NULL, param_values, param_lengths, param_formats, 0);
+
+    if (PQresultStatus(result) == PGRES_TUPLES_OK) {
+        int rows = PQntuples(result);
+        if (rows == 0) {
+            return NULL;
+        }
+        
+        Order* order = malloc(sizeof(Order));
+        order->id = atoi(PQgetvalue(result, 0, 0));
+        order->id_user = atoi(PQgetvalue(result, 0, 1));
+        order->creation_datetime = PQgetvalue(result, 0, 2);
+        order->paid = (strcmp(PQgetvalue(result, 0, 3),"t") == 0 ? true : false);
+        return order;
+    } else {
+        return NULL; // error
+    }
+}
+
+PGresult* getOrderItemsByOrderId(PGconn* connection, int id) {
+    const char* query = "SELECT * FROM \"OrderItems\" WHERE \"id_order\" = $1;";
     const char* param_values[1];
     char id_str[10];
     sprintf(id_str, "%d", id);

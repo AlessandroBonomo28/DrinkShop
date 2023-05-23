@@ -9,5 +9,6 @@ void getUserHandler(RouterParams params);
 void getDrinkImageHandler(RouterParams params);
 void getDrinkHandler(RouterParams params);
 void getDrinksHandler(RouterParams params);
-void getOrdersHandler(RouterParams params);
+void getOrdersMadeByUserHandler(RouterParams params);
+void getLastOrderMadeByUserHandler(RouterParams params);
 #endif

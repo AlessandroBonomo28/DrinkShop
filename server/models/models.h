@@ -44,5 +44,7 @@ User* getUserById(PGconn* connection, int id);
 
 Drink* getDrinkById(PGconn* connection, int id);
 PGresult* getDrinks(PGconn* connection);
-PGresult* getUserOrders(PGconn* connection,int id);
+PGresult* getOrdersMadeByUser(PGconn* connection,int id);
+Order* getLastOrderMadeByUser(PGconn* connection, int id);
+PGresult* getOrderItemsByOrderId(PGconn* connection, int id);
 #endif

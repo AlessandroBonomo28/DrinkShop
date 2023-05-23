@@ -17,11 +17,11 @@ Route routes[] = {
     { "GET", "/drink/image/:id", NO_MIDDLEWARE, getDrinkImageHandler },
     { "GET", "/drink/:id", NO_MIDDLEWARE, getDrinkHandler },
     { "GET", "/drinks", NO_MIDDLEWARE, getDrinksHandler },
-    // TODO POST /order (crea un ordine di una lista di drink con le quantita)
-    // TODO GET /order/last (ritorna l'ultimo ordine)
-    { "GET", "/orders", requiresAuth, getOrdersHandler },
-    // TODO PUT /order/current (modifica l'ordine in corso)
-    // TODO POST /pay (paga l'ordine corrente)
+    // TODO POST /order/drink (ordinare un drink) auth
+    // TODO DELETE /order/last/unpaid (eliminare l'ordine corrente non pagato) auth
+    { "GET", "/order/last", requiresAuth, getLastOrderMadeByUserHandler },
+    { "GET", "/orders", requiresAuth, getOrdersMadeByUserHandler },
+    // TODO POST /pay (paga l'ordine corrente) auth
 };
 
 void routeRequest(RouterParams params) {

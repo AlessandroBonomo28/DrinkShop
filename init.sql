@@ -97,7 +97,7 @@ BEGIN
     SELECT "paid" INTO last_order_paid
     FROM "Orders"
     WHERE "id_user" = NEW."id_user"
-    ORDER BY "timestamp" DESC
+    ORDER BY "creation_timestamp" DESC
     LIMIT 1;
     
     -- Se l'ultimo ordine non è stato pagato, lancia un'eccezione per impedire l'inserimento del nuovo ordine
