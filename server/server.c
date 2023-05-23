@@ -208,6 +208,6 @@ int main() {
     // Chiudi il socket del server
     shutdown(server_socket, SHUT_RDWR);
     close(server_socket);
-    printf("(X) Server stopped\n");
+    printf("(X) Server stopped.\n");
     return 0;
 }

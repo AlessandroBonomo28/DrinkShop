@@ -17,6 +17,7 @@ typedef struct {
 
 
 void routeRequest(RouterParams params);
-
+bool matchesPath(const char* requestPath, const char* routePath);
+const char* getPathParameter(const char* path);
 
 #endif
