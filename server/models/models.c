@@ -49,9 +49,10 @@ User* registerUser(PGconn* connection, const char* email, const char* password) 
         }
         
         User* user = malloc(sizeof(User));
-        user->id = atoi(PQgetvalue(result, 0, 0));
-        user->email = PQgetvalue(result, 0, 1);
-        user->password = PQgetvalue(result, 0, 2);
+        user->id = atoi(strdup(PQgetvalue(result, 0, 0)));
+        user->email = strdup(PQgetvalue(result, 0, 1));
+        user->password = strdup(PQgetvalue(result, 0, 2));
+        PQclear(result);
         return user;
     } else {
         return NULL; // error
@@ -76,9 +77,10 @@ User* getUserById(PGconn* connection, int id) {
         }
         
         User* user = malloc(sizeof(User));
-        user->id = atoi(PQgetvalue(result, 0, 0));
-        user->password = PQgetvalue(result, 0, 1);
-        user->email = PQgetvalue(result, 0, 2);
+        user->id = atoi(strdup(PQgetvalue(result, 0, 0)));
+        user->password = strdup(PQgetvalue(result, 0, 1));
+        user->email = strdup(PQgetvalue(result, 0, 2));
+        PQclear(result);
         return user;
     } else {
         return NULL; // error
@@ -103,11 +105,12 @@ Drink* getDrinkById(PGconn* connection, int id) {
         }
         
         Drink* drink = malloc(sizeof(Drink));
-        drink->id = atoi(PQgetvalue(result, 0, 0));
-        drink->name = PQgetvalue(result, 0, 1);
-        drink->description = PQgetvalue(result, 0, 2);
-        drink->image_url = PQgetvalue(result, 0, 3);
-        drink->price = atof(PQgetvalue(result, 0, 4));
+        drink->id = atoi(strdup(PQgetvalue(result, 0, 0)));
+        drink->name = strdup(PQgetvalue(result, 0, 1));
+        drink->description = strdup(PQgetvalue(result, 0, 2));
+        drink->image_url = strdup(PQgetvalue(result, 0, 3));
+        drink->price = atof(strdup(PQgetvalue(result, 0, 4)));
+        PQclear(result);
         return drink;
     } else {
         return NULL; // error
@@ -121,7 +124,7 @@ PGresult* getDrinks(PGconn* connection) {
 }
 
 PGresult* getOrdersMadeByUser(PGconn* connection,int id) {
-    const char* query = "SELECT * FROM \"Orders\" WHERE \"user_id\" = $1 ORDER BY \"id\" ASC;";
+    const char* query = "SELECT * FROM \"Orders\" WHERE \"id_user\" = $1 ORDER BY \"id\" ASC;";
     const char* param_values[1];
     char id_str[10];
     sprintf(id_str, "%d", id);
@@ -151,10 +154,11 @@ Order* getLastOrderMadeByUser(PGconn* connection, int id) {
         }
         
         Order* order = malloc(sizeof(Order));
-        order->id = atoi(PQgetvalue(result, 0, 0));
-        order->id_user = atoi(PQgetvalue(result, 0, 1));
-        order->creation_datetime = PQgetvalue(result, 0, 2);
+        order->id = atoi(strdup(PQgetvalue(result, 0, 0)));
+        order->id_user = atoi(strdup(PQgetvalue(result, 0, 1)));
+        order->creation_datetime = strdup(PQgetvalue(result, 0, 2));
         order->paid = (strcmp(PQgetvalue(result, 0, 3),"t") == 0 ? true : false);
+        PQclear(result);
         return order;
     } else {
         return NULL; // error
@@ -172,4 +176,33 @@ PGresult* getOrderItemsByOrderId(PGconn* connection, int id) {
 
     PGresult* result = PQexecParams(connection, query, 1, NULL, param_values, param_lengths, param_formats, 0);
     return result;
+}
+
+Order* getOrderById(PGconn* connection, int id) {
+    const char* query = "SELECT * FROM \"Orders\" WHERE \"id\" = $1;";
+    const char* param_values[1];
+    char id_str[10];
+    sprintf(id_str, "%d", id);
+    param_values[0] = id_str;
+    const int param_lengths[1] = { strlen(id_str) };
+    const int param_formats[1] = { 0 };
+
+    PGresult* result = PQexecParams(connection, query, 1, NULL, param_values, param_lengths, param_formats, 0);
+
+    if (PQresultStatus(result) == PGRES_TUPLES_OK) {
+        int rows = PQntuples(result);
+        if (rows == 0) {
+            return NULL;
+        }
+        
+        Order* order = malloc(sizeof(Order));
+        order->id = atoi(strdup(PQgetvalue(result, 0, 0)));
+        order->id_user = atoi(strdup(PQgetvalue(result, 0, 1)));
+        order->creation_datetime = strdup(PQgetvalue(result, 0, 2));
+        order->paid = (strcmp(PQgetvalue(result, 0, 3),"t") == 0 ? true : false);
+        PQclear(result);
+        return order;
+    } else {
+        return NULL; // error
+    }
 }

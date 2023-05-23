@@ -21,6 +21,7 @@ Route routes[] = {
     // TODO DELETE /order/last/unpaid (eliminare l'ordine corrente non pagato) auth
     { "GET", "/order/last", requiresAuth, getLastOrderMadeByUserHandler },
     { "GET", "/orders", requiresAuth, getOrdersMadeByUserHandler },
+    { "GET", "/order/:id", requiresAuth, getOrderHandler },
     // TODO POST /pay (paga l'ordine corrente) auth
 };
 

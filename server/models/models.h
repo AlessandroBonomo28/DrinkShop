@@ -47,4 +47,5 @@ PGresult* getDrinks(PGconn* connection);
 PGresult* getOrdersMadeByUser(PGconn* connection,int id);
 Order* getLastOrderMadeByUser(PGconn* connection, int id);
 PGresult* getOrderItemsByOrderId(PGconn* connection, int id);
+Order* getOrderById(PGconn* connection, int id);
 #endif

@@ -314,3 +314,65 @@ void getLastOrderMadeByUserHandler(RouterParams params){
         send(params.thread_data->client_socket, response, strlen(response), 0);
     }
 }
+
+void getOrderHandler(RouterParams params){
+    const char* str_order_id = getPathParameter(params.request.path);
+    if(str_order_id == NULL){ 
+        const char *response = "HTTP/1.1 400 Bad Request\r\nContent-Length: 0\r\n\r\n";
+        send(params.thread_data->client_socket, response, strlen(response), 0);
+        return;
+    }
+    TokenPayload* token = decodeToken(params.request.authorization);
+    if(token!= NULL){
+        const char* decoded_email = token->email;
+        int decoded_id = token->id;
+        Order* order = getOrderById(params.thread_data->connection,atoi(str_order_id));
+        free(token);
+        if (order == NULL){
+            const char *response = "HTTP/1.1 404 Not Found\r\nContent-Length: 0\r\n\r\n";
+            send(params.thread_data->client_socket, response, strlen(response), 0);
+            return;
+        } 
+        if (order->id_user != decoded_id){
+            const char *response = "HTTP/1.1 403 Forbidden\r\nContent-Length: 0\r\n\r\n";
+            send(params.thread_data->client_socket, response, strlen(response), 0);
+            free(order);
+            return;
+        }
+        JsonProperty orderProps[] = {
+            {"id", &order->id, INT}, 
+            {"id_user", &order->id_user, INT},
+            {"creation_datetime", (void*)order->creation_datetime, STRING},
+            {"paid", &order->paid, BOOL}
+        };
+        int orderPropsCount = sizeof(orderProps) / sizeof(orderProps[0]);
+        char* formattedOrder = formatJsonProps(orderProps, orderPropsCount);
+        PGresult* order_drinks_result = getOrderItemsByOrderId(params.thread_data->connection,order->id);
+        if(order_drinks_result == NULL){
+            const char *response = "HTTP/1.1 500 Server Error\r\nContent-Length: 0\r\n\r\n";
+            send(params.thread_data->client_socket, response, strlen(response), 0);
+            free(order);
+            free(formattedOrder);
+            return;
+        }
+        char* jsonListDrinksOrdered = formatQueryResultToJson(order_drinks_result);
+        char buffer[1024];
+        HttpResponse response;
+        response.code = "200 OK";
+        response.contentType = "application/json";
+        const size_t dim = sizeof(char) * (strlen(jsonListDrinksOrdered) + strlen(formattedOrder) + 42);
+        char* body = malloc(dim);
+        snprintf(body, dim, "{\"drinks\":%s,\"order\":%s}", jsonListDrinksOrdered, formattedOrder);
+        response.body = body;
+        formatHttpResponse(buffer, sizeof(buffer), &response);
+        send(params.thread_data->client_socket, buffer, strlen(buffer), 0);
+        free(formattedOrder);
+        free(jsonListDrinksOrdered);
+        PQclear(order_drinks_result);
+        free(body);
+        free(order);
+    } else {
+        const char *response = "HTTP/1.1 500 Server Error\r\nContent-Length: 0\r\n\r\n";
+        send(params.thread_data->client_socket, response, strlen(response), 0);
+    }
+}
