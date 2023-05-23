@@ -8,8 +8,6 @@
 User* authenticateUser(PGconn* connection, const char* email, const char* password) {
     const char* query = "SELECT * FROM \"Users\" WHERE \"email\" = $1 AND \"password\" = $2;";
     const char* param_values[2];
-    printf("Email: %s\n", email);
-    printf("Password %s\n", password);
     param_values[0] = email;
     param_values[1] = password;
     const int param_lengths[2] = { strlen(email), strlen(password) };
@@ -20,17 +18,13 @@ User* authenticateUser(PGconn* connection, const char* email, const char* passwo
     if (PQresultStatus(result) == PGRES_TUPLES_OK) {
         int rows = PQntuples(result);
         if (rows == 0) {
-            printf("User not authenticated!\n");
             return NULL;
         }
-        printf("User authenticated!\n");
         
         User* user = malloc(sizeof(User));
         user->id = atoi(PQgetvalue(result, 0, 0));
         user->password = PQgetvalue(result, 0, 1);
         user->email = PQgetvalue(result, 0, 2);
-        
-        printf("email letta %s\n", user->email);
         return user;
     } else {
         return NULL; // error
@@ -52,10 +46,8 @@ User* registerUser(PGconn* connection, const char* email, const char* password) 
     if (PQresultStatus(result) == PGRES_TUPLES_OK) {
         int rows = PQntuples(result);
         if (rows == 0) {
-            printf("User not registered!\n");
             return NULL;
         }
-        printf("User registered!\n");
         
         User* user = malloc(sizeof(User));
         user->id = atoi(PQgetvalue(result, 0, 0));
