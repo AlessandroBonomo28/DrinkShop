@@ -14,7 +14,7 @@ Route routes[] = {
     { "POST", "/register", NO_MIDDLEWARE, registerHandler },
     { "GET", "/", requiresAuth, homeHandler },
     { "GET", "/user/:id", requiresAuth, getUserHandler }, 
-    { "GET", "/drink/image/:id", requiresAuth, getDrinkImageHandler }
+    { "GET", "/drink/image/:id", NO_MIDDLEWARE, getDrinkImageHandler }
     // TODO GET /drink/:id
     // TODO GET /drinks
     // TODO POST /order (crea un ordine di una lista di drink con le quantita)
