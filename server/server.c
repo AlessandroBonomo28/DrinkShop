@@ -16,6 +16,7 @@ int client_count = 0;
 
 volatile sig_atomic_t stop_server = 0;
 
+// gestisci sigterm CTRL+C
 void handle_interrupt(int sig) {
     stop_server = 1;
     printf("(!) Server is shutting down...\n");
@@ -119,6 +120,7 @@ int main() {
     }
 
     // Abilita l'opzione SO_REUSEADDR per riutilizzare l'indirizzo del socket
+    // in questo modo quando stoppo il server senza attendere che l'S.O faccia l'unbind 
     int reuse = 1;
     if (setsockopt(server_socket, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse)) == -1) {
         perror("(!) Errore nell'impostazione dell'opzione SO_REUSEADDR");
