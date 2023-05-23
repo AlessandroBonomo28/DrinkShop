@@ -104,38 +104,37 @@ void registerHandler(RouterParams params) {
         send(params.thread_data->client_socket, response, strlen(response), 0);
     }
 }
-// TODO utility per le date: utils/date_helper
-void sayHello(RouterParams params) {
-    const char* stringValue = "Hello world";
-    bool boolValue = false;
-    float floatValue = 123.0;
-    int intValue = 123;
 
-    JsonProperty props[] = {
-        {"string", (void*)stringValue, STRING}, 
-        {"integer", &intValue, INT},
-        {"float", &floatValue, FLOAT},
-        {"boolean", &boolValue, BOOL},
-        {"static string","hello static",STRING}
-    };
+void getUserHandler(RouterParams params) {
+    User* user = getUserById(params.thread_data->connection,5);
+    if(user != NULL){
+        JsonProperty props[] = {
+            {"email", (void*)user->email, STRING}, 
+            //{"password", (void*)user->password, STRING},
+            {"id", &user->id, INT}
+            //{"float example", &val, FLOAT},
+            //{"bool example", &boolValue, BOOL},
+            //{"static string example","hello static",STRING}
+        };
 
-    int propsCount = sizeof(props) / sizeof(props[0]);
-    char* formattedJson = formatJsonProps(props, propsCount);
-
-    // Creazione della risposta HTTP includendo il JSON formattato
-    // %zu è il placeholder di sizeof(response)
-    char response[1024];
-    snprintf(response, sizeof(response),
-        "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: %zu\r\n\r\n%s",
-        strlen(formattedJson),
-        formattedJson);
-
-    send(params.thread_data->client_socket, response, strlen(response), 0);
-
-    free(formattedJson);
+        int propsCount = sizeof(props) / sizeof(props[0]);
+        char* formattedJson = formatJsonProps(props, propsCount);
+        char response[1024];
+        snprintf(response, sizeof(response),
+            "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: %zu\r\n\r\n%s",
+            strlen(formattedJson),
+            formattedJson);
+        send(params.thread_data->client_socket, response, strlen(response), 0);
+        free(user);
+        free(formattedJson);
+        return;
+    } else {
+        const char *response = "HTTP/1.1 404 Not Found\r\nContent-Length: 0\r\n\r\n";
+        send(params.thread_data->client_socket, response, strlen(response), 0);
+    }
 }
 
-void drinkImage(RouterParams params) {
+void getDrinkImageHandler(RouterParams params) {
     const char* path = "images/drinks/negroni.jpg";
     if(fileExists(path))
         serveFile(path,params.thread_data->client_socket);

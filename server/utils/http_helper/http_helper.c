@@ -17,15 +17,19 @@ void decodeHttpRequest(const char* buffer, HttpRequest* request) {
 }
 
 void printHttpRequest(const HttpRequest* request) {
-    printf("Metodo: %s\n", request->method);
-    printf("Percorso: %s\n", request->path);
+    printf("Method: %s\n", request->method);
+    printf("Path: %s\n", request->path);
 
     if (request->authorization[0] != '\0') {
-        printf("Authorization: %s\n", request->authorization);
+        printf("Authorization (Bearer token): %s\n", request->authorization);
+    } else {
+        printf("Empty Authorization (Bearer token)\n");
     }
 
     if (request->body[0] != '\0') {
         printf("Body: %s\n", request->body);
+    } else {
+        printf("Empty Body\n");
     }
 }
 

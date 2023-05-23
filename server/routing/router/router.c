@@ -8,15 +8,13 @@
 #define ROUTES_PREFIX "" // for example "/api"
 
 Route routes[] = {
-    { "GET", "/", requiresAuth, homeHandler },
     { "POST", "/login", NO_MIDDLEWARE, loginHandler },
     { "POST", "/register", NO_MIDDLEWARE, registerHandler },
-    { "GET", "/hello", requiresAuth, sayHello },
-    { "GET", "/drink/image", requiresAuth, drinkImage } // TODO /drink/image/:id (convenzione /<var>/<value>)
+    { "GET", "/", requiresAuth, homeHandler },
+    { "GET", "/user", requiresAuth, getUserHandler }, // TODO /user/:id
+    { "GET", "/drink/image", requiresAuth, getDrinkImageHandler } // TODO /drink/image/:id
     // TODO POST /order
     // TODO GET /drinks
-    // TODO GET /user/:id (esempio user/1)
-    // TODO GET /drinks/:datetime/:user_id (drinks ordinati il giorno date, dall'utente id drinks/30-02-2001:00:00:00/1)
     // altre routes...
 };
 

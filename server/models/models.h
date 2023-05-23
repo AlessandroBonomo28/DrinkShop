@@ -39,4 +39,5 @@ typedef struct {
 
 User* authenticateUser(PGconn* connection, const char* email, const char* password);
 User* registerUser(PGconn* connection, const char* email, const char* password);
+User* getUserById(PGconn* connection, int id);
 #endif

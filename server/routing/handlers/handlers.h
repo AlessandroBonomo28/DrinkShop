@@ -5,6 +5,6 @@
 void homeHandler(RouterParams params);
 void loginHandler(RouterParams params);
 void registerHandler(RouterParams params);
-void sayHello(RouterParams params);
-void drinkImage(RouterParams params);
+void getUserHandler(RouterParams params);
+void getDrinkImageHandler(RouterParams params);
 #endif

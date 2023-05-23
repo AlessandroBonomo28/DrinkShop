@@ -60,3 +60,32 @@ User* registerUser(PGconn* connection, const char* email, const char* password) 
 
     PQclear(result);
 }
+
+User* getUserById(PGconn* connection, int id) {
+    const char* query = "SELECT * FROM \"Users\" WHERE \"id\" = $1;";
+    const char* param_values[1];
+    char id_str[10];
+    sprintf(id_str, "%d", id);
+    param_values[0] = id_str;
+    const int param_lengths[1] = { strlen(id_str) };
+    const int param_formats[1] = { 0 };
+
+    PGresult* result = PQexecParams(connection, query, 1, NULL, param_values, param_lengths, param_formats, 0);
+
+    if (PQresultStatus(result) == PGRES_TUPLES_OK) {
+        int rows = PQntuples(result);
+        if (rows == 0) {
+            return NULL;
+        }
+        
+        User* user = malloc(sizeof(User));
+        user->id = atoi(PQgetvalue(result, 0, 0));
+        user->password = PQgetvalue(result, 0, 1);
+        user->email = PQgetvalue(result, 0, 2);
+        return user;
+    } else {
+        return NULL; // error
+    }
+
+    PQclear(result);
+}
