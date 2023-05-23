@@ -6,12 +6,20 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <errno.h>
+#include <signal.h>
 #include "server.h"
 #include "utils/json_helper/json_helper.h"
 #include "utils/http_helper/http_helper.h"
 #include "routing/router/router.h"
 
 int client_count = 0;
+
+volatile sig_atomic_t stop_server = 0;
+
+void handle_interrupt(int sig) {
+    stop_server = 1;
+    printf("(!) Server is shutting down...\n");
+}
 
 void *client_thread(void *arg) {
     ThreadData *thread_data = (ThreadData *)arg;
@@ -34,7 +42,15 @@ void *client_thread(void *arg) {
 
     // Ricezione della richiesta dal client
     ssize_t bytesRead = recv(thread_data->client_socket, buffer, sizeof(buffer) - 1, 0);
-    if (bytesRead == -1) {
+    if(stop_server){
+        printf("(!) Server is shutting down, closing thread.\n");
+        fflush(stdout);
+        PQfinish(thread_data->connection);
+        close(thread_data->client_socket);
+        free(thread_data);
+        pthread_exit(NULL);
+    }
+    else if (bytesRead == -1) {
         if (errno == EAGAIN || errno == EWOULDBLOCK) {
             printf("(!) Client socket timed out, closing thread. (Connected now: %d)\n",--client_count);
             fflush(stdout);
@@ -47,32 +63,43 @@ void *client_thread(void *arg) {
         close(thread_data->client_socket);
         free(thread_data);
         pthread_exit(NULL);
+    } else {
+        HttpRequest request; 
+        decodeHttpRequest(buffer,&request);
+        printHttpRequest(&request);
+
+        RouterParams params;
+        params.thread_data = thread_data;
+        params.request = request;
+        routeRequest(params);
+
+        // Chiudi la connessione al database
+        PQfinish(thread_data->connection);
+
+        // Chiudi il socket del client
+        close(thread_data->client_socket);
+
+        free(thread_data);
+
+        printf("(-) Client served, closing thread. (Connected now: %d)\n",--client_count);
+        fflush(stdout);
+        
+        pthread_exit(NULL); // Chiudi thread 
     }
-
-    HttpRequest request; 
-    decodeHttpRequest(buffer,&request);
-    printHttpRequest(&request);
-
-    RouterParams params;
-    params.thread_data = thread_data;
-    params.request = request;
-    routeRequest(params);
-
-    // Chiudi la connessione al database
-    PQfinish(thread_data->connection);
-
-    // Chiudi il socket del client
-    close(thread_data->client_socket);
-
-    free(thread_data);
-
-    printf("(-) Client served, closing thread. (Connected now: %d)\n",--client_count);
-    fflush(stdout);
-    
-    pthread_exit(NULL); // Chiudi thread 
 }
 
 int main() {
+    // bypass chiamate bloccanti come recv e accept
+    struct sigaction sa;
+    sa.sa_handler = handle_interrupt;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+
+    if (sigaction(SIGINT, &sa, NULL) == -1) {
+        perror("(!) Errore nell'impostazione del gestore di segnali");
+        exit(EXIT_FAILURE);
+    }
+
     int server_socket, client_socket;
     struct sockaddr_in server_addr, client_addr;
     socklen_t client_addr_len;
@@ -88,6 +115,13 @@ int main() {
     server_socket = socket(AF_INET, SOCK_STREAM, 0);
     if (server_socket == -1) {
         perror("(!) Errore nella creazione del socket del server");
+        exit(EXIT_FAILURE);
+    }
+
+    // Abilita l'opzione SO_REUSEADDR per riutilizzare l'indirizzo del socket
+    int reuse = 1;
+    if (setsockopt(server_socket, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse)) == -1) {
+        perror("(!) Errore nell'impostazione dell'opzione SO_REUSEADDR");
         exit(EXIT_FAILURE);
     }
 
@@ -110,11 +144,15 @@ int main() {
 
     printf("HTTP Server listening on port %d...\n",PORT);
 
-    while (1) {
+    while (!stop_server) {
         // Accetta una connessione dal client
         client_addr_len = sizeof(client_addr);
         client_socket = accept(server_socket, (struct sockaddr *)&client_addr, &client_addr_len);
-        if (client_socket == -1) {
+        if (stop_server) {
+            printf("(!) Server is shutting down, accept aborted.\n");
+            break;
+        }
+        if (client_socket == -1) {    
             perror("(!) Errore nell'accettazione della connessione del client");
             continue;
         }
@@ -158,12 +196,16 @@ int main() {
     // Chiudi le connessioni nel pool
     for (int i = 0; i < MAX_CLIENTS; i++) {
         if (connections[i] != NULL) {
-            PQfinish(connections[i]);
+            if (PQstatus(connections[i]) == CONNECTION_OK) {
+                PQfinish(connections[i]);
+                connections[i] = NULL;
+            }
         }
     }
 
     // Chiudi il socket del server
     shutdown(server_socket, SHUT_RDWR);
     close(server_socket);
+    printf("(X) Server stopped\n");
     return 0;
 }
