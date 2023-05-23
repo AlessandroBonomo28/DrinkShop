@@ -36,7 +36,7 @@ void jsonFold(const char* json, JSONFoldCallback callback, void* accumulator) {
 
     json_object_put(root);
 }
-
+// attenzione a rilasciare il valore ritornato con una free
 // Funzione per formattare il risultato della query in JSON
 char* formatQueryResultToJson(PGresult* result) {
     int rows = PQntuples(result);
@@ -113,16 +113,18 @@ void compareKeyCallback(const char* key, const char* value, void* context) {
         ctx->match_found = true;
     }
 }
-
-const char* getValueFromJson(const char* json, const char* key){
+// attenzione, bisogna fare una free del valore ritornato
+char* getValueFromJson(const char* json, const char* key){
     JSONCompareContext context;
     context.desired_key = key;
     context.desired_value = NULL;
     context.match_found = false;
 
     jsonFold(json, compareKeyCallback, &context);
-
-    return context.desired_value;
+    if(context.desired_value == NULL){
+        return NULL;
+    }
+    return strdup(context.desired_value);
 }
 bool existsKeyInJson(const char* json,const char* key){
     return !(getValueFromJson(json,key) == NULL);
@@ -139,7 +141,7 @@ void printJsonKeysAndValues(const char* json) {
     fflush(stdout);
     jsonMap(json, mapPrint);
 }
-
+// attention, bisogna ciclarci sopra e fare una free di ogni valore
 char** parseJsonStringIntoList(const char* json, int* count) {
     struct json_object* root = json_tokener_parse(json);
     enum json_type type = json_object_get_type(root);
@@ -163,7 +165,7 @@ char** parseJsonStringIntoList(const char* json, int* count) {
     *count = 0;
     return NULL;
 }
-
+// attenzione, bisogna fare una free del valore ritornato
 char* extractJsonListAsString(const char* json, const char* key) {
     struct json_object* root = json_tokener_parse(json);
     struct json_object* listObj;
@@ -178,7 +180,7 @@ char* extractJsonListAsString(const char* json, const char* key) {
     json_object_put(root);
     return listString;
 }
-
+// attenzione, bisogna ciclarci sopra e fare una free di ogni valore
 char** getListFromJson(const char* json, const char* key, int* out_count){
     *out_count = 0;
     char* jsonStrList = extractJsonListAsString(json,key);
@@ -187,6 +189,7 @@ char** getListFromJson(const char* json, const char* key, int* out_count){
     }
     else return NULL;
 }
+// attenzione, bisogna fare una free del valore ritornato
 char* formatJsonProps(JsonProperty* pairs, int count) {
     json_object* json = json_object_new_object();
 

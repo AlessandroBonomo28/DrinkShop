@@ -10,9 +10,9 @@
 Route routes[] = {
     { "GET", "/", requiresAuth, homeHandler },
     { "POST", "/login", NO_MIDDLEWARE, loginHandler },
-    { "GET", "/register", NO_MIDDLEWARE, registerHandler },
-    { "GET", "/hello", NO_MIDDLEWARE, sayHello },
-    { "GET", "/drink/image", NO_MIDDLEWARE, drinkImage } // TODO /drink/image/:id (convenzione /<var>/<value>)
+    { "POST", "/register", NO_MIDDLEWARE, registerHandler },
+    { "GET", "/hello", requiresAuth, sayHello },
+    { "GET", "/drink/image", requiresAuth, drinkImage } // TODO /drink/image/:id (convenzione /<var>/<value>)
     // TODO POST /order
     // TODO GET /drinks
     // TODO GET /user/:id (esempio user/1)

@@ -37,34 +37,6 @@ typedef struct {
     float amount;
 } Payment;
 
-// User methods
-
-User* getUserById(int user_id);
-User* getUserByEmail(const char* user_email);
-void insertUser(User* user);
-
-// Drink methods
-
-Drink* getDrinkById(int drink_id);
-void insertDrink(Drink* drink);
-Drink** getDrinks();
-
-// Order methods
-
-Order* getOrderById(int order_id);
-void insertOrder(Order* order);
-Order** getOrdersMadeByEmail(const char* user_email);
-
-// OrderItem methods
-
-OrderItem* getOrderItemById(int order_item_id);
-void insertOrderItem(OrderItem* order_item);
-
-// Payment methods
-
-Payment* getPaymentById(int payment_id);
-void insertPayment(Payment* payment);
-Payment** getPaymentsMadeByEmail(const char* user_email);
-
-
+User* authenticateUser(PGconn* connection, const char* email, const char* password);
+User* registerUser(PGconn* connection, const char* email, const char* password);
 #endif

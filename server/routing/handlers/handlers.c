@@ -9,6 +9,7 @@
 #include "../../utils/jwt_helper/jwt_helper.h"
 #include "../../utils/http_helper/http_helper.h"
 #include "../../utils/file_helper/file_helper.h"
+#include "../../models/models.h"
 
 void homeHandler(RouterParams params) {
     TokenPayload* token = decodeToken(params.request.authorization);
@@ -33,12 +34,24 @@ void homeHandler(RouterParams params) {
 
 void loginHandler(RouterParams params) {
     char *response = "HTTP/1.1 401 Unauthorized\r\nContent-Length: 15\r\n\r\nNot Authorized!";
-    bool user = jsonCompare(params.request.body,"user","alex");
-    bool pw = jsonCompare(params.request.body,"password","123");
-    if(user && pw){
+    char* email = getValueFromJson(params.request.body,"email");
+    char* pw = getValueFromJson(params.request.body,"password");
+    if(email == NULL || pw == NULL){
+        free(email);
+        free(pw);
+        // 400 Bad Request
+        response = "HTTP/1.1 400 Bad Request\r\nContent-Length: 0\r\n\r\n";
+        send(params.thread_data->client_socket, response, strlen(response), 0);
+        return;
+    }
+    User* user = authenticateUser(params.thread_data->connection,email,pw);
+    free(email);
+    free(pw);
+    if(user!=NULL){
         TokenPayload payload;
-        payload.email = "alex";
-        payload.id = 69;
+        payload.email = user->email;
+        payload.id = user->id;
+        free(user);
         char* token = encodeToken(&payload);
         if (token == NULL) {
             response = "HTTP/1.1 500 Internal Server Error\r\nContent-Length: 23\r\n\r\nToken generation failed!";
@@ -67,24 +80,29 @@ void loginHandler(RouterParams params) {
 }
 
 void registerHandler(RouterParams params) {
-    printJsonKeysAndValues(params.request.body);
-    int count;
-    char** list = getListFromJson(params.request.body, "list", &count);
-
-    if (list != NULL) {
-        printf("List:\n");
-        for (int i = 0; i < count; i++) {
-            printf("%s\n", list[i]);
-        }
-        for (int i = 0; i < count; i++) {
-            free(list[i]);
-        }
-        free(list);
-    } else {
-        printf("Key not found in JSON.\n");
+    char* email = getValueFromJson(params.request.body,"email");
+    char* pw = getValueFromJson(params.request.body,"password");
+    if(email == NULL || pw == NULL){
+        free(email);
+        free(pw);
+        // 400 Bad Request
+        const char *response = "HTTP/1.1 400 Bad Request\r\nContent-Length: 0\r\n\r\n";
+        send(params.thread_data->client_socket, response, strlen(response), 0);
+        return;
     }
-    const char *response = "HTTP/1.1 200 OK\r\nContent-Length: 13\r\n\r\nHello, World!";
-    send(params.thread_data->client_socket, response, strlen(response), 0);
+    User* user = registerUser(params.thread_data->connection,email,pw);
+    free(email);
+    free(pw);
+    if(user!=NULL){
+        const char *response = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n";
+        send(params.thread_data->client_socket, response, strlen(response), 0);
+        free(user);
+        return;
+    }else {
+        // 500 Internal Server Error
+        const char *response = "HTTP/1.1 500 Internal Server Error\r\nContent-Length: 0\r\n\r\n";
+        send(params.thread_data->client_socket, response, strlen(response), 0);
+    }
 }
 // TODO utility per le date: utils/date_helper
 void sayHello(RouterParams params) {

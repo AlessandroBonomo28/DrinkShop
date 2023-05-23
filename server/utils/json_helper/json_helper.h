@@ -29,7 +29,7 @@ void jsonMap(const char* json, JSONMapCallback callback);
 
 char* formatQueryResultToJson(PGresult* result);
 
-const char* getValueFromJson(const char* json, const char* key);
+char* getValueFromJson(const char* json, const char* key);
 char** getListFromJson(const char* json, const char* key, int* out_count);
 
 bool existsKeyInJson(const char* json,const char* key);
