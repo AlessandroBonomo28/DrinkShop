@@ -22,9 +22,10 @@ User* authenticateUser(PGconn* connection, const char* email, const char* passwo
         }
         
         User* user = malloc(sizeof(User));
-        user->id = atoi(PQgetvalue(result, 0, 0));
-        user->password = PQgetvalue(result, 0, 1);
-        user->email = PQgetvalue(result, 0, 2);
+        user->id = atoi(strdup(PQgetvalue(result, 0, 0)));
+        user->password = strdup(PQgetvalue(result, 0, 1));
+        user->email = strdup(PQgetvalue(result, 0, 2));
+        PQclear(result);
         return user;
     } else {
         return NULL; // error

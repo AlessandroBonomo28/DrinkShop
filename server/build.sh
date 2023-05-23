@@ -13,7 +13,9 @@ gcc -o server \
     utils/jwt_helper/jwt_helper.c \
     utils/http_helper/http_helper.c \
     utils/file_helper/file_helper.c \
+    utils/crypt_helper/crypt_helper.c \
     models/models.c \
     -ljson-c \
     -lpq \
-    -ljwt
+    -ljwt \
+    -lcrypt

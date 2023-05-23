@@ -121,9 +121,9 @@ CREATE INDEX idx_order_items_order ON "OrderItems" ("id_order");
 CREATE INDEX idx_order_items_item ON "OrderItems" ("id_item");
 
 INSERT INTO "Users" ("email","password") VALUES
-    ('alex@gmail.com','123'),
-    ('mario@gmail.com','123');
-
+    ('alex@gmail.com','rbJPrGrTIacSw'), 
+    ('mario@gmail.com','rbJPrGrTIacSw');
+-- password: rbJPrGrTIacSw = 123
 INSERT INTO "Drinks" ("name", "description", "image_url", "price") VALUES
     ('Negroni', 'Descrizione bevanda 1','images/drinks/negroni.jpg', 2.5),
     ('Bevanda 2', 'Descrizione bevanda 2','images/drinks/negroni.jpg', 3.0),

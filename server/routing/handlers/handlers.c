@@ -10,6 +10,7 @@
 #include "../../utils/http_helper/http_helper.h"
 #include "../../utils/file_helper/file_helper.h"
 #include "../../models/models.h"
+#include "../../utils/crypt_helper/crypt_helper.h"
 //TODO sistemare il body delle risposte http
 void homeHandler(RouterParams params) {
     TokenPayload* token = decodeToken(params.request.authorization);
@@ -35,15 +36,17 @@ void homeHandler(RouterParams params) {
 void loginHandler(RouterParams params) {
     char *response = "HTTP/1.1 401 Unauthorized\r\nContent-Length: 15\r\n\r\nNot Authorized!";
     char* email = getValueFromJson(params.request.body,"email");
-    char* pw = getValueFromJson(params.request.body,"password");
-    if(email == NULL || pw == NULL){
+    char* plain_pw = getValueFromJson(params.request.body,"password");
+    if(email == NULL || plain_pw == NULL){
         free(email);
-        free(pw);
+        free(plain_pw);
         // 400 Bad Request
         response = "HTTP/1.1 400 Bad Request\r\nContent-Length: 0\r\n\r\n";
         send(params.thread_data->client_socket, response, strlen(response), 0);
         return;
     }
+    char* pw = encrypt(plain_pw);
+    free(plain_pw);
     User* user = authenticateUser(params.thread_data->connection,email,pw);
     free(email);
     free(pw);
@@ -81,15 +84,17 @@ void loginHandler(RouterParams params) {
 
 void registerHandler(RouterParams params) {
     char* email = getValueFromJson(params.request.body,"email");
-    char* pw = getValueFromJson(params.request.body,"password");
-    if(email == NULL || pw == NULL){
+    char* plain_pw = getValueFromJson(params.request.body,"password");
+    if(email == NULL || plain_pw == NULL){
         free(email);
-        free(pw);
+        free(plain_pw);
         // 400 Bad Request
         const char *response = "HTTP/1.1 400 Bad Request\r\nContent-Length: 0\r\n\r\n";
         send(params.thread_data->client_socket, response, strlen(response), 0);
         return;
     }
+    char* pw = encrypt(plain_pw);
+    free(plain_pw);
     User* user = registerUser(params.thread_data->connection,email,pw);
     free(email);
     free(pw);
