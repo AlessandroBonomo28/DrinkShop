@@ -43,4 +43,6 @@ User* registerUser(PGconn* connection, const char* email, const char* password);
 User* getUserById(PGconn* connection, int id);
 
 Drink* getDrinkById(PGconn* connection, int id);
+PGresult* getDrinks(PGconn* connection);
+PGresult* getUserOrders(PGconn* connection,int id);
 #endif

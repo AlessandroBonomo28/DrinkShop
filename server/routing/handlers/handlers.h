@@ -7,4 +7,7 @@ void loginHandler(RouterParams params);
 void registerHandler(RouterParams params);
 void getUserHandler(RouterParams params);
 void getDrinkImageHandler(RouterParams params);
+void getDrinkHandler(RouterParams params);
+void getDrinksHandler(RouterParams params);
+void getOrdersHandler(RouterParams params);
 #endif

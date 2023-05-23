@@ -165,3 +165,86 @@ void getDrinkImageHandler(RouterParams params) {
     }
     free(drink);
 }
+
+void getDrinkHandler(RouterParams params) {
+    const char* str_drink_id = getPathParameter(params.request.path);
+    if(str_drink_id == NULL){ 
+        const char *response = "HTTP/1.1 400 Bad Request\r\nContent-Length: 0\r\n\r\n";
+        send(params.thread_data->client_socket, response, strlen(response), 0);
+        return;
+    }
+    Drink* drink = getDrinkById(params.thread_data->connection,atoi(str_drink_id));
+    if(drink == NULL){
+        // 404 Drink not found
+        const char *response = "HTTP/1.1 404 Not Found\r\nContent-Length: 0\r\n\r\n";
+        send(params.thread_data->client_socket, response, strlen(response), 0);
+        return;
+    }
+    JsonProperty props[] = {
+        {"name", (void*)drink->name, STRING}, 
+        {"description", (void*)drink->description, STRING},
+        {"price", &drink->price, FLOAT},
+        {"id", &drink->id, INT},
+        {"image_url", (void*)drink->image_url, STRING}
+    };
+
+    int propsCount = sizeof(props) / sizeof(props[0]);
+    char* formattedJson = formatJsonProps(props, propsCount);
+    char response[1024];
+    snprintf(response, sizeof(response),
+        "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: %zu\r\n\r\n%s",
+        strlen(formattedJson),
+        formattedJson);
+    send(params.thread_data->client_socket, response, strlen(response), 0);
+    free(drink);
+    free(formattedJson);
+}
+
+void getDrinksHandler(RouterParams params) {
+    PGresult* drinks_result = getDrinks(params.thread_data->connection);
+    if(drinks_result == NULL){
+        // 404 Drink not found
+        const char *response = "HTTP/1.1 404 Not Found\r\nContent-Length: 0\r\n\r\n";
+        send(params.thread_data->client_socket, response, strlen(response), 0);
+        return;
+    }
+    char* json = formatQueryResultToJson(drinks_result);
+    char buffer[1024];
+    HttpResponse response;
+    response.code = "200 OK";
+    response.contentType = "application/json";
+    response.body = json;
+    formatHttpResponse(buffer, sizeof(buffer), &response);
+    send(params.thread_data->client_socket, buffer, strlen(buffer), 0);
+    free(json);
+    free(drinks_result);
+}
+
+void getOrdersHandler(RouterParams params) {
+    TokenPayload* token = decodeToken(params.request.authorization);
+    if(token!= NULL){
+        const char* decoded_email = token->email;
+        int decoded_id = token->id;
+        PGresult* orders_result = getUserOrders(params.thread_data->connection,decoded_id);
+        if(orders_result == NULL){
+            // 404 Drink not found
+            const char *response = "HTTP/1.1 404 Not Found\r\nContent-Length: 0\r\n\r\n";
+            send(params.thread_data->client_socket, response, strlen(response), 0);
+            return;
+        }
+        char* json = formatQueryResultToJson(orders_result);
+        char buffer[1024];
+        HttpResponse response;
+        response.code = "200 OK";
+        response.contentType = "application/json";
+        response.body = json;
+        formatHttpResponse(buffer, sizeof(buffer), &response);
+        send(params.thread_data->client_socket, buffer, strlen(buffer), 0);
+        free(json);
+        free(orders_result);
+        free(token);
+    } else {
+        const char *response = "HTTP/1.1 500 Server Error\r\nContent-Length: 0\r\n\r\n";
+        send(params.thread_data->client_socket, response, strlen(response), 0);
+    }
+}

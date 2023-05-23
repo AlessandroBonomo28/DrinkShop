@@ -120,3 +120,22 @@ Drink* getDrinkById(PGconn* connection, int id) {
 
     PQclear(result);
 }
+
+PGresult* getDrinks(PGconn* connection) {
+    const char* query = "SELECT * FROM \"Drinks\" ORDER BY \"id\" ASC;";
+    PGresult* result = PQexec(connection, query);
+    return result;
+}
+
+PGresult* getUserOrders(PGconn* connection,int id) {
+    const char* query = "SELECT * FROM \"Orders\" WHERE \"user_id\" = $1 ORDER BY \"id\" ASC;";
+    const char* param_values[1];
+    char id_str[10];
+    sprintf(id_str, "%d", id);
+    param_values[0] = id_str;
+    const int param_lengths[1] = { strlen(id_str) };
+    const int param_formats[1] = { 0 };
+
+    PGresult* result = PQexecParams(connection, query, 1, NULL, param_values, param_lengths, param_formats, 0);
+    return result;
+}
