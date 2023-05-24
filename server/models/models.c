@@ -149,7 +149,16 @@ PGresult* getDrinks(PGconn* connection) {
 }
 
 PGresult* getOrdersMadeByUser(PGconn* connection,int id) {
-    const char* query = "SELECT * FROM \"Orders\" WHERE \"id_user\" = $1 ORDER BY \"id\" ASC;";
+    const char* query = (
+        "SELECT \"Orders\".*, \"Payments\".\"id\" AS id_payment, \
+        \"Payments\".\"card_holder\", \"Payments\".\"card_number\", \
+        \"Payments\".\"CVV\", \"Payments\".\"expiration_date\", \
+        \"Payments\".\"creation_timestamp\", \"Payments\".\"amount\" \
+        FROM \"Orders\" \
+        FULL JOIN \"Payments\" ON \"Orders\".\"id\" = \"Payments\".\"id_order\" \
+        WHERE \"Orders\".\"id_user\" = $1 \
+        ORDER BY \"Orders\".\"id\" ASC"
+    );
     const char* param_values[1];
     char id_str[10];
     sprintf(id_str, "%d", id);
@@ -191,7 +200,11 @@ Order* getLastOrderMadeByUser(PGconn* connection, int id) {
 }
 
 PGresult* getOrderItemsByOrderId(PGconn* connection, int id, float *totalAmount) {
-    const char* query = "SELECT * FROM \"OrderItems\" INNER JOIN \"Drinks\" ON \"OrderItems\".\"id_item\" = \"Drinks\".\"id\" WHERE \"id_order\" = $1;";
+    const char* query = (
+        "SELECT * FROM \"OrderItems\" \
+         INNER JOIN \"Drinks\" ON \"OrderItems\".\"id_item\" = \"Drinks\".\"id\" \
+          WHERE \"id_order\" = $1;"
+    );
     const char* param_values[1];
     char id_str[10];
     sprintf(id_str, "%d", id);
