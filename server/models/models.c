@@ -165,8 +165,8 @@ Order* getLastOrderMadeByUser(PGconn* connection, int id) {
     }
 }
 
-PGresult* getOrderItemsByOrderId(PGconn* connection, int id) {
-    const char* query = "SELECT * FROM \"OrderItems\" WHERE \"id_order\" = $1;";
+PGresult* getOrderItemsByOrderId(PGconn* connection, int id, float *totalAmount) {
+    const char* query = "SELECT * FROM \"OrderItems\" INNER JOIN \"Drinks\" ON \"OrderItems\".\"id_item\" = \"Drinks\".\"id\" WHERE \"id_order\" = $1;";
     const char* param_values[1];
     char id_str[10];
     sprintf(id_str, "%d", id);
@@ -175,6 +175,12 @@ PGresult* getOrderItemsByOrderId(PGconn* connection, int id) {
     const int param_formats[1] = { 0 };
 
     PGresult* result = PQexecParams(connection, query, 1, NULL, param_values, param_lengths, param_formats, 0);
+    *totalAmount = 0;
+    for (int i = 0; i < PQntuples(result); i++) {
+        //printf("price = %s\n", PQgetvalue(result, i, 8));
+        //printf("quantity = %s\n", PQgetvalue(result, i, 3));
+        *totalAmount += atoi(PQgetvalue(result,i,3))*atof(PQgetvalue(result, i, 8));
+    }
     return result;
 }
 

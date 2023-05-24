@@ -253,6 +253,47 @@ void getOrdersMadeByUserHandler(RouterParams params) {
     }
 }
 
+char* formatOrderResponse(Order* order, PGresult* order_drinks_result,float total){
+    JsonProperty orderProps[] = {
+        {"id", &order->id, INT}, 
+        {"id_user", &order->id_user, INT},
+        {"creation_datetime", (void*)order->creation_datetime, STRING},
+        {"paid", &order->paid, BOOL}
+    };
+    int orderPropsCount = sizeof(orderProps) / sizeof(orderProps[0]);
+    char* formattedOrder = formatJsonProps(orderProps, orderPropsCount);
+     
+    if(order_drinks_result == NULL){
+        
+        free(formattedOrder);
+        return NULL;
+    }
+    char* jsonListDrinksOrdered = formatQueryResultToJson(order_drinks_result);
+    char buffer[1024];
+    HttpResponse response;
+    response.code = "200 OK";
+    response.contentType = "application/json";
+    /*
+    Formato
+    {
+        "drinks" : jsonListDrinksOrdered,
+        "order" : formattedOrder
+        "total" : total
+    }
+    */
+    char* total_str = malloc(sizeof(char) * 10);
+    snprintf(total_str, 10, "%f", total);
+    const size_t dim = sizeof(char) * (strlen(jsonListDrinksOrdered) + strlen(formattedOrder) + strlen(total_str) + 50);
+    char* body = malloc(dim);
+    snprintf(body, dim, "{\"drinks\":%s,\"order\":%s,\"total\":%s}", jsonListDrinksOrdered, formattedOrder, total_str);
+    response.body = body;
+    formatHttpResponse(buffer, sizeof(buffer), &response);
+    free(formattedOrder);
+    free(jsonListDrinksOrdered);
+    free(body);
+    free(total_str);
+    return strdup(buffer);
+}
 void getLastOrderMadeByUserHandler(RouterParams params){
     TokenPayload* token = decodeToken(params.request.authorization);
     if(token!= NULL){
@@ -262,50 +303,21 @@ void getLastOrderMadeByUserHandler(RouterParams params){
         if(order == NULL){
             const char *response = "HTTP/1.1 404 Not Found\r\nContent-Length: 0\r\n\r\n";
             send(params.thread_data->client_socket, response, strlen(response), 0);
-            free(token);
             return;
         } else {
-            JsonProperty orderProps[] = {
-                {"id", &order->id, INT}, 
-                {"id_user", &order->id_user, INT},
-                {"creation_datetime", (void*)order->creation_datetime, STRING},
-                {"paid", &order->paid, BOOL}
-            };
-            int orderPropsCount = sizeof(orderProps) / sizeof(orderProps[0]);
-            char* formattedOrder = formatJsonProps(orderProps, orderPropsCount);
-            //printf("formattedOrder: %s\n", formattedOrder);
-            PGresult* order_drinks_result = getOrderItemsByOrderId(params.thread_data->connection,order->id);
-            if(order_drinks_result == NULL){
+            float total;
+            PGresult* res = getOrderItemsByOrderId(params.thread_data->connection,order->id,&total);
+            if(res == NULL){
                 const char *response = "HTTP/1.1 500 Server Error\r\nContent-Length: 0\r\n\r\n";
                 send(params.thread_data->client_socket, response, strlen(response), 0);
-                free(token);
                 free(order);
-                free(formattedOrder);
+                free(token);
                 return;
             }
-            char* jsonListDrinksOrdered = formatQueryResultToJson(order_drinks_result);
-            //printf("jsonListDrinksOrdered: %s\n", jsonListDrinksOrdered);
-            char buffer[1024];
-            HttpResponse response;
-            response.code = "200 OK";
-            response.contentType = "application/json";
-            /*
-            Formato
-            {
-                "drinks" : jsonListDrinksOrdered,
-                "order" : formattedOrder 
-            }
-            */
-            const size_t dim = sizeof(char) * (strlen(jsonListDrinksOrdered) + strlen(formattedOrder) + 42);
-            char* body = malloc(dim);
-            snprintf(body, dim, "{\"drinks\":%s,\"order\":%s}", jsonListDrinksOrdered, formattedOrder);
-            response.body = body;
-            formatHttpResponse(buffer, sizeof(buffer), &response);
-            send(params.thread_data->client_socket, buffer, strlen(buffer), 0);
-            free(formattedOrder);
-            free(jsonListDrinksOrdered);
-            PQclear(order_drinks_result);
-            free(body);
+            char* response = formatOrderResponse(order,res,total);
+            
+            send(params.thread_data->client_socket, response, strlen(response), 0);
+            PQclear(res);
             free(order);
         }
         free(token);
@@ -339,37 +351,19 @@ void getOrderHandler(RouterParams params){
             free(order);
             return;
         }
-        JsonProperty orderProps[] = {
-            {"id", &order->id, INT}, 
-            {"id_user", &order->id_user, INT},
-            {"creation_datetime", (void*)order->creation_datetime, STRING},
-            {"paid", &order->paid, BOOL}
-        };
-        int orderPropsCount = sizeof(orderProps) / sizeof(orderProps[0]);
-        char* formattedOrder = formatJsonProps(orderProps, orderPropsCount);
-        PGresult* order_drinks_result = getOrderItemsByOrderId(params.thread_data->connection,order->id);
-        if(order_drinks_result == NULL){
+        float total;
+        PGresult* res = getOrderItemsByOrderId(params.thread_data->connection,order->id,&total);
+        if(res == NULL){
             const char *response = "HTTP/1.1 500 Server Error\r\nContent-Length: 0\r\n\r\n";
             send(params.thread_data->client_socket, response, strlen(response), 0);
             free(order);
-            free(formattedOrder);
+            free(token);
             return;
         }
-        char* jsonListDrinksOrdered = formatQueryResultToJson(order_drinks_result);
-        char buffer[1024];
-        HttpResponse response;
-        response.code = "200 OK";
-        response.contentType = "application/json";
-        const size_t dim = sizeof(char) * (strlen(jsonListDrinksOrdered) + strlen(formattedOrder) + 42);
-        char* body = malloc(dim);
-        snprintf(body, dim, "{\"drinks\":%s,\"order\":%s}", jsonListDrinksOrdered, formattedOrder);
-        response.body = body;
-        formatHttpResponse(buffer, sizeof(buffer), &response);
-        send(params.thread_data->client_socket, buffer, strlen(buffer), 0);
-        free(formattedOrder);
-        free(jsonListDrinksOrdered);
-        PQclear(order_drinks_result);
-        free(body);
+        char* response = formatOrderResponse(order,res,total);
+        
+        send(params.thread_data->client_socket, response, strlen(response), 0);
+        PQclear(res);
         free(order);
     } else {
         const char *response = "HTTP/1.1 500 Server Error\r\nContent-Length: 0\r\n\r\n";
@@ -382,9 +376,6 @@ json request:
     "id_drink": 1,
     "quantity": 2
 }
-prendi dal token l'id dell'utente e usa la funzione orderDrink,
-se ritorna false allora errore 500, altrimenti ritorna 200.
-attenzione alle free
 */
 void orderDrinkHandler(RouterParams params){
     if(!existsKeyInJson(params.request.body, "id_drink") ||

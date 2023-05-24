@@ -159,27 +159,29 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION delete_order(order_id_par int)
+CREATE OR REPLACE FUNCTION delete_unpaid_order(id_user_par int)
 RETURNS void AS $$
 BEGIN
-    -- Verifica se l'Order esiste e se è un Order non pagato (paid = false)
+    -- Verifica se esistono ordini non pagati per l'utente specificato
     IF EXISTS (
         SELECT 1
         FROM "Orders"
-        WHERE "id" = order_id_par
+        WHERE "id_user" = id_user_par
         AND "paid" = false
     ) THEN
-        -- Elimina l'Order
+        -- Elimina gli ordini non pagati dell'utente
         DELETE FROM "Orders"
-        WHERE "id" = order_id_par;
+        WHERE "id_user" = id_user_par
+        AND "paid" = false;
     ELSE
-        -- Se l'Order non esiste o è già pagato, lancia un'eccezione
-        RAISE EXCEPTION 'L''Order non può essere cancellato perché non esiste o è già pagato.';
+        -- Se non ci sono ordini non pagati per l'utente, lancia un'eccezione
+        RAISE EXCEPTION 'Non ci sono ordini non pagati per l''utente specificato.';
     END IF;
 
     RETURN;
 END;
 $$ LANGUAGE plpgsql;
+
 
 
 CREATE OR REPLACE FUNCTION update_order_quantity(id_order_drink int, new_quantity int)
