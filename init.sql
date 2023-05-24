@@ -43,7 +43,7 @@ ALTER TABLE "Users"
 ADD CONSTRAINT "check_email_format"
 CHECK ("email" ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$');
 
-ALTER TABLE "OrderItems" ADD FOREIGN KEY ("id_order") REFERENCES "Orders" ("id");
+ALTER TABLE "OrderItems" ADD FOREIGN KEY ("id_order") REFERENCES "Orders" ("id") ON DELETE CASCADE;
 ALTER TABLE "OrderItems" ADD FOREIGN KEY ("id_item") REFERENCES "Drinks" ("id");
 ALTER TABLE "Orders" ADD FOREIGN KEY ("id_user") REFERENCES "Users" ("id");
 ALTER TABLE "Payments" ADD FOREIGN KEY ("id_order") REFERENCES "Orders" ("id");
@@ -143,6 +143,57 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+CREATE OR REPLACE FUNCTION update_quantity(id_order_drink int, new_quantity float)
+RETURNS void AS $$
+DECLARE
+    order_id int;
+    order_paid boolean;
+BEGIN
+    -- Controlla se l'OrderItem esiste e appartiene a un Order con paid = false
+    SELECT "id_order", "paid" INTO order_id, order_paid
+    FROM "OrderItems"
+    INNER JOIN "Orders" ON "OrderItems"."id_order" = "Orders"."id"
+    WHERE "OrderItems"."id" = id_order_drink
+    AND "Orders"."paid" = false;
+    
+    IF order_id IS NULL THEN
+        RAISE EXCEPTION 'L''OrderItem specificato non esiste o appartiene a un Order con paid = true.';
+    END IF;
+    
+    -- Aggiorna la quantità dell'OrderItem
+    UPDATE "OrderItems"
+    SET "quantity" = new_quantity
+    WHERE "id" = id_order_drink;
+    
+    RETURN;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION delete_order_drink(id_order_drink int)
+RETURNS void AS $$
+DECLARE
+    order_id int;
+    order_paid boolean;
+BEGIN
+    -- Controlla se l'OrderItem esiste e appartiene a un Order con paid = false
+    SELECT "id_order", "paid" INTO order_id, order_paid
+    FROM "OrderItems"
+    INNER JOIN "Orders" ON "OrderItems"."id_order" = "Orders"."id"
+    WHERE "OrderItems"."id" = id_order_drink
+    AND "Orders"."paid" = false;
+    
+    IF order_id IS NULL THEN
+        RAISE EXCEPTION 'L''OrderItem specificato non esiste o appartiene a un Order con paid = true.';
+    END IF;
+    
+    -- Cancella l'OrderItem
+    DELETE FROM "OrderItems"
+    WHERE "id" = id_order_drink;
+    
+    RETURN;
+END;
+$$ LANGUAGE plpgsql;
 
 -- Aggiungo indici di accesso per migliorare performance
 CREATE INDEX idx_orders_user ON "Orders" ("id_user");
