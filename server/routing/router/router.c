@@ -13,7 +13,7 @@ Route routes[] = {
     { "POST", "/login", NO_MIDDLEWARE, loginHandler },
     { "POST", "/register", NO_MIDDLEWARE, registerHandler },
     { "GET", "/", requiresAuth, homeHandler },
-    { "GET", "/user/:id", requiresAuth, getUserHandler }, 
+    { "GET", "/user/:email", requiresAuth, getUserHandler }, 
     { "GET", "/drink/image/:id", NO_MIDDLEWARE, getDrinkImageHandler },
     { "GET", "/drink/:id", NO_MIDDLEWARE, getDrinkHandler },
     { "GET", "/drinks", NO_MIDDLEWARE, getDrinksHandler },
@@ -48,8 +48,7 @@ void routeRequest(RouterParams params) {
 }
 
 // match per routes con sintassi "basepath/:param"
-// esempio: /user/:id deve matchare con la request /user/1 ma
-// non deve matchare con /user/1/orders
+// esempio: /user/:id deve matchare con la request /user/1
 bool matchesPath(const char* requestPath, const char* routePath) {
     int requestPathLen = strlen(requestPath);
     int routePathLen = strlen(routePath);
@@ -63,26 +62,28 @@ bool matchesPath(const char* requestPath, const char* routePath) {
     // Controlla se il routePath corrisponde al percorso della richiesta con un parametro dinamico
     int paramIdx = paramPos - routePath + 1;  // Indice del primo carattere del parametro (ignorando "/")
     int staticPartLen = paramIdx - 1;  // Lunghezza della parte statica del percorso (ignorando "/")
-    int dynamicPartLen = routePathLen - paramIdx - 1;  // Lunghezza della parte dinamica del percorso (ignorando "/:")
     bool match = false;
 
-    if (requestPathLen >= staticPartLen + dynamicPartLen) {
+    if (requestPathLen >= staticPartLen) {
         // Verifica se la parte statica corrisponde
         if (strncmp(requestPath, routePath, staticPartLen) == 0) {
             match = true;
             // Verifica se la parte dinamica corrisponde
             const char* requestDynamicPart = requestPath + staticPartLen;
-            const char* routeDynamicPart = routePath + paramIdx;
-            int remainingLen = requestPathLen - staticPartLen - dynamicPartLen;
-            if (remainingLen > 0 && strncmp(requestDynamicPart, routeDynamicPart, remainingLen) != 0) {
-                match = false;
+            const char* nextSlashPos = strchr(requestDynamicPart, '/');
+            if (nextSlashPos != NULL) {
+                int dynamicPartLen = nextSlashPos - requestDynamicPart;
+                const char* routeDynamicPart = routePath + paramIdx;
+                int remainingLen = requestPathLen - staticPartLen - dynamicPartLen;
+                if (remainingLen > 0 && strncmp(requestDynamicPart, routeDynamicPart, dynamicPartLen) != 0) {
+                    match = false;
+                }
             }
         }
     }
 
     return match;
 }
-
 
 
 const char* getPathParameter(const char* path) {

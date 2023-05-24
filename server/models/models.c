@@ -87,6 +87,31 @@ User* getUserById(PGconn* connection, int id) {
     }
 }
 
+User* getUserByEmail(PGconn* connection, const char* email) {
+    const char* query = "SELECT * FROM \"Users\" WHERE \"email\" = $1;";
+    const char* param_values[1];
+    param_values[0] = email;
+    const int param_lengths[1] = { strlen(email) };
+    const int param_formats[1] = { 0 };
+
+    PGresult* result = PQexecParams(connection, query, 1, NULL, param_values, param_lengths, param_formats, 0);
+
+    if (PQresultStatus(result) == PGRES_TUPLES_OK) {
+        int rows = PQntuples(result);
+        if (rows == 0) {
+            return NULL;
+        }
+        
+        User* user = malloc(sizeof(User));
+        user->id = atoi(strdup(PQgetvalue(result, 0, 0)));
+        user->password = strdup(PQgetvalue(result, 0, 1));
+        user->email = strdup(PQgetvalue(result, 0, 2));
+        PQclear(result);
+        return user;
+    } else {
+        return NULL; // error
+    }
+}
 Drink* getDrinkById(PGconn* connection, int id) {
     const char* query = "SELECT * FROM \"Drinks\" WHERE \"id\" = $1;";
     const char* param_values[1];

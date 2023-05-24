@@ -111,14 +111,14 @@ void registerHandler(RouterParams params) {
 }
 
 void getUserHandler(RouterParams params) {
-    const char* str_id = getPathParameter(params.request.path);
-    if(str_id == NULL){
+    const char* email_par = getPathParameter(params.request.path);
+    if(email_par == NULL){
         // 400 Bad Request
         const char *response = "HTTP/1.1 400 Bad Request\r\nContent-Length: 0\r\n\r\n";
         send(params.thread_data->client_socket, response, strlen(response), 0);
         return;
     }
-    User* user = getUserById(params.thread_data->connection,atoi(str_id));
+    User* user = getUserByEmail(params.thread_data->connection,email_par);
     if(user != NULL){
         JsonProperty props[] = {
             {"email", (void*)user->email, STRING}, 
