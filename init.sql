@@ -118,10 +118,11 @@ BEFORE INSERT ON "Orders"
 FOR EACH ROW
 EXECUTE FUNCTION check_last_order_payment_status();
 
-CREATE OR REPLACE FUNCTION order_drink(id_user_par int, id_drink int,  quantity_par int)
+CREATE OR REPLACE FUNCTION order_drink(id_user_par int, id_drink int, quantity_par int)
 RETURNS void AS $$
 DECLARE
     order_id int;
+    existing_quantity int;
 BEGIN
     -- Controlla se esiste un ordine in corso (paid = false) per l'utente corrente
     SELECT "id" INTO order_id
@@ -136,15 +137,52 @@ BEGIN
         SELECT lastval() INTO order_id;
     END IF;
     
-    -- Crea un nuovo orderItem con l'id_item fornito e l'id_order ottenuto
-    INSERT INTO "OrderItems" ("id_order", "id_item", "quantity") VALUES (order_id, id_drink, quantity_par);
+    -- Controlla se esiste già un OrderItem con lo stesso id_item e collegato allo stesso Order
+    SELECT "quantity" INTO existing_quantity
+    FROM "OrderItems"
+    WHERE "id_order" = order_id
+    AND "id_item" = id_drink;
+    
+    IF FOUND THEN
+        -- Aggiorna la quantità dell'OrderItem esistente
+        UPDATE "OrderItems"
+        SET "quantity" = existing_quantity + quantity_par
+        WHERE "id_order" = order_id
+        AND "id_item" = id_drink;
+    ELSE
+        -- Crea un nuovo OrderItem con l'id_item fornito e l'id_order ottenuto
+        INSERT INTO "OrderItems" ("id_order", "id_item", "quantity") VALUES (order_id, id_drink, quantity_par);
+    END IF;
     
     RETURN;
 END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION update_quantity(id_order_drink int, new_quantity float)
+CREATE OR REPLACE FUNCTION delete_order(order_id_par int)
+RETURNS void AS $$
+BEGIN
+    -- Verifica se l'Order esiste e se è un Order non pagato (paid = false)
+    IF EXISTS (
+        SELECT 1
+        FROM "Orders"
+        WHERE "id" = order_id_par
+        AND "paid" = false
+    ) THEN
+        -- Elimina l'Order
+        DELETE FROM "Orders"
+        WHERE "id" = order_id_par;
+    ELSE
+        -- Se l'Order non esiste o è già pagato, lancia un'eccezione
+        RAISE EXCEPTION 'L''Order non può essere cancellato perché non esiste o è già pagato.';
+    END IF;
+
+    RETURN;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION update_order_quantity(id_order_drink int, new_quantity int)
 RETURNS void AS $$
 DECLARE
     order_id int;

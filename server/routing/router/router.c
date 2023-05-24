@@ -18,9 +18,9 @@ Route routes[] = {
     { "GET", "/drink/:id", NO_MIDDLEWARE, getDrinkHandler },
     { "GET", "/drinks", NO_MIDDLEWARE, getDrinksHandler },
     { "POST", "/order/drink", requiresAuth, orderDrinkHandler },
-    // TODO PUT /order/drink/:id (modifica la quantità di un drink nell'ordine corrente) auth
-    // TODO DELETE /order/last/unpaid (eliminare l'ordine corrente non pagato) auth ATTENZIONE forbidden ordini chiusi
-    // TODO DELETE /order/drink/:id (eliminare un drink dall'ordine corrente) auth forbidden ordini chiusi
+    //{ "PUT", "/order/drink/:id", requiresAuth, updateDrinkQuantityInOrderHandler }, // TODO
+    //{ "DELETE", "/order/:id", requiresAuth, deleteOrderHandler }, // TODO
+    //{ "DELETE", "/order/drink/:id", requiresAuth, deleteDrinkFromOrderHandler }, //TODO
     { "GET", "/order/last", requiresAuth, getLastOrderMadeByUserHandler },
     { "GET", "/orders", requiresAuth, getOrdersMadeByUserHandler },
     { "GET", "/order/:id", requiresAuth, getOrderHandler },
