@@ -1,4 +1,3 @@
-// includi libreria postgres
 #include <postgresql/libpq-fe.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -149,6 +148,8 @@ PGresult* getDrinks(PGconn* connection) {
 }
 
 PGresult* getOrdersMadeByUser(PGconn* connection,int id) {
+    // bisogna selezionare in questo modo per evitare che gli attributi 
+    // di due tabelle diverse abbiano lo stesso nome
     const char* query = (
         "SELECT \"Orders\".*, \"Payments\".\"id\" AS id_payment, \
         \"Payments\".\"card_holder\", \"Payments\".\"card_number\", \
@@ -200,10 +201,14 @@ Order* getLastOrderMadeByUser(PGconn* connection, int id) {
 }
 
 PGresult* getOrderItemsByOrderId(PGconn* connection, int id, float *totalAmount) {
+    // bisogna selezionare in questo modo per evitare di avere attributi con lo stesso nome
     const char* query = (
-        "SELECT * FROM \"OrderItems\" \
-         INNER JOIN \"Drinks\" ON \"OrderItems\".\"id_item\" = \"Drinks\".\"id\" \
-          WHERE \"id_order\" = $1;"
+        "SELECT \"OrderItems\".*, \"Drinks\".\"id\" as \"id_drink\", \"Drinks\".\"name\", \
+         \"Drinks\".\"description\", \"Drinks\".\"image_url\", \"Drinks\".\"price\" \
+        FROM \"OrderItems\" \
+        INNER JOIN \"Drinks\" ON \"OrderItems\".\"id_item\" = \"Drinks\".\"id\" \
+        WHERE \"id_order\" = $1;"
+
     );
     const char* param_values[1];
     char id_str[10];
@@ -266,6 +271,44 @@ bool orderDrink(PGconn* connection, int id_user, int id_drink, int quantity){
     const int param_formats[3] = { 0, 0, 0 };
 
     PGresult* result = PQexecParams(connection, query, 3, NULL, param_values, param_lengths, param_formats, 0);
+    if(PQresultStatus(result) == PGRES_TUPLES_OK){
+        PQclear(result);
+        return true;
+    } else{
+        PQclear(result);
+        return false;
+    }
+}
+
+bool deleteDrinkFromOrder(PGconn* connection, int id_drink){
+    const char* query = "SELECT delete_order_drink($1);";
+    const char* param_values[1];
+    char id_drink_str[10];
+    sprintf(id_drink_str, "%d", id_drink);
+    param_values[0] = id_drink_str;
+    const int param_lengths[1] = { strlen(id_drink_str) };
+    const int param_formats[1] = { 0 };
+
+    PGresult* result = PQexecParams(connection, query, 1, NULL, param_values, param_lengths, param_formats, 0);
+    if(PQresultStatus(result) == PGRES_TUPLES_OK){
+        PQclear(result);
+        return true;
+    } else{
+        PQclear(result);
+        return false;
+    }
+}
+
+bool deleteUnpaidOrder(PGconn* connection, int id_user){
+    const char* query = "SELECT delete_unpaid_order($1);";
+    const char* param_values[1];
+    char id_user_str[10];
+    sprintf(id_user_str, "%d", id_user);
+    param_values[0] = id_user_str;
+    const int param_lengths[1] = { strlen(id_user_str) };
+    const int param_formats[1] = { 0 };
+
+    PGresult* result = PQexecParams(connection, query, 1, NULL, param_values, param_lengths, param_formats, 0);
     if(PQresultStatus(result) == PGRES_TUPLES_OK){
         PQclear(result);
         return true;

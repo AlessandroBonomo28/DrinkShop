@@ -409,3 +409,38 @@ void orderDrinkHandler(RouterParams params){
     }
         
 }
+
+void deleteDrinkFromOrderHandler(RouterParams params){
+    const char* std_id_drink_order = getPathParameter(params.request.path);
+    if(std_id_drink_order == NULL){ 
+        const char *response = "HTTP/1.1 400 Bad Request\r\nContent-Length: 0\r\n\r\n";
+        send(params.thread_data->client_socket, response, strlen(response), 0);
+        return;
+    }
+    bool deleted = deleteDrinkFromOrder(params.thread_data->connection,atoi(std_id_drink_order));
+    if(deleted){
+        const char *response = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n";
+        send(params.thread_data->client_socket, response, strlen(response), 0);
+    } else {
+        const char *response = "HTTP/1.1 500 Server Error\r\nContent-Length: 0\r\n\r\n";
+        send(params.thread_data->client_socket, response, strlen(response), 0);
+    }
+}
+
+void deleteOrderHandler(RouterParams params) {
+    TokenPayload *token = decodeToken(params.request.authorization);
+    if(token == NULL){
+        const char *response = "HTTP/1.1 500 Server Error\r\nContent-Length: 0\r\n\r\n";
+        send(params.thread_data->client_socket, response, strlen(response), 0);
+        return;
+    }
+    bool deleted = deleteUnpaidOrder(params.thread_data->connection,token->id);
+    free(token);
+    if(deleted){
+        const char *response = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n";
+        send(params.thread_data->client_socket, response, strlen(response), 0);
+    } else {
+        const char *response = "HTTP/1.1 500 Server Error\r\nContent-Length: 0\r\n\r\n";
+        send(params.thread_data->client_socket, response, strlen(response), 0);
+    }
+}

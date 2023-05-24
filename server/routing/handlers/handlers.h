@@ -13,4 +13,6 @@ void getOrdersMadeByUserHandler(RouterParams params);
 void getLastOrderMadeByUserHandler(RouterParams params);
 void getOrderHandler(RouterParams params);
 void orderDrinkHandler(RouterParams params);
+void deleteDrinkFromOrderHandler(RouterParams params);
+void deleteOrderHandler(RouterParams params);
 #endif

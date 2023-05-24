@@ -13,14 +13,14 @@ Route routes[] = {
     { "POST", "/login", NO_MIDDLEWARE, loginHandler },
     { "POST", "/register", NO_MIDDLEWARE, registerHandler },
     { "GET", "/", requiresAuth, homeHandler },
-    { "GET", "/user/:email", requiresAuth, getUserHandler }, 
+    { "GET", "/user/:email", NO_MIDDLEWARE, getUserHandler }, 
     { "GET", "/drink/image/:id", NO_MIDDLEWARE, getDrinkImageHandler },
     { "GET", "/drink/:id", NO_MIDDLEWARE, getDrinkHandler },
     { "GET", "/drinks", NO_MIDDLEWARE, getDrinksHandler },
     { "POST", "/order/drink", requiresAuth, orderDrinkHandler },
     //{ "PUT", "/order/drink/:id", requiresAuth, updateDrinkQuantityInOrderHandler }, // TODO
-    //{ "DELETE", "/order", requiresAuth, deleteOrderHandler }, // TODO
-    //{ "DELETE", "/order/drink/:id", requiresAuth, deleteDrinkFromOrderHandler }, //TODO
+    { "DELETE", "/order", requiresAuth, deleteOrderHandler },
+    { "DELETE", "/order/drink/:id", requiresAuth, deleteDrinkFromOrderHandler},
     { "GET", "/order/last", requiresAuth, getLastOrderMadeByUserHandler },
     { "GET", "/orders", requiresAuth, getOrdersMadeByUserHandler },
     { "GET", "/order/:id", requiresAuth, getOrderHandler },
