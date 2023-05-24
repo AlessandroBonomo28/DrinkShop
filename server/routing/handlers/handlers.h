@@ -12,4 +12,5 @@ void getDrinksHandler(RouterParams params);
 void getOrdersMadeByUserHandler(RouterParams params);
 void getLastOrderMadeByUserHandler(RouterParams params);
 void getOrderHandler(RouterParams params);
+void orderDrinkHandler(RouterParams params);
 #endif

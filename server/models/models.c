@@ -206,3 +206,27 @@ Order* getOrderById(PGconn* connection, int id) {
         return NULL; // error
     }
 }
+bool orderDrink(PGconn* connection, int id_user, int id_drink, int quantity){
+    const char* query = "SELECT order_drink($1,$2,$3);";
+    const char* param_values[3];
+    char id_user_str[10];
+    sprintf(id_user_str, "%d", id_user);
+    param_values[0] = id_user_str;
+    char id_drink_str[10];
+    sprintf(id_drink_str, "%d", id_drink);
+    param_values[1] = id_drink_str;
+    char quantity_str[10];
+    sprintf(quantity_str, "%d", quantity);
+    param_values[2] = quantity_str;
+    const int param_lengths[3] = { strlen(id_user_str), strlen(id_drink_str), strlen(quantity_str) };
+    const int param_formats[3] = { 0, 0, 0 };
+
+    PGresult* result = PQexecParams(connection, query, 3, NULL, param_values, param_lengths, param_formats, 0);
+    if(PQresultStatus(result) == PGRES_TUPLES_OK){
+        PQclear(result);
+        return true;
+    } else{
+        PQclear(result);
+        return false;
+    }
+}

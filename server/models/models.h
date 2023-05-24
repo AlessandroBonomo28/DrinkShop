@@ -18,7 +18,7 @@ typedef struct {
 typedef struct {
     int id;
     int id_user;
-    const char* creation_datetime; // TODO date type
+    const char* creation_datetime;
     bool paid;
 } Order;
 
@@ -29,12 +29,16 @@ typedef struct {
     int quantity;
 } OrderItem;
 
+
 typedef struct {
     int id;
     int id_order;
     int id_user;
-    const char* provider;
-    const char* creation_datetime; // TODO date type
+    const char* card_holder;
+    const char* card_number;
+    const char* CVV;
+    const char* expiration_date;
+    const char* creation_datetime;
     float amount;
 } Payment;
 
@@ -48,4 +52,5 @@ PGresult* getOrdersMadeByUser(PGconn* connection,int id);
 Order* getLastOrderMadeByUser(PGconn* connection, int id);
 PGresult* getOrderItemsByOrderId(PGconn* connection, int id);
 Order* getOrderById(PGconn* connection, int id);
+bool orderDrink(PGconn* connection, int id_user, int id_drink, int quantity);
 #endif

@@ -16,7 +16,10 @@ CREATE TABLE "Payments" (
   "id" SERIAL PRIMARY KEY,
   "id_order" int NOT NULL UNIQUE,
   "id_user" int NOT NULL,
-  "provider" VARCHAR(50),
+  "card_holder" VARCHAR(50),
+  "card_number" VARCHAR(16),
+  "CVV" VARCHAR(6),
+  "expiration_date" VARCHAR(5),
   "creation_timestamp" timestamp DEFAULT CURRENT_TIMESTAMP,
   "amount" float NOT NULL
 );
@@ -114,6 +117,32 @@ CREATE TRIGGER check_last_order_payment_status_trigger
 BEFORE INSERT ON "Orders"
 FOR EACH ROW
 EXECUTE FUNCTION check_last_order_payment_status();
+
+CREATE OR REPLACE FUNCTION order_drink(id_user_par int, id_drink int,  quantity_par int)
+RETURNS void AS $$
+DECLARE
+    order_id int;
+BEGIN
+    -- Controlla se esiste un ordine in corso (paid = false) per l'utente corrente
+    SELECT "id" INTO order_id
+    FROM "Orders"
+    WHERE "id_user" = id_user_par
+    AND "paid" = false
+    LIMIT 1;
+    
+    IF order_id IS NULL THEN
+        -- Se non esiste un ordine in corso, crea un nuovo ordine
+        INSERT INTO "Orders" ("id_user") VALUES (id_user_par);
+        SELECT lastval() INTO order_id;
+    END IF;
+    
+    -- Crea un nuovo orderItem con l'id_item fornito e l'id_order ottenuto
+    INSERT INTO "OrderItems" ("id_order", "id_item", "quantity") VALUES (order_id, id_drink, quantity_par);
+    
+    RETURN;
+END;
+$$ LANGUAGE plpgsql;
+
 
 -- Aggiungo indici di accesso per migliorare performance
 CREATE INDEX idx_orders_user ON "Orders" ("id_user");

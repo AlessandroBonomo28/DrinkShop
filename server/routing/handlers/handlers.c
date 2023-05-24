@@ -376,3 +376,45 @@ void getOrderHandler(RouterParams params){
         send(params.thread_data->client_socket, response, strlen(response), 0);
     }
 }
+/*
+json request:
+{
+    "id_drink": 1,
+    "quantity": 2
+}
+prendi dal token l'id dell'utente e usa la funzione orderDrink,
+se ritorna false allora errore 500, altrimenti ritorna 200.
+attenzione alle free
+*/
+void orderDrinkHandler(RouterParams params){
+    if(!existsKeyInJson(params.request.body, "id_drink") ||
+        !existsKeyInJson(params.request.body, "quantity")){
+        const char *response = "HTTP/1.1 400 Bad Request\r\nContent-Length: 0\r\n\r\n";
+        send(params.thread_data->client_socket, response, strlen(response), 0);
+    }
+    char* str_id_drink = getValueFromJson(params.request.body, "id_drink");
+    int id_drink = atoi(str_id_drink);
+    free(str_id_drink);
+    char* str_quantity = getValueFromJson(params.request.body, "quantity");
+    int quantity = atoi(str_quantity);
+    free(str_quantity);
+    printf("id_drink: %d, quantity: %d\n", id_drink, quantity);
+    TokenPayload* token = decodeToken(params.request.authorization);
+    if(token!= NULL){
+        const char* decoded_email = token->email;
+        int decoded_id = token->id;
+        bool result = orderDrink(params.thread_data->connection, decoded_id, id_drink, quantity);
+        if(result){
+            const char *response = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n";
+            send(params.thread_data->client_socket, response, strlen(response), 0);
+        } else {
+            const char *response = "HTTP/1.1 500 Server Error\r\nContent-Length: 0\r\n\r\n";
+            send(params.thread_data->client_socket, response, strlen(response), 0);
+        }
+        free(token);
+    } else {
+        const char *response = "HTTP/1.1 500 Server Error\r\nContent-Length: 0\r\n\r\n";
+        send(params.thread_data->client_socket, response, strlen(response), 0);
+    }
+        
+}
