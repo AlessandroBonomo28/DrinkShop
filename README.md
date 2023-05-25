@@ -50,9 +50,9 @@ docker compose up
  - Custom socket timeout
  - Gestione interrupt sigterm di terminazione (esempio CTRL+C)
  - Messaggi di stato del server sulle connessioni attive e eventi
- # Cosa si potrebbe aggiungere
- - IP spam filter
- - Incomplete request detection
  ### 404 Server custom response
  Quando il router non trova la route richiesta serve il client con un codice 404 e questa immagine:
 ![404](https://github.com/AlessandroBonomo28/DrinkShop/assets/75626033/0ce9c02a-5902-4b20-9742-b2f655e3f2d4)
+ # Cosa si potrebbe aggiungere
+ - IP spam filter
+ - Incomplete request detection
