@@ -36,8 +36,8 @@ cd <root progetto>
 docker compose up
  ```
  # Features del server
- - Elabora richieste Http
- - Parsing di richieste con body application/json
+ - Elabora richieste Http GET,POST,PUT,DELETE
+ - Parsing di richieste Http con body application/json
  - Risposte Http con content application/json
  - Smart path routing con URL parameter (esempio: /user, /user/:id) 
  - Può includere files nella risposta Http
