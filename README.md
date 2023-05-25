@@ -7,7 +7,7 @@
 
 prima di fare il *compose dei container* assicurarsi che il server non sia configurato in debug mode. Controllare che la stringa di connessione al database *PRODUCTION CONFIGURATION* non sia commentata.
  ```
- // server.c
+ // Configurazione del file server.h
  
  // PRODUCTION CONFIGURATION 
 #define DATABASE "host=postgres-db port=5432 dbname=drinks user=docker password=12345"
