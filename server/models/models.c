@@ -27,7 +27,7 @@ User* authenticateUser(PGconn* connection, const char* email, const char* passwo
         PQclear(result);
         return user;
     } else {
-        return NULL; // error
+        return NULL; 
     }
 }
 
@@ -54,7 +54,7 @@ User* registerUser(PGconn* connection, const char* email, const char* password) 
         PQclear(result);
         return user;
     } else {
-        return NULL; // error
+        return NULL; 
     }
 }
 
@@ -82,7 +82,7 @@ User* getUserById(PGconn* connection, int id) {
         PQclear(result);
         return user;
     } else {
-        return NULL; // error
+        return NULL; 
     }
 }
 
@@ -108,7 +108,7 @@ User* getUserByEmail(PGconn* connection, const char* email) {
         PQclear(result);
         return user;
     } else {
-        return NULL; // error
+        return NULL; 
     }
 }
 Drink* getDrinkById(PGconn* connection, int id) {
@@ -137,7 +137,7 @@ Drink* getDrinkById(PGconn* connection, int id) {
         PQclear(result);
         return drink;
     } else {
-        return NULL; // error
+        return NULL; 
     }
 }
 
@@ -196,7 +196,7 @@ Order* getLastOrderMadeByUser(PGconn* connection, int id) {
         PQclear(result);
         return order;
     } else {
-        return NULL; // error
+        return NULL; 
     }
 }
 
@@ -252,7 +252,7 @@ Order* getOrderById(PGconn* connection, int id) {
         PQclear(result);
         return order;
     } else {
-        return NULL; // error
+        return NULL; 
     }
 }
 bool orderDrink(PGconn* connection, int id_user, int id_drink, int quantity){

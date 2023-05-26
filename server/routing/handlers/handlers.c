@@ -92,7 +92,6 @@ void registerHandler(RouterParams params) {
     if(email == NULL || plain_pw == NULL){
         free(email);
         free(plain_pw);
-        // 400 Bad Request
         const char *response = "HTTP/1.1 400 Bad Request\r\nContent-Length: 0\r\n\r\n";
         send(params.thread_data->client_socket, response, strlen(response), 0);
         return;

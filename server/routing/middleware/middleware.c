@@ -13,7 +13,8 @@ void requiresAuth(RouterParams params, void (*next)(RouterParams params)) {
     if (verifyToken(params.request.authorization)) {
         TokenPayload* payload = decodeToken(params.request.authorization);
         if(payload==NULL){
-            serveFileWithResponseCode( "images/400.jpg", "400 Bad Request",params.thread_data->client_socket);
+            const char *response = "HTTP/1.1 400 Bad Request\r\nContent-Length: 0\r\n\r\n";
+            send(params.thread_data->client_socket, response, strlen(response), 0);
             return;
         }
         DateTime dt = *datetime_parse(payload->expire);
