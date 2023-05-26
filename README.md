@@ -54,10 +54,9 @@ docker compose up
  ### 404 Server custom response
  Quando il router non trova la route richiesta serve il client con un codice 404 e questa immagine:
 ![404](https://github.com/AlessandroBonomo28/DrinkShop/assets/75626033/0ce9c02a-5902-4b20-9742-b2f655e3f2d4)
- # Cosa si potrebbe fare
+ ## Come si potrebbe migliorare
  - IP spam filter
  - Incomplete request detection
  - Token expire in payload
  - Datetime helper class
- - polish json helper
  - check for mem leaks 💀
