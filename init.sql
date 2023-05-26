@@ -240,26 +240,38 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION pay_unpaid_order(id_user_par int, card_holder_par VARCHAR(50), card_number_par VARCHAR(16), CVV_par VARCHAR(6), expiration_date_par VARCHAR(5), amount_par float)
 RETURNS void AS $$
+DECLARE
+    total_amount float;
 BEGIN
-    -- Verifica se esiste un ordine non pagato per l'utente specificato
-    IF EXISTS (
-        SELECT 1
-        FROM "Orders"
-        WHERE "id_user" = id_user_par
-        AND "paid" = false
-    ) THEN
-        -- Crea un nuovo pagamento per l'ordine non pagato
-        INSERT INTO "Payments" ("id_order", "id_user", "card_holder", "card_number", "CVV", "expiration_date", "amount")
-        SELECT "id", id_user_par, card_holder_par, card_number_par, CVV_par, expiration_date_par, amount_par
-        FROM "Orders"
-        WHERE "id_user" = id_user_par
-        AND "paid" = false;
+    -- Calcola il totale dell'importo dell'ordine
+    SELECT SUM(oi.quantity * d.price)
+    INTO total_amount
+    FROM "Orders" o
+    JOIN "OrderItems" oi ON o."id" = oi."id_order"
+    JOIN "Drinks" d ON oi."id_item" = d."id"
+    WHERE o."id_user" = id_user_par
+    AND o."paid" = false;
 
-        -- Aggiorna lo stato di pagamento dell'ordine
-        UPDATE "Orders"
-        SET "paid" = true
-        WHERE "id_user" = id_user_par
-        AND "paid" = false;
+    -- Verifica se esiste un ordine non pagato per l'utente specificato
+    IF total_amount IS NOT NULL THEN
+        -- Verifica se l'importo specificato è maggiore o uguale al totale dell'importo
+        IF amount_par >= total_amount THEN
+            -- Crea un nuovo pagamento per l'ordine non pagato
+            INSERT INTO "Payments" ("id_order", "id_user", "card_holder", "card_number", "CVV", "expiration_date", "amount")
+            SELECT "id", id_user_par, card_holder_par, card_number_par, CVV_par, expiration_date_par, amount_par
+            FROM "Orders"
+            WHERE "id_user" = id_user_par
+            AND "paid" = false;
+
+            -- Aggiorna lo stato di pagamento dell'ordine
+            UPDATE "Orders"
+            SET "paid" = true
+            WHERE "id_user" = id_user_par
+            AND "paid" = false;
+        ELSE
+            -- L'importo specificato è inferiore al totale dell'importo, lancia un'eccezione
+            RAISE EXCEPTION 'L''importo specificato non è sufficiente per pagare l''ordine.';
+        END IF;
     ELSE
         -- Se non ci sono ordini non pagati per l'utente, lancia un'eccezione
         RAISE EXCEPTION 'Non ci sono ordini non pagati per l''utente specificato.';
@@ -268,6 +280,7 @@ BEGIN
     RETURN;
 END;
 $$ LANGUAGE plpgsql;
+
 
 
 -- Aggiungo indici di accesso per migliorare performance
