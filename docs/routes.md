@@ -1,4 +1,4 @@
-# API documentation
+# API documentation 🍸
 Questa è la documentazione delle API del backend server in C. [Torna al README](../README.md)
  ```
 # snippet di codice preso da router.c
