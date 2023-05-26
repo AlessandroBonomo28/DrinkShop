@@ -7,7 +7,11 @@
 gcc -o server \
     server.c \
     routing/router/router.c \
-    routing/handlers/handlers.c \
+    routing/handlers/basic_handlers.c \
+    routing/handlers/user/user_handlers.c \
+    routing/handlers/drink/drink_handlers.c \
+    routing/handlers/order/order_handlers.c \
+    routing/handlers/payment/payment_handlers.c \
     routing/middleware/middleware.c \
     utils/json_helper/json_helper.c \
     utils/jwt_helper/jwt_helper.c \

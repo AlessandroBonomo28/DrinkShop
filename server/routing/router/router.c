@@ -2,7 +2,11 @@
 #include <string.h>
 #include <sys/socket.h>
 #include "router.h"
-#include "../handlers/handlers.h"
+#include "../handlers/basic_handlers.h"
+#include "../handlers/user/user_handlers.h"
+#include "../handlers/drink/drink_handlers.h"
+#include "../handlers/order/order_handlers.h"
+#include "../handlers/payment/payment_handlers.h"
 #include "../middleware/middleware.h"
 #include "../../utils/file_helper/file_helper.h"
 #define NO_MIDDLEWARE NULL
