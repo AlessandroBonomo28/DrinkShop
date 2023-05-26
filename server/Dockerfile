@@ -8,7 +8,7 @@ RUN apt-get install libjson-c-dev -y
 # installa libreria jwt token
 RUN sudo apt-get install libjwt-dev -y
 # installa libreria bcrypt
-sudo apt-get install libcrypt-dev -y
+RUN sudo apt-get install libcrypt-dev -y
 
 # Copia il contenuto nella directory /src del container
 COPY . /src
