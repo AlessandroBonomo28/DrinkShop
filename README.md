@@ -42,6 +42,7 @@ docker compose up
  - Smart path routing con URL parameter (esempio: /user, /user/:id) 
  - Può includere files nella risposta Http
  - Jwt bearer token authentication
+ - Jwt token expires after custom amount of time
  - Password encryption
  - Models per interfacciamento con tabelle del database
  - Possibilità di eseguire custom middleware per ogni route
@@ -57,6 +58,4 @@ docker compose up
  ## Come si potrebbe migliorare
  - IP spam filter
  - Incomplete request detection
- - Token expire in payload
- - Datetime helper class
  - check for mem leaks 💀
