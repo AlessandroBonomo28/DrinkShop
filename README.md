@@ -1,5 +1,5 @@
 # Drink Shop 🍹
- Drink shop con architettura client-server. Android Java client + C Http Socket Server + Postgres DB.
+ Drink shop con architettura 3 tier client-server-data. Android Java client + C Http Socket Server + Postgres DB.
  
  Il server è dockerizzato e ha due container:
  - postgres-db
