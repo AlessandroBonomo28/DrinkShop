@@ -32,7 +32,7 @@ void jsonFold(const char* json, JSONFoldCallback callback, void* accumulator) {
             enum json_type val_type = json_object_get_type(val);
             const char* value = NULL;
             char valueStr[64];
-
+            char* valStr = NULL;
             switch (val_type) {
                 case json_type_null:
                     value = "null";
@@ -42,11 +42,11 @@ void jsonFold(const char* json, JSONFoldCallback callback, void* accumulator) {
                     break;
                 case json_type_double:
                     snprintf(valueStr, sizeof(valueStr), "%f", json_object_get_double(val));
-                    value = valueStr;
+                    value = strdup(valueStr);
                     break;
                 case json_type_int:
                     snprintf(valueStr, sizeof(valueStr), "%d", json_object_get_int(val));
-                    value = valueStr;
+                    value = strdup(valueStr);
                     break;
                 case json_type_string:
                     value = json_object_get_string(val);
@@ -62,6 +62,9 @@ void jsonFold(const char* json, JSONFoldCallback callback, void* accumulator) {
                     break;
             }
             callback(key, value, accumulator);
+            if (valStr != NULL) {
+                free(valStr);
+            }
         }
     }
 

@@ -12,7 +12,7 @@
 #include "../../models/models.h"
 #include "../../utils/crypt_helper/crypt_helper.h"
 #include "../../utils/datetime_helper/datetime_helper.h"
-//TODO sistemare il body delle risposte http
+
 void homeHandler(RouterParams params) {
     TokenPayload* token = decodeToken(params.request.authorization);
     if(token!= NULL){
@@ -55,7 +55,7 @@ void loginHandler(RouterParams params) {
         TokenPayload payload;
         payload.email = user->email;
         payload.id = user->id;
-        DateTime dt = datetime_addMinutes(datetime_now(), 1);
+        DateTime dt = datetime_addMinutes(datetime_now(), EXPIRE_MINUTES);
         payload.expire = datetime_format(dt);
         printf("Logged in, token will expire at: %s\n", payload.expire);
         free(user);
@@ -481,11 +481,13 @@ void updateDrinkQuantityInOrderHandler(RouterParams params) {
     }
     char* str_id_drink = getValueFromJson(params.request.body, "id_drink");
     char* str_quantity = getValueFromJson(params.request.body, "quantity");
+    printf("str_id_drink: %s, str_quantity: %s\n", str_id_drink, str_quantity);
     int id_drink = atoi(str_id_drink);
     int quantity = atoi(str_quantity);
+    printf("id_drink: %d, quantity: %d\n", id_drink, quantity);
+    bool updated = updateDrinkQuantityFromUnpaidOrder(params.thread_data->connection,token->id,id_drink,quantity);
     free(str_quantity);
     free(str_id_drink);
-    bool updated = updateDrinkQuantityFromUnpaidOrder(params.thread_data->connection,token->id,id_drink,quantity);
     free(token);
     if(updated){
         const char *response = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n";
