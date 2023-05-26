@@ -19,7 +19,10 @@ gcc -o server \
     utils/file_helper/file_helper.c \
     utils/crypt_helper/crypt_helper.c \
     utils/datetime_helper/datetime_helper.c \
-    models/models.c \
+    models/DAOs/user/user_dao.c \
+    models/DAOs/drink/drink_dao.c \
+    models/DAOs/order/order_dao.c \
+    models/DAOs/payment/payment_dao.c \
     -ljson-c \
     -lpq \
     -ljwt \

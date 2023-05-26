@@ -42,21 +42,5 @@ typedef struct {
     float amount;
 } Payment;
 
-User* authenticateUser(PGconn* connection, const char* email, const char* password);
-User* registerUser(PGconn* connection, const char* email, const char* password);
-User* getUserById(PGconn* connection, int id);
-User* getUserByEmail(PGconn* connection, const char* email);
 
-Drink* getDrinkById(PGconn* connection, int id);
-PGresult* getDrinks(PGconn* connection);
-PGresult* getOrdersMadeByUser(PGconn* connection,int id);
-Order* getLastOrderMadeByUser(PGconn* connection, int id);
-PGresult* getOrderItemsByOrderId(PGconn* connection, int id, float *totalAmount);
-Order* getOrderById(PGconn* connection, int id);
-bool orderDrink(PGconn* connection, int id_user, int id_drink, int quantity);
-bool deleteDrinkFromUnpaidOrder(PGconn* connection,int id_user, int id_drink);
-bool deleteUnpaidOrder(PGconn* connection, int id_user);
-bool updateDrinkQuantityFromUnpaidOrder(PGconn* connection,int id_user, int id_drink, int new_quantity);
-
-bool payUnpaidOrder(PGconn* connection, Payment new_payment);
 #endif

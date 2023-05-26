@@ -12,7 +12,7 @@
 #include "../../../models/models.h"
 #include "../../../utils/crypt_helper/crypt_helper.h"
 #include "../../../utils/datetime_helper/datetime_helper.h"
-
+#include "../../../models/DAOs/user/user_dao.h"
 void loginHandler(RouterParams params) {
     char *response = "HTTP/1.1 401 Unauthorized\r\nContent-Length: 15\r\n\r\nNot Authorized!";
     char* email = getValueFromJson(params.request.body,"email");
