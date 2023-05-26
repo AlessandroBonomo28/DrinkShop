@@ -280,16 +280,19 @@ bool orderDrink(PGconn* connection, int id_user, int id_drink, int quantity){
     }
 }
 
-bool deleteDrinkFromOrder(PGconn* connection, int id_drink){
-    const char* query = "SELECT delete_order_drink($1);";
-    const char* param_values[1];
+bool deleteDrinkFromUnpaidOrder(PGconn* connection,int id_user, int id_drink){
+    const char* query = "SELECT delete_drink_from_unpaid_order($1,$2);";
+    const char* param_values[2];
+    char id_user_str[10];
+    sprintf(id_user_str, "%d", id_user);
+    param_values[0] = id_user_str;
     char id_drink_str[10];
     sprintf(id_drink_str, "%d", id_drink);
-    param_values[0] = id_drink_str;
-    const int param_lengths[1] = { strlen(id_drink_str) };
-    const int param_formats[1] = { 0 };
+    param_values[1] = id_drink_str;
+    const int param_lengths[2] = { strlen(id_user_str), strlen(id_drink_str) };
+    const int param_formats[2] = { 0, 0 };
 
-    PGresult* result = PQexecParams(connection, query, 1, NULL, param_values, param_lengths, param_formats, 0);
+    PGresult* result = PQexecParams(connection, query, 2, NULL, param_values, param_lengths, param_formats, 0);
     if(PQresultStatus(result) == PGRES_TUPLES_OK){
         PQclear(result);
         return true;
@@ -309,6 +312,31 @@ bool deleteUnpaidOrder(PGconn* connection, int id_user){
     const int param_formats[1] = { 0 };
 
     PGresult* result = PQexecParams(connection, query, 1, NULL, param_values, param_lengths, param_formats, 0);
+    if(PQresultStatus(result) == PGRES_TUPLES_OK){
+        PQclear(result);
+        return true;
+    } else{
+        PQclear(result);
+        return false;
+    }
+}
+// usa select update_drink_quantity_from_unpaid_order(id_user_par int, id_drink_par int, new_quantity int)
+bool updateDrinkQuantityFromUnpaidOrder(PGconn* connection,int id_user, int id_drink, int new_quantity) {
+    const char* query = "SELECT update_drink_quantity_from_unpaid_order($1,$2,$3);";
+    const char* param_values[3];
+    char id_user_str[10];
+    sprintf(id_user_str, "%d", id_user);
+    param_values[0] = id_user_str;
+    char id_drink_str[10];
+    sprintf(id_drink_str, "%d", id_drink);
+    param_values[1] = id_drink_str;
+    char new_quantity_str[10];
+    sprintf(new_quantity_str, "%d", new_quantity);
+    param_values[2] = new_quantity_str;
+    const int param_lengths[3] = { strlen(id_user_str), strlen(id_drink_str), strlen(new_quantity_str) };
+    const int param_formats[3] = { 0, 0, 0 };
+
+    PGresult* result = PQexecParams(connection, query, 3, NULL, param_values, param_lengths, param_formats, 0);
     if(PQresultStatus(result) == PGRES_TUPLES_OK){
         PQclear(result);
         return true;

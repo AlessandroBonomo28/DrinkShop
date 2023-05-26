@@ -18,7 +18,7 @@ Route routes[] = {
     { "GET", "/drink/:id", NO_MIDDLEWARE, getDrinkHandler },
     { "GET", "/drinks", NO_MIDDLEWARE, getDrinksHandler },
     { "POST", "/order/drink", requiresAuth, orderDrinkHandler },
-    //{ "PUT", "/order/drink/:id", requiresAuth, updateDrinkQuantityInOrderHandler }, // TODO
+    { "PUT", "/order/drink", requiresAuth, updateDrinkQuantityInOrderHandler },
     { "DELETE", "/order", requiresAuth, deleteOrderHandler },
     { "DELETE", "/order/drink/:id", requiresAuth, deleteDrinkFromOrderHandler},
     { "GET", "/order/last", requiresAuth, getLastOrderMadeByUserHandler },

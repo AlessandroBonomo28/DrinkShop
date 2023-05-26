@@ -411,13 +411,20 @@ void orderDrinkHandler(RouterParams params){
 }
 
 void deleteDrinkFromOrderHandler(RouterParams params){
-    const char* std_id_drink_order = getPathParameter(params.request.path);
-    if(std_id_drink_order == NULL){ 
+    TokenPayload* token = decodeToken(params.request.authorization);
+    const char* std_id_drink = getPathParameter(params.request.path);
+    if(std_id_drink == NULL){ 
         const char *response = "HTTP/1.1 400 Bad Request\r\nContent-Length: 0\r\n\r\n";
         send(params.thread_data->client_socket, response, strlen(response), 0);
         return;
     }
-    bool deleted = deleteDrinkFromOrder(params.thread_data->connection,atoi(std_id_drink_order));
+    if(token == NULL){
+        const char *response = "HTTP/1.1 500 Server Error\r\nContent-Length: 0\r\n\r\n";
+        send(params.thread_data->client_socket, response, strlen(response), 0);
+        return;
+    }
+    bool deleted = deleteDrinkFromUnpaidOrder(params.thread_data->connection,token->id,atoi(std_id_drink));
+    free(token);
     if(deleted){
         const char *response = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n";
         send(params.thread_data->client_socket, response, strlen(response), 0);
@@ -437,6 +444,30 @@ void deleteOrderHandler(RouterParams params) {
     bool deleted = deleteUnpaidOrder(params.thread_data->connection,token->id);
     free(token);
     if(deleted){
+        const char *response = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n";
+        send(params.thread_data->client_socket, response, strlen(response), 0);
+    } else {
+        const char *response = "HTTP/1.1 500 Server Error\r\nContent-Length: 0\r\n\r\n";
+        send(params.thread_data->client_socket, response, strlen(response), 0);
+    }
+}
+
+void updateDrinkQuantityInOrderHandler(RouterParams params) {
+    TokenPayload *token = decodeToken(params.request.authorization);
+    if(token == NULL){
+        const char *response = "HTTP/1.1 500 Server Error\r\nContent-Length: 0\r\n\r\n";
+        send(params.thread_data->client_socket, response, strlen(response), 0);
+        return;
+    }
+    char* str_id_drink = getValueFromJson(params.request.body, "id_drink");
+    char* str_quantity = getValueFromJson(params.request.body, "quantity");
+    int id_drink = atoi(str_id_drink);
+    int quantity = atoi(str_quantity);
+    free(str_quantity);
+    free(str_id_drink);
+    bool updated = updateDrinkQuantityFromUnpaidOrder(params.thread_data->connection,token->id,id_drink,quantity);
+    free(token);
+    if(updated){
         const char *response = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n";
         send(params.thread_data->client_socket, response, strlen(response), 0);
     } else {

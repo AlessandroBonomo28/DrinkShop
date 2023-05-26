@@ -182,9 +182,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
-
-CREATE OR REPLACE FUNCTION update_order_quantity(id_order_drink int, new_quantity int)
+CREATE OR REPLACE FUNCTION update_drink_quantity_from_unpaid_order(id_user_par int, id_drink_par int, new_quantity int)
 RETURNS void AS $$
 DECLARE
     order_id int;
@@ -194,23 +192,26 @@ BEGIN
     SELECT "id_order", "paid" INTO order_id, order_paid
     FROM "OrderItems"
     INNER JOIN "Orders" ON "OrderItems"."id_order" = "Orders"."id"
-    WHERE "OrderItems"."id" = id_order_drink
+    WHERE "OrderItems"."id_item" = id_drink_par
+    AND "Orders"."id_user" = id_user_par
     AND "Orders"."paid" = false;
-    
+
     IF order_id IS NULL THEN
         RAISE EXCEPTION 'L''OrderItem specificato non esiste o appartiene a un Order con paid = true.';
     END IF;
-    
+
     -- Aggiorna la quantità dell'OrderItem
     UPDATE "OrderItems"
     SET "quantity" = new_quantity
-    WHERE "id" = id_order_drink;
-    
+    WHERE "id_order" = order_id
+    AND "id_item" = id_drink_par;
+
     RETURN;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION delete_order_drink(id_order_drink int)
+
+CREATE OR REPLACE FUNCTION delete_drink_from_unpaid_order(id_user_par int, id_drink_par int)
 RETURNS void AS $$
 DECLARE
     order_id int;
@@ -220,17 +221,19 @@ BEGIN
     SELECT "id_order", "paid" INTO order_id, order_paid
     FROM "OrderItems"
     INNER JOIN "Orders" ON "OrderItems"."id_order" = "Orders"."id"
-    WHERE "OrderItems"."id" = id_order_drink
+    WHERE "OrderItems"."id_item" = id_drink_par
+    AND "Orders"."id_user" = id_user_par
     AND "Orders"."paid" = false;
-    
+
     IF order_id IS NULL THEN
         RAISE EXCEPTION 'L''OrderItem specificato non esiste o appartiene a un Order con paid = true.';
     END IF;
-    
+
     -- Cancella l'OrderItem
     DELETE FROM "OrderItems"
-    WHERE "id" = id_order_drink;
-    
+    WHERE "id_order" = order_id
+    AND "id_item" = id_drink_par;
+
     RETURN;
 END;
 $$ LANGUAGE plpgsql;
