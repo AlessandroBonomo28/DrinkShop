@@ -11,6 +11,7 @@
 #include "../../utils/file_helper/file_helper.h"
 #include "../../models/models.h"
 #include "../../utils/crypt_helper/crypt_helper.h"
+#include "../../utils/datetime_helper/datetime_helper.h"
 //TODO sistemare il body delle risposte http
 void homeHandler(RouterParams params) {
     TokenPayload* token = decodeToken(params.request.authorization);
@@ -54,6 +55,9 @@ void loginHandler(RouterParams params) {
         TokenPayload payload;
         payload.email = user->email;
         payload.id = user->id;
+        DateTime dt = datetime_addMinutes(datetime_now(), 1);
+        payload.expire = datetime_format(dt);
+        printf("Logged in, token will expire at: %s\n", payload.expire);
         free(user);
         char* token = encodeToken(&payload);
         if (token == NULL) {

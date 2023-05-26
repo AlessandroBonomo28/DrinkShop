@@ -158,7 +158,7 @@ PGresult* getOrdersMadeByUser(PGconn* connection,int id) {
         FROM \"Orders\" \
         FULL JOIN \"Payments\" ON \"Orders\".\"id\" = \"Payments\".\"id_order\" \
         WHERE \"Orders\".\"id_user\" = $1 \
-        ORDER BY \"Orders\".\"id\" ASC LIMIT 10;"
+        ORDER BY \"Orders\".\"id\" DESC LIMIT 10;"
     );
     const char* param_values[1];
     char id_str[10];
@@ -345,20 +345,7 @@ bool updateDrinkQuantityFromUnpaidOrder(PGconn* connection,int id_user, int id_d
         return false;
     }
 }
-/*
-typedef struct {
-    int id;
-    int id_order;
-    int id_user;
-    const char* card_holder;
-    const char* card_number;
-    const char* CVV;
-    const char* expiration_date;
-    const char* creation_datetime;
-    float amount;
-} Payment;
-*/
-// usa select pay_unpaid_order(id_user_par int, card_holder_par VARCHAR(50), card_number_par VARCHAR(16), CVV_par VARCHAR(6), expiration_date_par VARCHAR(5), amount_par float)
+
 bool payUnpaidOrder(PGconn* connection, Payment new_payment) {
     const char* query = "SELECT pay_unpaid_order($1,$2,$3,$4,$5,$6);";
     const char* param_values[6];

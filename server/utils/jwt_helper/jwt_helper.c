@@ -8,7 +8,7 @@ char* encodeToken(const TokenPayload* payload) {
     jwt_new(&jwt);
     jwt_add_grant(jwt, "email", payload->email);
     jwt_add_grant_int(jwt, "id", (long)payload->id);
-    //TODO expire datetime
+    jwt_add_grant(jwt, "expire", payload->expire);
     /* ipotetici attributi di tipo bool e float
     //jwt_add_grant_bool(jwt, "premium", (int)payload->premium);
     //jwt_add_grant_double(jwt, "id", (double)payload->id);
@@ -43,6 +43,17 @@ TokenPayload* decodeToken(const char* token) {
             payload->email = strdup(email);
         } else {
             // Errore nel recuperare l'attributo "email" dal token
+            free(payload);
+            payload = NULL;
+            jwt_free(decoded);
+            return NULL;
+        }
+
+        // ottieni expire
+        const char* expire = jwt_get_grant(decoded, "expire");
+        if (expire != NULL) {
+            payload->expire = strdup(expire);
+        } else {
             free(payload);
             payload = NULL;
             jwt_free(decoded);

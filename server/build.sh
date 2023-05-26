@@ -14,6 +14,7 @@ gcc -o server \
     utils/http_helper/http_helper.c \
     utils/file_helper/file_helper.c \
     utils/crypt_helper/crypt_helper.c \
+    utils/datetime_helper/datetime_helper.c \
     models/models.c \
     -ljson-c \
     -lpq \
