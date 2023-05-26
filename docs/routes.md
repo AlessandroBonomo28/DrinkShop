@@ -20,7 +20,7 @@ Questa è la documentazione delle API del backend server in C. [Torna al README]
 { "GET", "/order/:id", requiresAuth, getOrderHandler },
 { "POST", "/pay", requiresAuth, payOrderHandler }
  ```
-## GET /login
+## POST /login
 - Serve a autenticare l'utente, se ha successo, restituisce un token jwt
 - Non richiede autorizzazione
 ### Request example
@@ -41,4 +41,22 @@ Questa è la documentazione delle API del backend server in C. [Torna al README]
 
 # 400 Bad request
 # 401 Unauthorized
+```
+## POST /register
+- Serve a creare un nuovo utente
+- Non richiede autorizzazione
+### Request example
+```
+# Content type: application/json
+
+{
+    "email":"alex@gmail.com",
+    "password":"123"
+}
+```
+### Responses
+```
+# 200 OK
+# 400 Bad request
+# 500 Internal Server Error (utente già esistente)
 ```
