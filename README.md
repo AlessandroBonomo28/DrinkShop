@@ -1,6 +1,8 @@
 # Drink Shop 🍹
  Drink shop con architettura 3 tier client-server-data. Android Java client + C Http Socket Server + Postgres DB.
  
+[API docs](server/docs/routes.md)
+
  Il server è dockerizzato e ha due container:
  - postgres-db
  - server-c
@@ -57,8 +59,6 @@ docker compose up
 
 ![404](https://github.com/AlessandroBonomo28/DrinkShop/assets/75626033/0ce9c02a-5902-4b20-9742-b2f655e3f2d4)
 
-# Documentazione routes
-[Route docs](server/docs/routes.md)
  ## Come si potrebbe migliorare
  - IP spam filter
  - Incomplete request detection
