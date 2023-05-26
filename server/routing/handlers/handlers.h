@@ -16,4 +16,5 @@ void orderDrinkHandler(RouterParams params);
 void deleteDrinkFromOrderHandler(RouterParams params);
 void deleteOrderHandler(RouterParams params);
 void updateDrinkQuantityInOrderHandler(RouterParams params);
+void payOrderHandler(RouterParams params);
 #endif

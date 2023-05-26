@@ -57,4 +57,6 @@ bool orderDrink(PGconn* connection, int id_user, int id_drink, int quantity);
 bool deleteDrinkFromUnpaidOrder(PGconn* connection,int id_user, int id_drink);
 bool deleteUnpaidOrder(PGconn* connection, int id_user);
 bool updateDrinkQuantityFromUnpaidOrder(PGconn* connection,int id_user, int id_drink, int new_quantity);
+
+bool payUnpaidOrder(PGconn* connection, Payment new_payment);
 #endif

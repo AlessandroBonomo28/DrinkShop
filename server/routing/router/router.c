@@ -7,7 +7,7 @@
 #include "../../utils/file_helper/file_helper.h"
 #define NO_MIDDLEWARE NULL
 #define MAX_PATH_LENGTH 1024
-#define ROUTES_PREFIX "" // for example "/api"
+#define ROUTES_PREFIX "" // per esempio "/api"
 
 Route routes[] = {
     { "POST", "/login", NO_MIDDLEWARE, loginHandler },
@@ -24,7 +24,7 @@ Route routes[] = {
     { "GET", "/order/last", requiresAuth, getLastOrderMadeByUserHandler },
     { "GET", "/orders", requiresAuth, getOrdersMadeByUserHandler },
     { "GET", "/order/:id", requiresAuth, getOrderHandler },
-    // TODO POST /pay (paga l'ordine corrente) auth
+    { "POST", "/pay", requiresAuth, payOrderHandler }
 };
 
 void routeRequest(RouterParams params) {

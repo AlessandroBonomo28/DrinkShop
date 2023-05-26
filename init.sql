@@ -238,6 +238,38 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION pay_unpaid_order(id_user_par int, card_holder_par VARCHAR(50), card_number_par VARCHAR(16), CVV_par VARCHAR(6), expiration_date_par VARCHAR(5), amount_par float)
+RETURNS void AS $$
+BEGIN
+    -- Verifica se esiste un ordine non pagato per l'utente specificato
+    IF EXISTS (
+        SELECT 1
+        FROM "Orders"
+        WHERE "id_user" = id_user_par
+        AND "paid" = false
+    ) THEN
+        -- Crea un nuovo pagamento per l'ordine non pagato
+        INSERT INTO "Payments" ("id_order", "id_user", "card_holder", "card_number", "CVV", "expiration_date", "amount")
+        SELECT "id", id_user_par, card_holder_par, card_number_par, CVV_par, expiration_date_par, amount_par
+        FROM "Orders"
+        WHERE "id_user" = id_user_par
+        AND "paid" = false;
+
+        -- Aggiorna lo stato di pagamento dell'ordine
+        UPDATE "Orders"
+        SET "paid" = true
+        WHERE "id_user" = id_user_par
+        AND "paid" = false;
+    ELSE
+        -- Se non ci sono ordini non pagati per l'utente, lancia un'eccezione
+        RAISE EXCEPTION 'Non ci sono ordini non pagati per l''utente specificato.';
+    END IF;
+
+    RETURN;
+END;
+$$ LANGUAGE plpgsql;
+
+
 -- Aggiungo indici di accesso per migliorare performance
 CREATE INDEX idx_orders_user ON "Orders" ("id_user");
 CREATE INDEX idx_order_items_order ON "OrderItems" ("id_order");

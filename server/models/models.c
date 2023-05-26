@@ -158,7 +158,7 @@ PGresult* getOrdersMadeByUser(PGconn* connection,int id) {
         FROM \"Orders\" \
         FULL JOIN \"Payments\" ON \"Orders\".\"id\" = \"Payments\".\"id_order\" \
         WHERE \"Orders\".\"id_user\" = $1 \
-        ORDER BY \"Orders\".\"id\" ASC"
+        ORDER BY \"Orders\".\"id\" ASC LIMIT 10;"
     );
     const char* param_values[1];
     char id_str[10];
@@ -320,7 +320,7 @@ bool deleteUnpaidOrder(PGconn* connection, int id_user){
         return false;
     }
 }
-// usa select update_drink_quantity_from_unpaid_order(id_user_par int, id_drink_par int, new_quantity int)
+
 bool updateDrinkQuantityFromUnpaidOrder(PGconn* connection,int id_user, int id_drink, int new_quantity) {
     const char* query = "SELECT update_drink_quantity_from_unpaid_order($1,$2,$3);";
     const char* param_values[3];
@@ -337,6 +337,52 @@ bool updateDrinkQuantityFromUnpaidOrder(PGconn* connection,int id_user, int id_d
     const int param_formats[3] = { 0, 0, 0 };
 
     PGresult* result = PQexecParams(connection, query, 3, NULL, param_values, param_lengths, param_formats, 0);
+    if(PQresultStatus(result) == PGRES_TUPLES_OK){
+        PQclear(result);
+        return true;
+    } else{
+        PQclear(result);
+        return false;
+    }
+}
+/*
+typedef struct {
+    int id;
+    int id_order;
+    int id_user;
+    const char* card_holder;
+    const char* card_number;
+    const char* CVV;
+    const char* expiration_date;
+    const char* creation_datetime;
+    float amount;
+} Payment;
+*/
+// usa select pay_unpaid_order(id_user_par int, card_holder_par VARCHAR(50), card_number_par VARCHAR(16), CVV_par VARCHAR(6), expiration_date_par VARCHAR(5), amount_par float)
+bool payUnpaidOrder(PGconn* connection, Payment new_payment) {
+    const char* query = "SELECT pay_unpaid_order($1,$2,$3,$4,$5,$6);";
+    const char* param_values[6];
+    char id_user_str[10];
+    sprintf(id_user_str, "%d", new_payment.id_user);
+    param_values[0] = id_user_str;
+    param_values[1] = new_payment.card_holder;
+    param_values[2] = new_payment.card_number;
+    param_values[3] = new_payment.CVV;
+    param_values[4] = new_payment.expiration_date;
+    char amount_str[50];
+    sprintf(amount_str, "%f", new_payment.amount);
+    param_values[5] = amount_str;
+    const int param_lengths[6] = { 
+        strlen(id_user_str), 
+        strlen(new_payment.card_holder),
+        strlen(new_payment.card_number), 
+        strlen(new_payment.CVV), 
+        strlen(new_payment.expiration_date), 
+        strlen(amount_str)
+    };
+    const int param_formats[6] = { 0, 0, 0, 0, 0, 0 };
+
+    PGresult* result = PQexecParams(connection, query, 6, NULL, param_values, param_lengths, param_formats, 0);
     if(PQresultStatus(result) == PGRES_TUPLES_OK){
         PQclear(result);
         return true;

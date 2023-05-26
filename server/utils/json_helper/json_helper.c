@@ -29,7 +29,38 @@ void jsonFold(const char* json, JSONFoldCallback callback, void* accumulator) {
 
     if (type == json_type_object) {
         json_object_object_foreach(root, key, val) {
-            const char* value = json_object_get_string(val);
+            enum json_type val_type = json_object_get_type(val);
+            const char* value = NULL;
+            char valueStr[64];
+
+            switch (val_type) {
+                case json_type_null:
+                    value = "null";
+                    break;
+                case json_type_boolean:
+                    value = json_object_get_boolean(val) ? "true" : "false";
+                    break;
+                case json_type_double:
+                    snprintf(valueStr, sizeof(valueStr), "%f", json_object_get_double(val));
+                    value = valueStr;
+                    break;
+                case json_type_int:
+                    snprintf(valueStr, sizeof(valueStr), "%d", json_object_get_int(val));
+                    value = valueStr;
+                    break;
+                case json_type_string:
+                    value = json_object_get_string(val);
+                    break;
+                case json_type_array:
+                    value = json_object_get_string(val);// Aggiungi qui la gestione degli array e degli oggetti se necessario
+                    break;
+                case json_type_object:
+                    value = json_object_get_string(val);// Aggiungi qui la gestione degli array e degli oggetti se necessario
+                    break;
+                default:
+                    value = "null";
+                    break;
+            }
             callback(key, value, accumulator);
         }
     }
