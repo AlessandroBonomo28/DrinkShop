@@ -1,7 +1,7 @@
 # Drink Shop 🍹
  Drink shop con architettura 3 tier client-server-data. Android Java client + C Http Socket Server + Postgres DB.
  
-[API docs](server/docs/routes.md)
+Per informazioni sulle API del server in C vedi [API docs](docs/routes.md)
 
  Il server è dockerizzato e ha due container:
  - postgres-db
