@@ -163,6 +163,7 @@ URL request example: /drinks
 *Nota: Il drink verrà aggiunto automaticamente all'ordine in corso (se non esiste viene creato un nuovo ordine), se esiste già un ordinazione dello stesso drink, la quantità verrà sommata.*
 ### Request example
 ```
+# Header authorization: Bearer token
 # Content type: application/json
 
 {
@@ -182,6 +183,7 @@ URL request example: /drinks
 - Richiede autorizzazione
 ### Request example
 ```
+# Header authorization: Bearer token
 # Content type: application/json
 
 {
@@ -199,6 +201,10 @@ URL request example: /drinks
 ## DELETE /order
 - Permette di cancellare l'ordine in corso
 - Richiede autorizzazione
+### Request example
+```
+# Header authorization: Bearer token
+```
 ### Responses
 ```
 # 200 OK
@@ -210,6 +216,7 @@ URL request example: /drinks
 - Richiede autorizzazione
 ### Request example
 ```
+# Header authorization: Bearer token
 URL parameter: id del drink da cancellare
 URL request example: /order/drink/1
 ```
@@ -222,6 +229,10 @@ URL request example: /order/drink/1
 ## GET /order/last
 - Permette di ottenere informazioni sull'ordine più recente
 - Richiede autorizzazione
+### Request example
+```
+# Header authorization: Bearer token
+```
 ### Responses
 ```
 # 200 OK
@@ -266,6 +277,10 @@ URL request example: /order/drink/1
 - Richiede autorizzazione
 
 *Nota: Restituisce gli ultimi 10 ordini, se gli ordini sono contrassegnati come 'paid: t' allora sono ordini pagati e hanno i dati del pagamento. Se un ordine è contrassegnato con 'paid: f' allora si tratta di un ordine in corso che non è ancora stato pagato e di conseguenza ha i dati di pagamento vuoti.*
+### Request example
+```
+# Header authorization: Bearer token
+```
 ### Responses
 ```
 # 200 OK
@@ -305,6 +320,7 @@ URL request example: /order/drink/1
 - Richiede autorizzazione
 ### Request example
 ```
+# Header authorization: Bearer token
 URL parameter: id dell'ordine
 URL request example: /order/1
 ```
@@ -355,6 +371,7 @@ URL request example: /order/1
 *Nota: viene controllato automaticamente se l'importo è >= del totale dell'ordine. Tutto ciò che è > del totale viene considerato mancia.*
 ### Request example
 ```
+# Header authorization: Bearer token
 # Content Type: application/json
 {
     "amount":2.50,
