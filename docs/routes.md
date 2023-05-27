@@ -21,9 +21,9 @@ Questa è la documentazione delle API del backend server in C. [Torna al README]
 { "POST", "/pay", requiresAuth, payOrderHandler }
  ```
  ## Indice delle routes 📖
- Attempt | #1 | #2 | #3 | #4 | #5 | #6 | #7 | #8 | #9 | #10 | #11
---- | --- | --- | --- |--- |--- |--- |--- |--- |--- |--- |---
-Seconds | 301 | 283 | 290 | 286 | 289 | 285 | 287 | 287 | 272 | 276 | 269
+ User | Drink | Order | Payment
+--- | --- | --- | --- |
+Seconds | 301 | 283 | 290 | 
 - [/login](#post-login)  
 - [/register](#post-register) 
 ## POST /login
