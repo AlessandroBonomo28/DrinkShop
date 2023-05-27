@@ -273,25 +273,27 @@ URL request example: /order/drink/1
     {
         "id": "2",
         "id_user": "1",
-        "creation_timestamp": "",
+        "creation_timestamp": "2023-05-27 17:06:26.910592",
         "paid": "f",
         "id_payment": "",
         "card_holder": "",
         "card_number": "",
         "CVV": "",
         "expiration_date": "",
+        "payment_timestamp": "",
         "amount": ""
     },
     {
         "id": "1",
         "id_user": "1",
-        "creation_timestamp": "2023-05-26 22:02:00.585581",
+        "creation_timestamp": "2023-05-26 20:41:57.865745",
         "paid": "t",
         "id_payment": "1",
-        "card_holder": "Alex",
-        "card_number": "1234567891011120",
-        "CVV": "123",
+        "card_holder": "me",
+        "card_number": "123",
+        "CVV": "45",
         "expiration_date": "01/21",
+        "payment_timestamp": "2023-05-26 22:02:00.585581",
         "amount": "2.5"
     }
 ]
