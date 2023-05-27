@@ -2,7 +2,7 @@
 Questa è la documentazione delle API del backend server in C. [Torna al README](../README.md)
  ```
 # snippet di codice preso da router.c
-# 'requireAuth' è il middleware che verifica il jwt bearer token
+# 'requiresAuth' è il middleware che verifica il jwt bearer token
 
 { "POST", "/login", NO_MIDDLEWARE, loginHandler },
 { "POST", "/register", NO_MIDDLEWARE, registerHandler },
@@ -23,10 +23,10 @@ Questa è la documentazione delle API del backend server in C. [Torna al README]
  ## Indice delle routes 📖
  User | Drink | Order | Payment
 --- | --- | --- | --- |
-[/](#get-) | 301 | 283 | 290 | 
-[/login](#post-login) | 301 | 283 | 290 | 
-[/register](#post-register) | 301 | 283 | 290 | 
-[/user/:email](#get-usermail) | 301 | 283 | 290 | 
+[GET /](#get-) | [GET /drink/image/:id](#get-drinkimageid) | [POST /order/drink](#post-orderdrink) | 290 | 
+[POST /login](#post-login) | [GET /drink/:id](#get-drinkid) | [PUT /order/drink](#put-orderdrink) | 290 | 
+[POST /register](#post-register) | [GET /drinks](#get-drinks) | 283 | 290 | 
+[GET /user/:email](#get-usermail) | 2 | 283 | 290 | 
 ## POST /login
 - Serve a autenticare l'utente, se ha successo, restituisce un token jwt
 - Non richiede autorizzazione
