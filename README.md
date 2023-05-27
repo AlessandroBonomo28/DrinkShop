@@ -1,6 +1,8 @@
 # Drink Shop 🍹
  Drink shop con architettura 3 tier client-server-data. Android Java client + C Http Socket Server + Postgres DB.
  
+Per informazioni sulle API del server in C vedi [API docs](docs/routes.md)
+
  Il server è dockerizzato e ha due container:
  - postgres-db
  - server-c
@@ -37,7 +39,7 @@ docker compose up
  ```
  # Features del server
  - Elabora richieste Http GET, POST, PUT, DELETE
- - Parsing di richieste Http con body application/json
+ - Parsing di richieste Http con content application/json
  - Risposte Http con content application/json
  - Smart path routing con URL parameter (esempio: /user, /user/:id) 
  - Può includere files nella risposta Http
@@ -56,8 +58,6 @@ docker compose up
  Quando il router non trova la route richiesta serve il client con un codice 404 e questa immagine:
 
 ![404](https://github.com/AlessandroBonomo28/DrinkShop/assets/75626033/0ce9c02a-5902-4b20-9742-b2f655e3f2d4)
-
-# Documentazione routes
 
  ## Come si potrebbe migliorare
  - IP spam filter
