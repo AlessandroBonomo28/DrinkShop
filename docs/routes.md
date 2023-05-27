@@ -348,3 +348,26 @@ URL request example: /order/1
 # 403 Forbidden (Non puoi visualizzare l'ordine di qualcun'altro)
 # 401 Unauthorized
 ```
+## POST /pay
+- Permette di pagare l'ordine in corso
+- Richiede autorizzazione
+
+*Nota: viene controllato automaticamente se l'importo è >= del totale dell'ordine. Tutto ciò che è > del totale viene considerato mancia.*
+### Request example
+```
+# Content Type: application/json
+{
+    "amount":2.50,
+    "card_holder": "alex",
+    "card_number": "1234567891112130",
+    "CVV":"123",
+    "expiration_date":"01/21"
+}
+```
+### Responses
+```
+# 200 OK
+# 500 Internal Server Error (Nessun ordine da pagare o importo non sufficiente)
+# 400 Bad Request
+# 401 Unauthorized
+```
