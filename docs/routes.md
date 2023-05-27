@@ -20,9 +20,9 @@ Questa è la documentazione delle API del backend server in C. [Torna al README]
 { "GET", "/order/:id", requiresAuth, getOrderHandler },
 { "POST", "/pay", requiresAuth, payOrderHandler }
  ```
- #### Indice 📖
-[login](##-POST-/login)  
-[register](##-POST-/register) 
+ #### Indice delle routes 📖
+- [/login](#post-login)  
+- [/register](#post-register) 
 ## POST /login
 - Serve a autenticare l'utente, se ha successo, restituisce un token jwt
 - Non richiede autorizzazione
