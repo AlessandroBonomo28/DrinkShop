@@ -57,6 +57,23 @@ bool matchesPath(const char* requestPath, const char* routePath) {
     int requestPathLen = strlen(requestPath);
     int routePathLen = strlen(routePath);
 
+    // slash count di requestPath
+    int requestPathSlashCount = 0;
+    for (int i = 0; i < requestPathLen; i++) {
+        if (requestPath[i] == '/') {
+            requestPathSlashCount++;
+        }
+    }
+    // slash count di routePath
+    int routePathSlashCount = 0;
+    for (int i = 0; i < routePathLen; i++) {
+        if (routePath[i] == '/') {
+            routePathSlashCount++;
+        }
+    }
+    if(requestPathSlashCount != routePathSlashCount) {
+        return false;
+    }
     // Controlla se il routePath ha un parametro dinamico
     const char* paramPos = strstr(routePath, "/:");
     if (paramPos == NULL) {
