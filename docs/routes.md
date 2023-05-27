@@ -129,7 +129,7 @@ URL request example: /drink/1
 # 404 Not found (drink inesistente)
 ```
 ## GET /drinks
-- Restituisce informazioni sul drink dato il suo id
+- Restituisce tutti i drink disponibili
 - Non richiede autorizzazione
 ### Request example
 ```
@@ -155,4 +155,24 @@ URL request example: /drinks
     }
 ]
 # 500 Internal Server Error
+```
+## POST /order/drink
+- Permette di ordinare un drink
+- Richiede autorizzazione
+*Nota: Il drink verrà aggiunto automaticamente all'ordine in corso (se non esiste viene creato un nuovo ordine), se esiste già un ordinazione dello stesso drink, la quantità verrà sommata.*
+### Request example
+```
+# Content type: application/json
+
+{
+    "quantity":1,
+    "id_drink":2
+}
+```
+### Responses
+```
+# 200 OK
+# 400 Bad request
+# 500 Internal Server Error (quantità <0 oppure id drink inesistente
+# 401 Unauthorized
 ```
