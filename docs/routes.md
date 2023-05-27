@@ -21,7 +21,7 @@ Questa è la documentazione delle API del backend server in C. [Torna al README]
 { "POST", "/pay", requiresAuth, payOrderHandler }
  ```
  ## Indice delle routes 📖
- Order 🛒 | Drink 🍹 | User 🧑 | Payment 💲
+ Order 🛒 | User 🧑 | Drink 🍹 | Payment 💲
 --- | --- | --- | --- |
 [POST /order/drink](#post-orderdrink) | [GET /](#get-) | [GET /drink/image/:id](#get-drinkimageid) | [POST /pay](#post-pay) | 
 [PUT /order/drink](#put-orderdrink) | [POST /login](#post-login) | [GET /drink/:id](#get-drinkid) |  | 
