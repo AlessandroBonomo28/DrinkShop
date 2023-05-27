@@ -23,9 +23,9 @@ Questa è la documentazione delle API del backend server in C. [Torna al README]
  ## Indice delle routes 📖
  User | Drink | Order | Payment
 --- | --- | --- | --- |
-Seconds | 301 | 283 | 290 | 
-- [/login](#post-login)  
-- [/register](#post-register) 
+[/login](#post-login) | 301 | 283 | 290 | 
+[/register](#post-register) | 301 | 283 | 290 | 
+
 ## POST /login
 - Serve a autenticare l'utente, se ha successo, restituisce un token jwt
 - Non richiede autorizzazione
