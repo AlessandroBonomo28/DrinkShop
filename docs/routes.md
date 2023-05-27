@@ -261,6 +261,43 @@ URL request example: /order/drink/1
 # 404 Not Found (Nessun ordine trovato)
 # 401 Unauthorized
 ```
+## GET /orders
+- Permette di ottenere informazioni su ordini effettuati in passato
+- Richiede autorizzazione
+
+*Nota: Restituisce gli ultimi 10 ordini, se gli ordini sono contrassegnati come 'paid: t' allora sono ordini pagati e hanno i dati del pagamento. Se un ordine è contrassegnato con 'paid: f' allora si tratta di un ordine in corso che non è ancora stato pagato e di conseguenza ha i dati di pagamento vuoti.*
+### Responses
+```
+# 200 OK
+[
+    {
+        "id": "2",
+        "id_user": "1",
+        "creation_timestamp": "",
+        "paid": "f",
+        "id_payment": "",
+        "card_holder": "",
+        "card_number": "",
+        "CVV": "",
+        "expiration_date": "",
+        "amount": ""
+    },
+    {
+        "id": "1",
+        "id_user": "1",
+        "creation_timestamp": "2023-05-26 22:02:00.585581",
+        "paid": "t",
+        "id_payment": "1",
+        "card_holder": "Alex",
+        "card_number": "1234567891011120",
+        "CVV": "123",
+        "expiration_date": "01/21",
+        "amount": "2.5"
+    }
+]
+# 404 Not Found (Nessun ordine trovato)
+# 401 Unauthorized
+```
 ## GET /order/:id
 - Permette di ottenere informazioni sull'ordine dal suo id
 - Richiede autorizzazione
