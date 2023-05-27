@@ -26,7 +26,7 @@ Questa è la documentazione delle API del backend server in C. [Torna al README]
 [POST /order/drink](#post-orderdrink) | [GET /](#get-) | [GET /drink/image/:id](#get-drinkimageid) | [POST /pay](#post-pay) | 
 [PUT /order/drink](#put-orderdrink) | [POST /login](#post-login) | [GET /drink/:id](#get-drinkid) |  | 
 [DELETE /order](#delete-order) | [POST /register](#post-register) | [GET /drinks](#get-drinks) |  | 
-[DELETE /order/drink/:id](#delete-orderdrinkid) | [GET /user/:email](#get-usermail) |  |  | 
+[DELETE /order/drink/:id](#delete-orderdrinkid) | [GET /user/:email](#get-useremail) |  |  | 
 [GET /order/last](#get-orderlast) |  |  |  | 
 [GET /orders](#get-orders) |  |  |  | 
 [GET /order/:id](#get-orderid) |  |  |  | 
