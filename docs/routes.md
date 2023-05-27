@@ -24,12 +24,12 @@ Questa è la documentazione delle API del backend server in C. [Torna al README]
  Order 🛒 | Drink 🍹 | User 🧑 | Payment 💲
 --- | --- | --- | --- |
 [POST /order/drink](#post-orderdrink) | [GET /](#get-) | [GET /drink/image/:id](#get-drinkimageid) | [POST /pay](#post-pay) | 
-[PUT /order/drink](#put-orderdrink) | [POST /login](#post-login) | [GET /drink/:id](#get-drinkid) | 290 | 
-[DELETE /order](#delete-order) | [POST /register](#post-register) | [GET /drinks](#get-drinks) | 290 | 
-[DELETE /order/drink/:id](#delete-orderdrinkid) | [GET /user/:email](#get-usermail) | 2 | 290 | 
-[GET /order/last](#get-orderlast) | 1 | 2 | 290 | 
-[GET /orders](#get-orders) | 1 | 2 | 290 | 
-[GET /order/:id](#get-orderid) | 1 | 2 | 290 | 
+[PUT /order/drink](#put-orderdrink) | [POST /login](#post-login) | [GET /drink/:id](#get-drinkid) |  | 
+[DELETE /order](#delete-order) | [POST /register](#post-register) | [GET /drinks](#get-drinks) |  | 
+[DELETE /order/drink/:id](#delete-orderdrinkid) | [GET /user/:email](#get-usermail) |  |  | 
+[GET /order/last](#get-orderlast) |  |  |  | 
+[GET /orders](#get-orders) |  |  |  | 
+[GET /order/:id](#get-orderid) |  |  |  | 
 ## POST /login
 - Serve a autenticare l'utente, se ha successo, restituisce un token jwt
 - Non richiede autorizzazione
