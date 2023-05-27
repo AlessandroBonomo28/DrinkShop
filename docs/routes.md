@@ -60,3 +60,99 @@ Questa è la documentazione delle API del backend server in C. [Torna al README]
 # 400 Bad request
 # 500 Internal Server Error (utente già esistente)
 ```
+## GET /
+- Home dell'utente con messaggio di benvenuto
+- Richiede autorizzazione
+### Request example
+```
+# Header authorization: Bearer token
+```
+### Responses
+```
+# 200 OK
+body: <messaggio di benvenuto>
+
+# 401 Unauthorized
+```
+## GET /user/:email
+- Restituisce le informazioni di un utente data la usa email
+- Non richiede autorizzazione
+### Request example
+```
+URL parameter email: email dell'utente 
+URL request example: /user/alex@gmail.com
+```
+### Responses
+```
+# 200 OK
+{
+    "email": "alex@gmail.com",
+    "id": 1
+}
+
+# 404 Not found (utente inesistente)
+```
+## GET /drink/image/:id
+- Restituisce l'immagine di un drink dato il suo id
+- Non richiede autorizzazione
+### Request example
+```
+URL parameter id: id del drink
+URL request example: /drink/image/1
+```
+### Responses
+```
+# 200 OK
+body: file immagine (jpg, jpeg, png ...)
+
+# 404 Not found (drink inesistente)
+```
+## GET /drink/:id
+- Restituisce informazioni sul drink dato il suo id
+- Non richiede autorizzazione
+### Request example
+```
+URL parameter id: id del drink
+URL request example: /drink/1
+```
+### Responses
+```
+# 200 OK
+
+{
+    "name": "Negroni",
+    "description": "Cocktail amaro e intenso",
+    "price": 2.5,
+    "id": 1,
+    "image_url": "images/drinks/negroni.jpg"
+}
+# 404 Not found (drink inesistente)
+```
+## GET /drinks
+- Restituisce informazioni sul drink dato il suo id
+- Non richiede autorizzazione
+### Request example
+```
+URL request example: /drinks
+```
+### Responses
+```
+# 200 OK
+[
+    {
+        "id": "1",
+        "name": "Negroni",
+        "description": "Cocktail amaro e intenso",
+        "image_url": "images/drinks/negroni.jpg",
+        "price": "2.5"
+    },
+    {
+        "id": "2",
+        "name": "Long Island",
+        "description": "Cocktail forte e deciso",
+        "image_url": "images/drinks/longisland.jpg",
+        "price": "3"
+    }
+]
+# 500 Internal Server Error
+```
