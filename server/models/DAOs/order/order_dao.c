@@ -11,7 +11,7 @@ PGresult* getOrdersMadeByUser(PGconn* connection,int id) {
         "SELECT \"Orders\".*, \"Payments\".\"id\" AS id_payment, \
         \"Payments\".\"card_holder\", \"Payments\".\"card_number\", \
         \"Payments\".\"CVV\", \"Payments\".\"expiration_date\", \
-        \"Payments\".\"creation_timestamp\", \"Payments\".\"amount\" \
+        \"Payments\".\"creation_timestamp\" as payment_timestamp, \"Payments\".\"amount\" \
         FROM \"Orders\" \
         FULL JOIN \"Payments\" ON \"Orders\".\"id\" = \"Payments\".\"id_order\" \
         WHERE \"Orders\".\"id_user\" = $1 \
