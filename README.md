@@ -49,6 +49,7 @@ docker compose up
  - Models per interfacciamento con tabelle del database
  - Possibilità di eseguire custom middleware per ogni route
  - Handler per ogni route
+ - Custom routes prefix
  - Multithreading
  - Pool di connessioni con custom max clients  
  - Custom socket timeout
