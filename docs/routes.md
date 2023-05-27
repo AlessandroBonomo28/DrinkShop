@@ -21,12 +21,15 @@ Questa è la documentazione delle API del backend server in C. [Torna al README]
 { "POST", "/pay", requiresAuth, payOrderHandler }
  ```
  ## Indice delle routes 📖
- User | Drink | Order | Payment
+ User 🧑 | Drink 🍹 | Order 🛒 | Payment 💲
 --- | --- | --- | --- |
-[GET /](#get-) | [GET /drink/image/:id](#get-drinkimageid) | [POST /order/drink](#post-orderdrink) | 290 | 
+[GET /](#get-) | [GET /drink/image/:id](#get-drinkimageid) | [POST /order/drink](#post-orderdrink) | [POST /pay](#post-pay) | 
 [POST /login](#post-login) | [GET /drink/:id](#get-drinkid) | [PUT /order/drink](#put-orderdrink) | 290 | 
-[POST /register](#post-register) | [GET /drinks](#get-drinks) | 283 | 290 | 
-[GET /user/:email](#get-usermail) | 2 | 283 | 290 | 
+[POST /register](#post-register) | [GET /drinks](#get-drinks) | [DELETE /order](#delete-order) | 290 | 
+[GET /user/:email](#get-usermail) | 2 | [DELETE /order/drink/:id](#delete-orderdrinkid) | 290 | 
+1 | 2 | [GET /order/last](#get-orderlast) | 290 | 
+1 | 2 | [GET /orders](#get-orders) | 290 | 
+1 | 2 | [GET /order/:id](#get-orderid) | 290 | 
 ## POST /login
 - Serve a autenticare l'utente, se ha successo, restituisce un token jwt
 - Non richiede autorizzazione
