@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "json_helper.hpp": "c",
+        "stdlib.h": "c",
+        "middleware.h": "c",
+        "router.h": "c",
+        "http_helper.h": "c",
+        "jwt_helper.h": "c",
+        "file_helper.h": "c"
+    }
+}
