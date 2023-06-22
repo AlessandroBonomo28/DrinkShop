@@ -6,17 +6,13 @@ RUN apt-get update && apt-get install -y libpq-dev
 # installa libreria json
 RUN apt-get install libjson-c-dev -y
 # installa libreria jwt token
-RUN sudo apt-get install libjwt-dev -y
+RUN apt-get install libjwt-dev -y
 # installa libreria bcrypt
-RUN sudo apt-get install libcrypt-dev -y
+RUN apt-get install libcrypt-dev -y
 
 # Copia il contenuto nella directory /src del container
-COPY . /src
+COPY . .
 
-# Imposta la directory di lavoro
-WORKDIR /src
-
-# Compila il server
 RUN chmod +x build.sh
 RUN ./build.sh
 
