@@ -134,7 +134,8 @@ URL request example: /drink/1
     "description": "Cocktail amaro e intenso",
     "price": 2.5,
     "id": 1,
-    "image_url": "images/drinks/negroni.jpg"
+    "image_url": "images/drinks/negroni.jpg",
+    "drink_type": "cocktail"
 }
 # 404 Not found (drink inesistente)
 ```
@@ -154,14 +155,16 @@ URL request example: /drinks
         "name": "Negroni",
         "description": "Cocktail amaro e intenso",
         "image_url": "images/drinks/negroni.jpg",
-        "price": "2.5"
+        "price": "2.5",
+        "drink_type": "cocktail"
     },
     {
         "id": "2",
         "name": "Long Island",
         "description": "Cocktail forte e deciso",
         "image_url": "images/drinks/longisland.jpg",
-        "price": "3"
+        "price": "3",
+        "drink_type": "cocktail"
     }
 ]
 # 500 Internal Server Error
@@ -257,7 +260,8 @@ URL request example: /order/drink/1
             "name": "Negroni",
             "description": "Cocktail amaro e intenso",
             "image_url": "images/drinks/negroni.jpg",
-            "price": "2.5"
+            "price": "2.5",
+            "drink_type": "cocktail"
         },
         {
             "id": "2",
@@ -268,7 +272,8 @@ URL request example: /order/drink/1
             "name": "Long Island",
             "description": "Cocktail forte e deciso",
             "image_url": "images/drinks/longisland.jpg",
-            "price": "3"
+            "price": "3",
+            "drink_type": "cocktail"
         }
     ],
     "order": {
@@ -348,7 +353,8 @@ URL request example: /order/1
             "name": "Negroni",
             "description": "Cocktail amaro e intenso",
             "image_url": "images/drinks/negroni.jpg",
-            "price": "2.5"
+            "price": "2.5",
+            "drink_type": "cocktail"
         },
         {
             "id": "2",
@@ -359,7 +365,8 @@ URL request example: /order/1
             "name": "Long Island",
             "description": "Cocktail forte e deciso",
             "image_url": "images/drinks/longisland.jpg",
-            "price": "3"
+            "price": "3",
+            "drink_type": "frullato"
         }
     ],
     "order": {
