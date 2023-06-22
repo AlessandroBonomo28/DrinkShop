@@ -1,3 +1,5 @@
+CREATE TYPE DRINK_TYPE AS ENUM ('cocktail', 'frullato');
+
 CREATE TABLE "Users" (
   "id" SERIAL PRIMARY KEY,
   "password" VARCHAR(200) NOT NULL,
@@ -9,7 +11,8 @@ CREATE TABLE "Drinks" (
   "name" VARCHAR(50),
   "description" VARCHAR(250),
   "image_url" VARCHAR(250),
-  "price" float CHECK ("price" > 0)
+  "price" float CHECK ("price" > 0),
+  "drink_type" DRINK_TYPE DEFAULT 'cocktail'
 );
 
 CREATE TABLE "Payments" (
@@ -299,3 +302,6 @@ INSERT INTO "Drinks" ("name", "description", "image_url", "price") VALUES
     ('Cosmopolitan', 'Cocktail dolce','images/drinks/negroni.jpg', 2.75),
     ('Shot di Assenzio', 'Molto forte','images/drinks/negroni.jpg', 3.5);
 
+INSERT INTO "Drinks" ("name", "description", "image_url", "price","drink_type") VALUES
+    ('Frullato1', 'Frullato amaro e intenso','images/drinks/negroni.jpg', 2.5,'frullato'),
+    ('Frullato2', 'Frullato forte e deciso','images/drinks/longisland.jpg', 3.0,'frullato');
