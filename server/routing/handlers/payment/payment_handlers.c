@@ -12,7 +12,7 @@
 #include "../../../models/models.h"
 #include "../../../utils/crypt_helper/crypt_helper.h"
 #include "../../../utils/datetime_helper/datetime_helper.h"
-#include "../../../models/DAOs/payment/payment_DAO.h"
+#include "../../../models/DAOs/payment/payment_dao.h"
 
 void payOrderHandler(RouterParams params) {
     TokenPayload *token = decodeToken(params.request.authorization);
