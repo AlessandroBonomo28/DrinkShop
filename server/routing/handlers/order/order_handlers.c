@@ -169,13 +169,7 @@ void getOrderHandler(RouterParams params){
         send(params.thread_data->client_socket, response, strlen(response), 0);
     }
 }
-/*
-json request:
-{
-    "id_drink": 1,
-    "quantity": 2
-}
-*/
+
 void orderDrinkHandler(RouterParams params){
     if(!existsKeyInJson(params.request.body, "id_drink") ||
         !existsKeyInJson(params.request.body, "quantity")){
