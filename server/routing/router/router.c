@@ -11,7 +11,7 @@
 #include "../../utils/file_helper/file_helper.h"
 #define NO_MIDDLEWARE NULL
 #define MAX_PATH_LENGTH 1024
-#define ROUTES_PREFIX "" // per esempio "/api"
+#define ROUTES_PREFIX "/api"
 
 Route routes[] = {
     { "POST", "/login", NO_MIDDLEWARE, loginHandler },

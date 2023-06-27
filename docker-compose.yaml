@@ -6,7 +6,7 @@ services:
     restart: on-failure
     build: server/.
     ports:
-      - "3000:4040"
+      - "80:4040"
     depends_on:
       - postgres-db
   postgres-db:

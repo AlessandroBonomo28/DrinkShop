@@ -1,8 +1,13 @@
 # API documentation 🍸
 Questa è la documentazione delle API del backend server in C. [Torna al README](../README.md)
+
+<span style="color:blue">Tutte le routes utilizzano il PREFIX "/api"</span>
+
  ```
 # snippet di codice preso da router.c
 # 'requiresAuth' è il middleware che verifica il jwt bearer token
+
+#define ROUTES_PREFIX "/api"
 
 { "POST", "/login", NO_MIDDLEWARE, loginHandler },
 { "POST", "/register", NO_MIDDLEWARE, registerHandler },
