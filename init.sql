@@ -298,18 +298,18 @@ INSERT INTO "Users" ("email","password") VALUES
 INSERT INTO "Drinks" ("name", "description", "image_url", "price") VALUES
     ('Negroni', 'Cocktail amaro e intenso','images/drinks/negroni.jpg', 2.5),
     ('Long Island', 'Cocktail forte e deciso','images/drinks/longisland.jpg', 3.0),
-    ('Moscow Mule', 'Cocktail infuocato','images/drinks/moscow.jpg', 2.0),
+    ('Moscow Mule', 'Cocktail deciso','images/drinks/moscow.jpg', 2.0),
     ('Cosmopolitan', 'Cocktail dolce','images/drinks/cosmopolitan.jpg', 2.75),
     ('Hugo', 'Molto forte','images/drinks/hugo.jpg', 3.5),
-    ('Margarita', 'Molto forte','images/drinks/margarita.jpg', 4.5),
-    ('Bianchi', 'Molto forte','images/drinks/bianchi.jpg', 2.5),
-    ('Manhattan', 'Molto forte','images/drinks/manhattan.jpg', 3.5),
-    ('Mojito', 'Molto forte','images/drinks/mojito.jpg', 6.5),
-    ('Martini', 'Molto forte','images/drinks/martini.jpg', 3.5),
-    ('Gin Tonic', 'Molto forte','images/drinks/gintonic.jpg', 3.0);
+    ('Margarita', 'Forte e Amaro','images/drinks/margarita.jpg', 4.5),
+    ('Bianchi', 'Molto alcolico','images/drinks/bianchi.jpg', 2.5),
+    ('Manhattan', 'Delizioso','images/drinks/manhattan.jpg', 3.5),
+    ('Mojito', 'Cocktail intenso','images/drinks/mojito.jpg', 6.5),
+    ('Martini', 'Piacevole e intenso','images/drinks/martini.jpg', 3.5),
+    ('Gin Tonic', 'Cocktail forte','images/drinks/gintonic.jpg', 3.0);
 
 INSERT INTO "Drinks" ("name", "description", "image_url", "price","drink_type") VALUES
     ('Frullato di banana', 'Frullato gustoso','images/drinks/banana.jpg', 2.5,'frullato'),
-    ('Frullato di more e lamponi', 'Frullato forte e deciso','images/drinks/more-lamp.jpg', 3.0,'frullato'),
-    ('Frullato di fragole', 'Frullato forte e deciso','images/drinks/fragola.jpg', 2.0,'frullato'),
-    ('Frullato di kiwi', 'Frullato gustoso','images/drinks/kiwi.jpg', 3.5,'frullato');
+    ('Frullato di more e lamponi', 'Frullato dolce','images/drinks/more-lamp.jpg', 3.0,'frullato'),
+    ('Frullato di fragole', 'Frullato delizioso','images/drinks/fragola.jpg', 2.0,'frullato'),
+    ('Frullato di kiwi', 'Frullato saporito','images/drinks/kiwi.jpg', 3.5,'frullato');
