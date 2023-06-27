@@ -1,7 +1,7 @@
 # API documentation 🍸
 Questa è la documentazione delle API del backend server in C. [Torna al README](../README.md)
 
-<span style="color:blue">Tutte le routes utilizzano il PREFIX "/api"</span>
+🔴 Tutte le routes utilizzano il PREFIX "/api" 🔴
 
  ```
 # snippet di codice preso da router.c
