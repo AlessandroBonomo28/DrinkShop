@@ -8,7 +8,7 @@ public class UserDAO implements IUserDAO {
     public TokenPayload login(String email, String password) throws UserException {
 
         // TODO solleva eccezione se l'utente non esiste
-        if(email=="" || password =="")
+        if(email.isEmpty() || password.isEmpty())
             throw new UserException("Utente inesistente");
 
         // TODO fetch token da API
@@ -23,6 +23,6 @@ public class UserDAO implements IUserDAO {
 
     @Override
     public User register(String email, String password) throws UserException {
-        return null;
+        return null; // TODO
     }
 }
