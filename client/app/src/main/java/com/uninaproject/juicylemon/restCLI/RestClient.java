@@ -8,7 +8,7 @@ import java.net.URL;
 
 public class RestClient {
     private static RestClient instance;
-    private static final String BASE_URL = "http://ratatouille.bonomo.cloud";
+    private static final String BASE_URL = "http://ratatouille.bonomo.cloud:3000";
 
     private RestClient() {
         // Private constructor to prevent direct instantiation
