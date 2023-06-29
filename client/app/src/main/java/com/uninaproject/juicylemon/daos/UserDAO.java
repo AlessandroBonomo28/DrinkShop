@@ -1,6 +1,8 @@
 package com.uninaproject.juicylemon.daos;
 
 import com.uninaproject.juicylemon.lemonExceptions.UserException;
+import com.uninaproject.juicylemon.model.User;
+
 public class UserDAO implements IUserDAO {
     @Override
     public TokenPayload login(String email, String password) throws UserException {
@@ -17,5 +19,10 @@ public class UserDAO implements IUserDAO {
             throw new UserException("Fail to decode token");
         }
 
+    }
+
+    @Override
+    public User register(String email, String password) throws UserException {
+        return null;
     }
 }
