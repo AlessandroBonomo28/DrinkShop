@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">JuicyLemon</string>
     <string name="accedi_registrati">Accedi/Registrati</string>
+    <string name="entra">Entra</string>
+    <string name="registrati">Registrati</string>
+    <string name="email">email</string>
+    <string name="password">password</string>
 </resources>
