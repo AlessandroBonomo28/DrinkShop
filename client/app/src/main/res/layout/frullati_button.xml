@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    android:id="@+id/frullati_button"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/box_shadow"
+    android:paddingStart="16dp"
+    android:paddingTop="10dp"
+    android:layout_marginBottom="8dp"
+    android:paddingEnd="1dp">
+
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:text="@string/frullati" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+
+        android:src="@drawable/image_tre_frullati"
+        android:contentDescription="Tre frullati vicini tra di loro" />
+
+</FrameLayout>

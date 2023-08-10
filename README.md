@@ -12,10 +12,10 @@ prima di fare il *compose dei container* assicurarsi che il server non sia confi
  // Configurazione del file server.h
  
  // PRODUCTION CONFIGURATION 
-#define DATABASE "host=postgres-db port=5432 dbname=drinks user=docker password=12345"
+ // #define DATABASE "host=postgres-db port=5432 dbname=drinks user=docker password=12345"
 
-// DEBUG CONFIGURATION 
-//#define DATABASE "host=127.0.0.1 port=42069 dbname=drinks user=docker password=12345"
+ // DEBUG CONFIGURATION 
+ //#define DATABASE "host=127.0.0.1 port=42069 dbname=drinks user=docker password=12345"
  ```
  Nel caso fosse commentata basterà commentare la *DEBUG CONFIGURATION*, decommentare *PRODUCTION CONFIGURATION*, eseguire
  ```
