@@ -17,8 +17,6 @@ public class MainActivity extends AppCompatActivity {
 
         btnLogin.setOnClickListener( v -> setContentView(R.layout.activity_main));
 
-
-
         // Effettua la richiesta a /api/login
         String endpoint = "/api/";
         String method = "GET";

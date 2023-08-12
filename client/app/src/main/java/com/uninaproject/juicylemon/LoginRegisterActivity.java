@@ -8,6 +8,11 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.uninaproject.juicylemon.daos.TokenPayload;
+import com.uninaproject.juicylemon.daos.UserDAO;
+import com.uninaproject.juicylemon.lemonExceptions.UserException;
+import com.uninaproject.juicylemon.model.User;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,12 +38,11 @@ public class LoginRegisterActivity extends AppCompatActivity {
         registerFields.add(findViewById(R.id.conferma_password_register_edittext));
 
         btnLogin.setOnClickListener(v -> {
-            LoginManager loginManager = new LoginManager();
 
             long emptyFieldsLogin = Utils.getAllFieldsNotEmpty(loginFields);
             long emptyFieldsRegister = Utils.getAllFieldsNotEmpty(registerFields);
+            UserDAO userDAO = new UserDAO();
 
-            // If there are empty fields in login and no empty fields in register, then isLogging is false
             // REGISTER ROUTE
             if (emptyFieldsLogin > 0 && emptyFieldsRegister == 0) {
                 if (!registerFields.get(1).getText().toString().equals(registerFields.get(2).getText().toString())) {
@@ -46,18 +50,37 @@ public class LoginRegisterActivity extends AppCompatActivity {
                     return;
                 }
 
-                loginManager.register(
-                        registerFields.get(0).getText().toString(),
-                        registerFields.get(1).getText().toString()
-                );
+                try {
+                    User newUser = userDAO.register(
+                            registerFields.get(0).getText().toString(),
+                            registerFields.get(1).getText().toString()
+                    );
+
+                    LoginManager.getInstance().setUser(newUser);
+                    Utils.showAlert(this, "Registrazione avvenuta con successo");
+                } catch (UserException e) {
+                    Utils.showAlert(this, e.getMessage());
+                    return;
+                }
             }
 
             // LOGIN ROUTE
             if (emptyFieldsLogin == 0 && emptyFieldsRegister > 0) {
-                loginManager.login(
-                        loginFields.get(0).getText().toString(),
-                        loginFields.get(1).getText().toString()
-                );
+                try {
+                    TokenPayload tokenPayload = userDAO.login(
+                            loginFields.get(0).getText().toString(),
+                            loginFields.get(1).getText().toString()
+                    );
+
+
+                    LoginManager.getInstance().setTokenPayload(tokenPayload);
+
+                    Intent intent = new Intent(this, DashboardActivity.class);
+                    startActivity(intent);
+                } catch (UserException e) {
+                    Utils.showAlert(this, e.getMessage());
+                    return;
+                }
             }
 
             if (emptyFieldsLogin > 0 && emptyFieldsRegister > 0) {
@@ -67,9 +90,6 @@ public class LoginRegisterActivity extends AppCompatActivity {
 
 
 
-
-            Intent intent = new Intent(this, DashboardActivity.class);
-            startActivity(intent);
         });
 
     }

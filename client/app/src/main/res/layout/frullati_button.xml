@@ -24,6 +24,6 @@
         android:layout_gravity="end"
 
         android:src="@drawable/image_tre_frullati"
-        android:contentDescription="Tre frullati vicini tra di loro" />
+        android:contentDescription="@string/descrizione_immagine_frullati" />
 
 </FrameLayout>
