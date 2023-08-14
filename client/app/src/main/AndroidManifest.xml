@@ -22,7 +22,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".DashboardActivity">
+        </activity>
 
+        <activity android:name=".components.DrinkItem">
         </activity>
     </application>
 

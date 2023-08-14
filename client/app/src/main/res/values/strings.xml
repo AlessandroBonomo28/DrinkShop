@@ -9,5 +9,6 @@
     <string name="frullati">Frullati</string>
     <string name="descrizione_immagine_frullati">Tre frullati vicini tra di loro</string>
     <string name="welcome_text">Benvenuto, %1$s!</string>
+    <string name="in_data">In Data:\n %a$s</string>
     <string name="consigliati_per_te">Consigliati per Te</string>
 </resources>

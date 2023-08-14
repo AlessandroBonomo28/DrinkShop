@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:background="@drawable/box_shadow"
-    android:layout_height="100dp">
+    android:layout_height="100dp"
+    android:background="@drawable/edit_text_border">
 
     <ImageView
         android:id="@+id/imageView3"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:background="@drawable/rounded_corners"
-        app:layout_constraintStart_toStartOf="parent"
         android:src="@drawable/image_tre_frullati"
+        app:layout_constraintStart_toStartOf="parent"
 
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,7 +27,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/nomeDrink"
+            android:id="@+id/drink_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Negroni"
@@ -33,31 +35,32 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/dataAcquisto"
+            android:id="@+id/drink_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="In Data: 23/03/2023"
             android:textColor="#857F7F"
-            android:textStyle="italic" />
+            android:textStyle="bold|italic" />
 
     </LinearLayout>
 
     <ImageButton
+        android:id="@+id/add_to_cart_button"
         android:layout_width="50dp"
         android:layout_height="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
     <TextView
+        android:id="@+id/drink_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:textSize="16sp"
         android:text="€ 6,50"
         android:textColor="#F8BB83"
+        android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</merge>

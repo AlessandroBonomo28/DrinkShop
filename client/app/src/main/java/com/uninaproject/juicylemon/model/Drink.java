@@ -14,4 +14,26 @@ public class Drink {
         this.description = description;
         this.type = type;
     }
+
+    public Drink(String name, DrinkType type, float price) {
+        this.name = name;
+        this.type = type;
+        this.price = price;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public float getPrice() {
+        return price;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public DrinkType getType() {
+        return type;
+    }
 }
