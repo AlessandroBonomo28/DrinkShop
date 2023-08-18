@@ -1,4 +1,4 @@
-package com.uninaproject.juicylemon;
+package com.uninaproject.juicylemon.utils;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class Utils {
+
+    public final static String API_BASE_URL = "http://192.168.144.86:80/api/";
 
     /**
      * Check if all the fields are not empty

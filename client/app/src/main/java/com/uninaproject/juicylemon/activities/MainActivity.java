@@ -1,8 +1,10 @@
-package com.uninaproject.juicylemon;
+package com.uninaproject.juicylemon.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
+
+import com.uninaproject.juicylemon.R;
 import com.uninaproject.juicylemon.restCLI.RestClient;
 
 import android.widget.Toast;

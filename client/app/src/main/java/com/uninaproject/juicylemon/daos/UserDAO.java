@@ -12,7 +12,7 @@ public class UserDAO implements IUserDAO {
             throw new UserException("Utente inesistente");
 
         // TODO fetch token da API
-        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFsZXhAZ21haWwuY29tIiwiZXhwaXJlIjoiMjAyMy0wNi0yOSAxMDowNzo0NiIsImlkIjoxfQ.FZhz0g5lOtvLrvrdHRsgc0yhK36itkGdHQCYtzg1AHc";
+        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hcmlvLnJvc3NpQGdtYWlsLmNvbSIsImV4cGlyZSI6IjIwMjMtMDgtMTggMjI6MzY6MjQiLCJpZCI6M30.YkFB39Xal1XnneAojfs3DLqEaZ5gkyq-zl__Ed68x8M";
         try{
             return new TokenPayload(token);
         } catch (Exception e){

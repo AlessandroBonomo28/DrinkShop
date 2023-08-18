@@ -1,10 +1,11 @@
 package com.uninaproject.juicylemon.components;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -14,7 +15,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.uninaproject.juicylemon.R;
-import com.uninaproject.juicylemon.Utils;
+import com.uninaproject.juicylemon.activities.DetailActivity;
+import com.uninaproject.juicylemon.utils.Utils;
 import com.uninaproject.juicylemon.model.Drink;
 
 import java.text.SimpleDateFormat;
@@ -36,6 +38,10 @@ public class DrinkItem extends ConstraintLayout {
         // style the component
         setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.edit_text_border, null));
 
+        // set android:descendantFocusability="blocksDescendants"
+        setDescendantFocusability(FOCUS_BLOCK_DESCENDANTS);
+
+
         // inflate the component
         initializeViews(context);
 
@@ -56,6 +62,7 @@ public class DrinkItem extends ConstraintLayout {
 
     }
 
+    @SuppressLint("SetTextI18n")
     public void setDrink(Drink drink) {
         drinkName.setText(drink.getName());
 

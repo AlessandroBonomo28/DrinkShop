@@ -1,6 +1,5 @@
-package com.uninaproject.juicylemon;
+package com.uninaproject.juicylemon.activities;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -8,10 +7,12 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.uninaproject.juicylemon.R;
 import com.uninaproject.juicylemon.daos.TokenPayload;
 import com.uninaproject.juicylemon.daos.UserDAO;
 import com.uninaproject.juicylemon.lemonExceptions.UserException;
 import com.uninaproject.juicylemon.model.User;
+import com.uninaproject.juicylemon.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
