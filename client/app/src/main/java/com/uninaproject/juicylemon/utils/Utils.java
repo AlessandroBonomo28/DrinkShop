@@ -16,7 +16,7 @@ import java.util.Optional;
 
 public class Utils {
 
-    public final static String API_BASE_URL = "http://192.168.144.86:80/api/";
+    public final static String API_BASE_URL = "http://192.168.247.86:80/api/";
 
     /**
      * Check if all the fields are not empty

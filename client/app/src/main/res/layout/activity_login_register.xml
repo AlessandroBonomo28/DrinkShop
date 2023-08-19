@@ -50,7 +50,8 @@
             android:hint="email"
             android:inputType="textEmailAddress" />
 
-        <EditText
+
+        <com.uninaproject.juicylemon.components.EditTextWithShowHideButton
             android:id="@+id/password_login_edittext"
             style="@style/Widget.Material3.AutoCompleteTextView.OutlinedBox"
             android:layout_width="match_parent"
@@ -61,6 +62,8 @@
             android:ems="10"
             android:hint="password"
             android:inputType="textPassword" />
+
+
 
         <View
             android:id="@+id/divider"
@@ -109,10 +112,11 @@
             android:layout_height="wrap_content"
             android:background="@drawable/edit_text_border"
             android:ems="10"
-            android:hint="conferma password"
+            android:hint="@string/conferma_password"
             android:inputType="textPassword" />
 
     </LinearLayout>
+
 
     <Button
         android:id="@+id/register_login_button"
@@ -126,6 +130,7 @@
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" >
+    </Button>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

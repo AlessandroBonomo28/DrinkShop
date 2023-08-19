@@ -49,15 +49,11 @@ public class DashboardActivity  extends AppCompatActivity {
 
         ListView listView = findViewById(R.id.list_view);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                Drink drink = (Drink) listView.getItemAtPosition(position);
-                Intent intent = new Intent(DashboardActivity.this, DetailActivity.class);
-                intent.putExtra("drink", drink);
-                startActivity(intent);
-            }
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            Drink drink = (Drink) listView.getItemAtPosition(position);
+            Intent intent = new Intent(DashboardActivity.this, DetailActivity.class);
+            intent.putExtra("drink", drink);
+            startActivity(intent);
         });
 
         DrinkDAO drinkDAO = new DrinkDAOImpl();

@@ -27,7 +27,7 @@
         android:layout_marginBottom="10dp"
         />
 
-    <com.uninaproject.juicylemon.components.EditTextWithClear
+    <com.uninaproject.juicylemon.components.EditTextWithShowHideButton
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 

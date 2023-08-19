@@ -70,7 +70,7 @@ public class DrinkItem extends ConstraintLayout {
 
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy", Locale.ITALY);
         String date = formatter.format(new Date());
-        drinkDate.setText("In Data: \n" +date);
+        drinkDate.setText("In Data: \n" + date);
 
         addToCartButton.setOnClickListener(v -> {
             Utils.showAlert(getContext(), "Aggiunto al carrello!!");

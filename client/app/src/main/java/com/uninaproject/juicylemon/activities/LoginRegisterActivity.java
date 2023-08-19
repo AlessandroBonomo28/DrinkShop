@@ -10,15 +10,23 @@ import android.widget.EditText;
 import com.uninaproject.juicylemon.R;
 import com.uninaproject.juicylemon.daos.TokenPayload;
 import com.uninaproject.juicylemon.daos.UserDAO;
+import com.uninaproject.juicylemon.events.UserAuthErrorEvent;
+import com.uninaproject.juicylemon.events.UserLoginEvent;
+import com.uninaproject.juicylemon.events.UserRegisterEvent;
 import com.uninaproject.juicylemon.lemonExceptions.UserException;
 import com.uninaproject.juicylemon.model.User;
 import com.uninaproject.juicylemon.utils.Utils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class LoginRegisterActivity extends AppCompatActivity {
 
+    List<EditText> loginFields = new ArrayList<>();
+    List<EditText> registerFields = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,12 +36,10 @@ public class LoginRegisterActivity extends AppCompatActivity {
         Button btnLogin = findViewById(R.id.register_login_button);
 
         // Login Fields
-        List<EditText> loginFields = new ArrayList<>();
         loginFields.add(findViewById(R.id.email_login_edittext));
         loginFields.add(findViewById(R.id.password_login_edittext));
 
         // Register Fields
-        List<EditText> registerFields = new ArrayList<>();
         registerFields.add(findViewById(R.id.email_register_edittext));
         registerFields.add(findViewById(R.id.password_register_edittext));
         registerFields.add(findViewById(R.id.conferma_password_register_edittext));
@@ -52,12 +58,13 @@ public class LoginRegisterActivity extends AppCompatActivity {
                 }
 
                 try {
-                    User newUser = userDAO.register(
+                    userDAO.register(
                             registerFields.get(0).getText().toString(),
-                            registerFields.get(1).getText().toString()
+                            registerFields.get(1).getText().toString(),
+                            this
                     );
 
-                    LoginManager.getInstance().setUser(newUser);
+
                     Utils.showAlert(this, "Registrazione avvenuta con successo");
                 } catch (UserException e) {
                     Utils.showAlert(this, e.getMessage());
@@ -68,16 +75,11 @@ public class LoginRegisterActivity extends AppCompatActivity {
             // LOGIN ROUTE
             if (emptyFieldsLogin == 0 && emptyFieldsRegister > 0) {
                 try {
-                    TokenPayload tokenPayload = userDAO.login(
+                     userDAO.login(
                             loginFields.get(0).getText().toString(),
-                            loginFields.get(1).getText().toString()
-                    );
+                            loginFields.get(1).getText().toString(),
+                            this);
 
-
-                    LoginManager.getInstance().setTokenPayload(tokenPayload);
-
-                    Intent intent = new Intent(this, DashboardActivity.class);
-                    startActivity(intent);
                 } catch (UserException e) {
                     Utils.showAlert(this, e.getMessage());
                     return;
@@ -86,14 +88,49 @@ public class LoginRegisterActivity extends AppCompatActivity {
 
             if (emptyFieldsLogin > 0 && emptyFieldsRegister > 0) {
                 Utils.showAlert(this, "Compila i campi");
-                return;
             }
-
-
-
         });
 
     }
 
+    private void clearFields(List<EditText> fields) {
 
+        for (EditText field : fields) {
+            field.setText("");
+        }
+    }
+
+    @Subscribe
+    public void onMessageEvent(UserLoginEvent event) {
+        System.out.println("EVENTO: " + event.tokenPayload.rawToken);
+        LoginManager.getInstance().setTokenPayload(event.tokenPayload);
+
+        Intent intent = new Intent(this, DashboardActivity.class);
+        startActivity(intent);
+    }
+
+    @Subscribe
+    public void onMessageEvent(UserRegisterEvent event) {
+        Utils.showAlert(this, "Registrazione avvenuta con successo");
+        clearFields(registerFields);
+    }
+
+    @Subscribe
+    public void onMessageEvent(UserAuthErrorEvent event) {
+        Utils.showAlert(this, "Errore", event.getMessage());
+        clearFields(loginFields);
+        clearFields(registerFields);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
 }

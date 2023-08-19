@@ -11,4 +11,5 @@
     <string name="welcome_text">Benvenuto, %1$s!</string>
     <string name="in_data">In Data:\n %a$s</string>
     <string name="consigliati_per_te">Consigliati per Te</string>
+    <string name="conferma_password">conferma password</string>
 </resources>
