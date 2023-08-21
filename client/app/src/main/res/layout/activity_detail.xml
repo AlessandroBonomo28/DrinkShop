@@ -5,26 +5,58 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/drinkDetailName"
-        android:layout_width="wrap_content"
+    <com.uninaproject.juicylemon.components.Navbar
+        android:id="@+id/toolbar_detail"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Negroni Secco"
-        android:layout_marginTop="20dp"
-        android:textSize="25sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/imageView4"
+    <TextView
+        android:id="@+id/drinkDetailName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="160dp"
+        android:layout_marginTop="56dp"
+        android:text="Negroni Secco"
+        android:textSize="25sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_detail" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/drink_image_view_detail"
+        android:layout_width="358dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="60dp"
+        android:contentDescription="@string/immagine_del_drink"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/drinkDetailName"
+        app:shapeAppearanceOverlay="@style/RoundedSmall"
         tools:srcCompat="@tools:sample/avatars" />
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinator_detail"
+        android:layout_width="413dp"
+        android:layout_height="167dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_detail_add_to_cart"
+            android:layout_width="155dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="25dp"
+            android:layout_marginBottom="20dp"
+            android:backgroundTint="@color/my_light_primary"
+            android:contentDescription="@string/add_drink_to_cart"
+            android:src="@drawable/ic_cart_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

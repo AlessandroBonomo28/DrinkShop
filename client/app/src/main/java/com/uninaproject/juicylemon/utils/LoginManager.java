@@ -1,8 +1,7 @@
-package com.uninaproject.juicylemon.activities;
+package com.uninaproject.juicylemon.utils;
 
 import com.uninaproject.juicylemon.daos.TokenPayload;
 import com.uninaproject.juicylemon.model.User;
-import com.uninaproject.juicylemon.utils.Utils;
 
 public class LoginManager {
 

@@ -16,5 +16,5 @@ public interface DrinkDAO {
 
     public Drink getDrink(int id, Context context, Response.Listener<JSONObject> listener);
 
-    public String getDrinkImage(int id, Context context);
+    public void getDrinkImage(int id, Context context);
 }

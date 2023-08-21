@@ -14,7 +14,7 @@ import com.uninaproject.juicylemon.events.UserAuthErrorEvent;
 import com.uninaproject.juicylemon.events.UserLoginEvent;
 import com.uninaproject.juicylemon.events.UserRegisterEvent;
 import com.uninaproject.juicylemon.lemonExceptions.UserException;
-import com.uninaproject.juicylemon.model.User;
+import com.uninaproject.juicylemon.utils.LoginManager;
 import com.uninaproject.juicylemon.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -32,6 +32,21 @@ public class LoginRegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_register);
+
+        // If there is a token in cache, try to login
+        if (Utils.getTokenFromCache(this).isPresent()) {
+            String token = Utils.getTokenFromCache(this).get();
+            try {
+                TokenPayload tokenPayload = new TokenPayload(token);
+                LoginManager.getInstance().setTokenPayload(tokenPayload);
+
+                Intent intent = new Intent(this, DashboardActivity.class);
+                startActivity(intent);
+            } catch (Exception e) {
+                Utils.showAlert(this, "Errore", "Token non valido");
+                throw new RuntimeException(e);
+            }
+        }
 
         Button btnLogin = findViewById(R.id.register_login_button);
 
@@ -102,8 +117,12 @@ public class LoginRegisterActivity extends AppCompatActivity {
 
     @Subscribe
     public void onMessageEvent(UserLoginEvent event) {
-        System.out.println("EVENTO: " + event.tokenPayload.rawToken);
         LoginManager.getInstance().setTokenPayload(event.tokenPayload);
+
+        Utils.addTokenToCache(
+                event.tokenPayload.rawToken,
+                this
+        );
 
         Intent intent = new Intent(this, DashboardActivity.class);
         startActivity(intent);

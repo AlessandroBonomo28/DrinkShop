@@ -53,7 +53,6 @@ public class DrinkItem extends ConstraintLayout {
     private void initializeViews(Context context) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.drink_button, this);
-
         drinkName = findViewById(R.id.drink_name);
         drinkPrice = findViewById(R.id.drink_price);
         drinkDate = findViewById(R.id.drink_date);

@@ -2,25 +2,27 @@ package com.uninaproject.juicylemon.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.uninaproject.juicylemon.R;
 import com.uninaproject.juicylemon.adapters.DrinkItemAdapter;
 import com.uninaproject.juicylemon.daos.drinks.DrinkDAO;
 import com.uninaproject.juicylemon.daos.drinks.DrinkDAOImpl;
 import com.uninaproject.juicylemon.model.Drink;
+import com.uninaproject.juicylemon.utils.LoginManager;
 import com.uninaproject.juicylemon.utils.Utils;
 
 import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class DashboardActivity  extends AppCompatActivity {
@@ -30,11 +32,9 @@ public class DashboardActivity  extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TextView welcome_text = findViewById(R.id.navbar_text_welcome);
-
-        String email = LoginManager.getInstance().getUser().email;
-        welcome_text.setText(getString(R.string.welcome_text, Utils.capitalize(Utils.separateEmail(email).first)));
-
+        Toolbar toolbar = findViewById(R.id.navbar_dashboard);
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
 
         FrameLayout frullati_button = findViewById(R.id.frullati_button);
         frullati_button.setOnClickListener(v -> {
@@ -75,4 +75,5 @@ public class DashboardActivity  extends AppCompatActivity {
 
 
     }
+
 }

@@ -1,22 +1,28 @@
 package com.uninaproject.juicylemon.utils;
 
 import android.content.Context;
-import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.util.Pair;
+import android.view.View;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.uninaproject.juicylemon.daos.TokenPayload;
 import com.uninaproject.juicylemon.model.User;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 public class Utils {
 
-    public final static String API_BASE_URL = "http://192.168.247.86:80/api/";
+    /**
+     * The base url of the API
+     */
+    public final static String API_BASE_URL = "http://192.168.61.86:80/api/";
+
 
     /**
      * Check if all the fields are not empty
@@ -24,9 +30,7 @@ public class Utils {
      * @return true if all the fields are not empty, false otherwise
      */
     public static long getAllFieldsNotEmpty(Collection<? extends EditText> fields) {
-        long emptyFields = fields.stream().filter(field -> field.getText().toString().isEmpty()).count();
-        return emptyFields;
-
+        return fields.stream().filter(field -> field.getText().toString().isEmpty()).count();
     }
 
     /**
@@ -71,5 +75,36 @@ public class Utils {
 
     public static String addCurrencySymbol(String str) {
         return str + "€";
+    }
+
+    public static void addTokenToCache(String token, Context context ) {
+        SharedPreferences sharedPref = context.getSharedPreferences("credentials", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        editor.putString("token", token);
+        editor.apply();
+    }
+
+    public static Optional<String> getTokenFromCache(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences("credentials", Context.MODE_PRIVATE);
+        String token = sharedPref.getString("token", null);
+
+        return Optional.ofNullable(token);
+    }
+
+    public static void showSnackbar(
+            CoordinatorLayout coordinatorLayout,
+            String message,
+            int duration,
+            String actionText,
+            View.OnClickListener actionListener) {
+
+        Snackbar snackbar = Snackbar.make(coordinatorLayout, message, duration);
+
+        if (actionText != null && actionListener != null) {
+            snackbar.setAction(actionText, actionListener);
+        }
+
+        snackbar.show();
     }
 }

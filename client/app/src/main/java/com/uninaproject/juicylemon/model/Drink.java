@@ -63,4 +63,8 @@ public class Drink implements Serializable {
                 ", type=" + type +
                 '}';
     }
+
+    public int getId() {
+        return id;
+    }
 }

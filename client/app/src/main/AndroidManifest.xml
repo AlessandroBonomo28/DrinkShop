@@ -32,6 +32,8 @@
 
         <activity android:name=".components.DrinkItem">
         </activity>
+
+        <activity android:name=".activities.CartActivity"/>
     </application>
 
 </manifest>
