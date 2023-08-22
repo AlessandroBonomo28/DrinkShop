@@ -37,6 +37,19 @@
         app:shapeAppearanceOverlay="@style/RoundedSmall"
         tools:srcCompat="@tools:sample/avatars" />
 
+
+    <TextView
+        android:id="@+id/drink_detail_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="Descrizione drink"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/drink_image_view_detail" />
+
+
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinator_detail"
         android:layout_width="413dp"
@@ -54,9 +67,10 @@
             android:layout_marginBottom="20dp"
             android:backgroundTint="@color/my_light_primary"
             android:contentDescription="@string/add_drink_to_cart"
-            android:src="@drawable/ic_cart_24"
+            android:src="@drawable/ic_cart_30"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

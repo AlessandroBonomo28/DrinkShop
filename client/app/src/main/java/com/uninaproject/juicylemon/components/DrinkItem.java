@@ -2,10 +2,10 @@ package com.uninaproject.juicylemon.components;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -14,8 +14,9 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.res.ResourcesCompat;
 
+import com.google.android.material.snackbar.Snackbar;
+import com.uninaproject.juicylemon.Controller;
 import com.uninaproject.juicylemon.R;
-import com.uninaproject.juicylemon.activities.DetailActivity;
 import com.uninaproject.juicylemon.utils.Utils;
 import com.uninaproject.juicylemon.model.Drink;
 
@@ -53,26 +54,36 @@ public class DrinkItem extends ConstraintLayout {
     private void initializeViews(Context context) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.drink_button, this);
+
         drinkName = findViewById(R.id.drink_name);
         drinkPrice = findViewById(R.id.drink_price);
         drinkDate = findViewById(R.id.drink_date);
 
         addToCartButton = findViewById(R.id.add_to_cart_button);
-
     }
 
     @SuppressLint("SetTextI18n")
     public void setDrink(Drink drink) {
         drinkName.setText(drink.getName());
 
-        drinkPrice.setText(Utils.addCurrencySymbol(String.valueOf(drink.getPrice())));
+        String price = Utils.normalizePrice(String.valueOf(drink.getPrice()));
+        drinkPrice.setText("€" + price);
 
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy", Locale.ITALY);
         String date = formatter.format(new Date());
         drinkDate.setText("In Data: \n" + date);
 
         addToCartButton.setOnClickListener(v -> {
-            Utils.showAlert(getContext(), "Aggiunto al carrello!!");
+            Controller.getInstance().addDrinkToCart(drink);
+            playAnimation();
+            Snackbar.make(this, drink.getName() + " aggiunto al carrello", Snackbar.LENGTH_SHORT).show();
         });
+    }
+
+    private void playAnimation() {
+        Animation colorAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.rotate);
+        colorAnimation.setDuration(1000);
+        colorAnimation.setRepeatMode(Animation.RESTART);
+        addToCartButton.startAnimation(colorAnimation);
     }
 }

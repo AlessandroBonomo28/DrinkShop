@@ -50,6 +50,7 @@ public class DetailActivity extends AppCompatActivity {
         Controller controller = Controller.getInstance();
 
         TextView drinkName = findViewById(R.id.drinkDetailName);
+        TextView drinkDescription = findViewById(R.id.drink_detail_description);
         CoordinatorLayout coordinatorLayout = findViewById(R.id.coordinator_detail);
         FloatingActionButton fabAddToCart = findViewById(R.id.fab_detail_add_to_cart);
         drinkImage = findViewById(R.id.drink_image_view_detail);
@@ -62,7 +63,9 @@ public class DetailActivity extends AppCompatActivity {
         // get the drink image asynchronously
         controller.getDrinkDAO().getDrinkImage(selectedDrink.getId(), this);
 
+        // setting variables
         drinkName.setText(selectedDrink.getName());
+        drinkDescription.setText(selectedDrink.getDescription());
 
         fabAddToCart.setOnClickListener(v -> {
             model.addDrinkToCart(selectedDrink);

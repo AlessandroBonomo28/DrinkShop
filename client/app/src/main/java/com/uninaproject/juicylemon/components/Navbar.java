@@ -3,6 +3,7 @@ package com.uninaproject.juicylemon.components;
 import android.content.Context;
 import android.content.Intent;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -51,12 +52,14 @@ public class Navbar extends Toolbar {
     void init() {
         EventBus.getDefault().register(this);
 
+        // inflate layout
+        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater.inflate(R.layout.navbar_dashboard, this);
+
         viewModel = new ViewModelProvider((ViewModelStoreOwner) getContext()).get(NavbarViewModel.class);
 
         setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.box_shadow, null));
 
-        // inflate layout
-        inflate(getContext(), R.layout.navbar_dashboard, this);
 
         welcome_text = findViewById(R.id.navbar_text_welcome);
         cart_button = findViewById(R.id.cart_button);
@@ -67,7 +70,7 @@ public class Navbar extends Toolbar {
 
         String nomeUtente = Utils.separateEmail(LoginManager.getInstance().getUser().email).first;
         welcome_text.setText(getResources().getString(R.string.welcome_text, nomeUtente));
-        
+
         cart_button.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), CartActivity.class);
             getContext().startActivity(intent);

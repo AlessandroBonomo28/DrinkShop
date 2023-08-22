@@ -50,15 +50,17 @@
         android:layout_height="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         android:background="@android:color/transparent"
-        android:src="@drawable/ic_cart_24"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:src="@drawable/ic_cart_30"
+        android:foreground="@drawable/ripple_image_button"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/add_drink_to_cart" />
 
     <TextView
         android:id="@+id/drink_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:text="€ 6,50"
+        android:text="€6,50"
         android:textColor="#F8BB83"
         android:textSize="16sp"
         android:textStyle="bold"

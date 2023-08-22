@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:clickable="true"
+    android:background="@drawable/edit_text_border"
+    android:layout_height="80dp"
+    android:focusable="true">
+
+    <TextView
+        android:id="@+id/cart_list_item_drink_name"
+        android:layout_width="127dp"
+        android:layout_height="wrap_content"
+        android:breakStrategy="simple"
+        android:gravity="center_vertical"
+        android:layout_marginStart="10dp"
+        android:text="@string/cocktails"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/cart_list_item_remove"
+        android:layout_width="60dp"
+        android:layout_height="47dp"
+        android:layout_marginEnd="10dp"
+        android:backgroundTint="@color/gray"
+        android:text="-"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/cart_list_item_add"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/cart_list_item_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:text="Add"
+        app:layout_constraintBaseline_toBaselineOf="@+id/cart_list_item_remove"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/cart_list_item_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/edit_text_border"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="5dp"
+        android:text="20"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/cart_list_item_remove"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

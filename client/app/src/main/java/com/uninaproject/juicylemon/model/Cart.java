@@ -58,6 +58,10 @@ public class Cart {
         }
     }
 
+    public Map<Drink, Integer> getDrinks() {
+        return drinkInCarrello;
+    }
+
     public void clear() {
         drinkInCarrello.clear();
     }

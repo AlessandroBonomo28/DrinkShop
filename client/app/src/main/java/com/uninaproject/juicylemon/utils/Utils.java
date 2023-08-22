@@ -21,7 +21,7 @@ public class Utils {
     /**
      * The base url of the API
      */
-    public final static String API_BASE_URL = "http://192.168.61.86:80/api/";
+    public final static String API_BASE_URL = "http://192.168.186.86:80/api/";
 
 
     /**
@@ -106,5 +106,19 @@ public class Utils {
         }
 
         snackbar.show();
+    }
+
+    public static String normalizePrice(String price) {
+        String[] splittedPrice = price.split("\\.");
+
+        // se non ci sono decimali aggiungo 00
+        if (splittedPrice.length == 1)
+            return price + "00";
+        // se ci sono 2 decimali
+        // e se il secondo decimale è vuoto aggiungo uno 0
+        else if (splittedPrice[1].length() == 1)
+            return price + "0";
+        else
+            return price;
     }
 }
