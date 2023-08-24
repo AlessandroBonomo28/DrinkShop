@@ -38,7 +38,8 @@ public class DashboardActivity  extends AppCompatActivity {
 
         FrameLayout frullati_button = findViewById(R.id.frullati_button);
         frullati_button.setOnClickListener(v -> {
-            Utils.showAlert(this, "Frullati");
+            Intent intent = new Intent(DashboardActivity.this, DrinksListView.class);
+            startActivity(intent);
         });
 
         FrameLayout cocktails_button = findViewById(R.id.cocktails_button);

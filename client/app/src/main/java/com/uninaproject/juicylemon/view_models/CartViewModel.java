@@ -21,4 +21,14 @@ public class CartViewModel extends ViewModel {
     public MutableLiveData<Map<Drink, Integer>> getDrinks() {
         return drinks;
     }
+
+    public void addDrink(Drink drink) {
+        Controller.getInstance().getCart().addDrink(drink);
+        drinks.postValue(Controller.getInstance().getCart().getDrinks());
+    }
+
+    public void removeDrink(Drink drink) {
+        Controller.getInstance().getCart().removeAmountOfDrink(drink, 1);
+        drinks.postValue(Controller.getInstance().getCart().getDrinks());
+    }
 }

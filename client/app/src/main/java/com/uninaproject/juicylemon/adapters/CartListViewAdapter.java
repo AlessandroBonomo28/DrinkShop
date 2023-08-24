@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,7 +13,10 @@ import androidx.annotation.Nullable;
 
 import com.uninaproject.juicylemon.Controller;
 import com.uninaproject.juicylemon.R;
+import com.uninaproject.juicylemon.events.CartDrinkAmountChangedEvent;
 import com.uninaproject.juicylemon.model.Drink;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -34,6 +38,8 @@ public class CartListViewAdapter extends ArrayAdapter<Drink> {
 
         TextView drinkName = convertView.findViewById(R.id.cart_list_item_drink_name);
         TextView drinkCounter = convertView.findViewById(R.id.cart_list_item_count);
+        Button removeButton = convertView.findViewById(R.id.cart_list_item_remove);
+        Button addButton = convertView.findViewById(R.id.cart_list_item_add);
 
         if (drink == null) {
             return convertView;
@@ -41,6 +47,14 @@ public class CartListViewAdapter extends ArrayAdapter<Drink> {
 
         drinkName.setText(drink.getName());
         drinkCounter.setText(String.valueOf(Controller.getInstance().getCart().getDrinks().get(drink)));
+
+        removeButton.setOnClickListener(v -> {
+            EventBus.getDefault().post(new CartDrinkAmountChangedEvent(drink, 1,CartDrinkAmountChangedEvent.Action.REMOVE));
+        });
+
+        addButton.setOnClickListener(v -> {
+            EventBus.getDefault().post(new CartDrinkAmountChangedEvent(drink, 1,CartDrinkAmountChangedEvent.Action.ADD));
+        });
 
         return convertView;
     }

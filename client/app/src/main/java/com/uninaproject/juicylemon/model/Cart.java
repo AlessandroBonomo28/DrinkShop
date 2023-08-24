@@ -1,5 +1,9 @@
 package com.uninaproject.juicylemon.model;
 
+import com.uninaproject.juicylemon.events.CartUpdateEvent;
+
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,11 +42,7 @@ public class Cart {
         else
             drinkInCarrello.put(drink, 1);
 
-    }
-
-    public void addDrinks(List<Drink> drinks) {
-        for (Drink drink : drinks)
-            addDrink(drink);
+        EventBus.getDefault().post(new CartUpdateEvent(getTotalSize()));
     }
 
     public void removeAmountOfDrink(Drink drink, int amount) {
@@ -56,6 +56,8 @@ public class Cart {
             else
                 drinkInCarrello.put(drink, newAmount);
         }
+
+        EventBus.getDefault().post(new CartUpdateEvent(getTotalSize()));
     }
 
     public Map<Drink, Integer> getDrinks() {
