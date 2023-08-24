@@ -8,7 +8,7 @@
     android:background="@drawable/edit_text_border">
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/drink_image"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:background="@drawable/rounded_corners"
@@ -23,7 +23,7 @@
         android:orientation="vertical"
 
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageView3"
+        app:layout_constraintStart_toEndOf="@+id/drink_image"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView

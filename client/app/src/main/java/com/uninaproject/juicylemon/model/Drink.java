@@ -1,9 +1,13 @@
 package com.uninaproject.juicylemon.model;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Drink implements Serializable {
     public int id;
@@ -37,6 +41,20 @@ public class Drink implements Serializable {
         }
     }
 
+    public static List<Drink> fromJsonArray(JSONArray array) {
+        return Stream.iterate(0, i -> i + 1)
+                .limit(array.length())
+                .map(i -> {
+                    try {
+                        return array.getJSONObject(i);
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .map(Drink::fromJSON)
+                .collect(Collectors.toList());
+    }
+
     public String getName() {
         return name;
     }
@@ -52,6 +70,7 @@ public class Drink implements Serializable {
     public DrinkType getType() {
         return type;
     }
+
 
     @Override
     public String toString() {

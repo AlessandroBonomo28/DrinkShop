@@ -37,7 +37,7 @@
         android:textSize="18sp" />
 
     <ListView
-        android:id="@+id/list_view"
+        android:id="@+id/dashboard_list_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

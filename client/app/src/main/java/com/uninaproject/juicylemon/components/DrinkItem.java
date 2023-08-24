@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,8 +18,13 @@ import androidx.core.content.res.ResourcesCompat;
 import com.google.android.material.snackbar.Snackbar;
 import com.uninaproject.juicylemon.Controller;
 import com.uninaproject.juicylemon.R;
+import com.uninaproject.juicylemon.events.DrinkImageEvent;
+import com.uninaproject.juicylemon.model.DrinkType;
 import com.uninaproject.juicylemon.utils.Utils;
 import com.uninaproject.juicylemon.model.Drink;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -32,6 +38,8 @@ public class DrinkItem extends ConstraintLayout {
     TextView drinkDate;
     Drink drink;
     ImageButton addToCartButton;
+
+    ImageView drinkImage;
 
     public DrinkItem(@NonNull Context context, @Nullable AttributeSet attrs, Optional<Drink> drink) {
         super(context, attrs);
@@ -49,6 +57,8 @@ public class DrinkItem extends ConstraintLayout {
         // set the drink
         drink.ifPresent(this::setDrink);
 
+
+
     }
 
     private void initializeViews(Context context) {
@@ -58,6 +68,7 @@ public class DrinkItem extends ConstraintLayout {
         drinkName = findViewById(R.id.drink_name);
         drinkPrice = findViewById(R.id.drink_price);
         drinkDate = findViewById(R.id.drink_date);
+        drinkImage = findViewById(R.id.drink_image);
 
         addToCartButton = findViewById(R.id.add_to_cart_button);
     }
@@ -78,6 +89,8 @@ public class DrinkItem extends ConstraintLayout {
             playAnimation();
             Snackbar.make(this, drink.getName() + " aggiunto al carrello", Snackbar.LENGTH_SHORT).show();
         });
+
+        setDrinkIcon(drink);
     }
 
     private void playAnimation() {
@@ -86,4 +99,13 @@ public class DrinkItem extends ConstraintLayout {
         colorAnimation.setRepeatMode(Animation.RESTART);
         addToCartButton.startAnimation(colorAnimation);
     }
+
+    private void setDrinkIcon(Drink drink) {
+        if (drink.getType() == DrinkType.COCKTAIL)
+            drinkImage.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.image_cocktails, null));
+        else
+            drinkImage.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.image_tre_frullati, null));
+
+    }
+
 }

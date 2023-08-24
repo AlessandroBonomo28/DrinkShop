@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.function.Function;
 
 public interface DrinkDAO {
-    public List<Drink> getDrinks(Context context, Response.Listener<JSONArray> listener);
+    public List<Drink> getDrinks(Context context);
 
     public Drink getDrink(int id, Context context, Response.Listener<JSONObject> listener);
 

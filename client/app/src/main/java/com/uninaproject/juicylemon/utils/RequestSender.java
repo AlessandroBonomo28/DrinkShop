@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.util.Pair;
 import android.widget.ImageView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonArrayRequest;
@@ -13,6 +14,8 @@ import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.Map;
 
 public class RequestSender {
 

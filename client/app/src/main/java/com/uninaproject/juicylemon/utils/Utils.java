@@ -21,7 +21,7 @@ public class Utils {
     /**
      * The base url of the API
      */
-    public final static String API_BASE_URL = "http://192.168.1.36:80/api/";
+    public final static String API_BASE_URL = "http://192.168.1.11:80/api/";
 
 
     /**
