@@ -86,6 +86,29 @@ public class RequestSender {
         VolleyRequestHandler.getInstance(context).addToRequestQueue(jsonObjectRequest);
     }
 
+    public static void sendRequestForString(Context context, String url, int method, JSONObject body, Map<String, String> headers, RequestListeners<String> listeners) {
+        StringRequest stringRequest = new StringRequest(
+                url, listeners.responseListener, listeners.errorListener) {
+
+            @Override
+            public int getMethod() {
+                return method;
+            }
+
+            @Override
+            public byte[] getBody() {
+                return body.toString().getBytes();
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                return headers;
+            }
+        };
+
+        VolleyRequestHandler.getInstance(context).addToRequestQueue(stringRequest);
+    }
+
     public static void sendRequestForImage(Context context, String url, int method, JSONObject body, Pair<Integer, Integer> maxImageSize, RequestListeners<Bitmap> listeners) {
         ImageRequest jsonObjectRequest = new ImageRequest(
                 url, listeners.responseListener, maxImageSize.first, maxImageSize.second, ImageView.ScaleType.CENTER, null, listeners.errorListener) {

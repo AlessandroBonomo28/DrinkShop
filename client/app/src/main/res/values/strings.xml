@@ -15,4 +15,5 @@
     <string name="immagine_del_drink">Immagine del drink</string>
     <string name="placeholder_text">Hello, User!</string>
     <string name="add_drink_to_cart">Add drink to cart</string>
+    <string name="send_order">Send order</string>
 </resources>

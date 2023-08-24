@@ -1,8 +1,11 @@
 package com.uninaproject.juicylemon.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.os.CancellationSignal;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.hardware.biometrics.BiometricPrompt;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -90,7 +93,7 @@ public class LoginRegisterActivity extends AppCompatActivity {
             // LOGIN ROUTE
             if (emptyFieldsLogin == 0 && emptyFieldsRegister > 0) {
                 try {
-                     userDAO.login(
+                    userDAO.login(
                             loginFields.get(0).getText().toString(),
                             loginFields.get(1).getText().toString(),
                             this);
