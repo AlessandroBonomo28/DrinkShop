@@ -18,5 +18,7 @@ services:
       - POSTGRES_USER=docker
       - POSTGRES_PASSWORD=12345
       - POSTGRES_DB=drinks
+      - TZ=Europe/Rome
+      - PGTZ=Europe/Rome
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
