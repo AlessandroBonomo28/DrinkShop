@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdbool.h>
+
+#define TIME_ZONE  "Europe/Rome"
 // Struttura per rappresentare un oggetto datetime
 typedef struct {
     int year;

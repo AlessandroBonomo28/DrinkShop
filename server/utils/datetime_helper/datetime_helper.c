@@ -5,6 +5,8 @@
 
 // Calcola la differenza in secondi tra due oggetti datetime
 long int datetime_diff(DateTime dt1, DateTime dt2) {
+    setenv("TZ", TIME_ZONE, 1);
+    tzset();
     time_t time1, time2;
     struct tm tm1, tm2;
 
@@ -61,6 +63,8 @@ bool dt_lessEquals(DateTime dt1, DateTime dt2) {
 
 // Ottiene il datetime corrente
 DateTime datetime_now() {
+    setenv("TZ", TIME_ZONE, 1);
+    tzset();
     time_t now;
     struct tm* tm_info;
     time(&now);
@@ -74,6 +78,8 @@ DateTime datetime_now() {
     dt.minute = tm_info->tm_min;
     dt.second = tm_info->tm_sec;
 
+    // print now
+    printf("Current local time and date: %s", asctime(tm_info));
     return dt;
 }
 
@@ -101,6 +107,10 @@ DateTime* datetime_parse(const char* str) {
 
 // Aggiunge un numero specificato di minuti a un oggetto datetime
 DateTime datetime_addMinutes(DateTime dt, int minutes) {
+    // imposta timezone
+    setenv("TZ", TIME_ZONE, 1);
+    tzset();
+
     time_t timestamp;
     struct tm *timeinfo;
     
