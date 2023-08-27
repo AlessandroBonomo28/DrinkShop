@@ -68,7 +68,7 @@ char* formatOrderResponse(Order* order, PGresult* order_drinks_result,float tota
         return NULL;
     }
     char* jsonListDrinksOrdered = formatQueryResultToJson(order_drinks_result);
-    char buffer[1024];
+    char buffer[4096];
     HttpResponse response;
     response.code = "200 OK";
     response.contentType = "application/json";
