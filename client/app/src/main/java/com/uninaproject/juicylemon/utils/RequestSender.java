@@ -6,6 +6,7 @@ import android.util.Pair;
 import android.widget.ImageView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonArrayRequest;
@@ -32,9 +33,50 @@ public class RequestSender {
 
     }
 
-    public static void sendRequestForJsonObject(Context context, String url, int method, JSONObject body, RequestListeners<JSONObject> listeners) {
+    public static class RequestOptions {
+        private int method = Request.Method.GET;
+        private JSONObject body = null;
+        private Map<String, String> headers = null;
+
+        public RequestOptions setMethod(int method) {
+            this.method = method;
+            return this;
+        }
+
+        public RequestOptions setBody(JSONObject body) {
+            this.body = body;
+            return this;
+        }
+
+        public RequestOptions setHeaders(Map<String, String> headers) {
+            this.headers = headers;
+            return this;
+        }
+
+        public int getMethod() {
+            return method;
+        }
+
+        public JSONObject getBody() {
+            return body;
+        }
+
+        public Map<String, String> getHeaders() {
+            return headers;
+        }
+    }
+
+    public static void sendRequestForJsonObject(Context context, String url, int method, JSONObject body, Map<String, String> headers , RequestListeners<JSONObject> listeners) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 url, listeners.responseListener, listeners.errorListener) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                if (headers == null)
+                    return super.getHeaders();
+                else
+                    return headers;
+            }
 
             @Override
             public int getMethod() {

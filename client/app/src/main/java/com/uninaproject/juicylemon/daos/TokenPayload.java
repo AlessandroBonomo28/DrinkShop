@@ -2,6 +2,7 @@ package com.uninaproject.juicylemon.daos;
 
 
 import com.auth0.android.jwt.JWT;
+import com.uninaproject.juicylemon.lemonExceptions.InvalidTokenException;
 
 public class TokenPayload {
     public String email;
@@ -9,7 +10,7 @@ public class TokenPayload {
 
     public int id;
     public String expire;
-    public TokenPayload(String token) throws Exception {
+    public TokenPayload(String token) throws InvalidTokenException {
 
         // Set the raw token
         this.rawToken = token;
@@ -21,7 +22,7 @@ public class TokenPayload {
         String expire = jwt.getClaim("expire").asString();
 
         if(id == null || email == null || expire == null)
-            throw new Exception("Error");
+            throw new InvalidTokenException("Error");
 
         this.id = Integer.parseInt(id);
         this.email = email;

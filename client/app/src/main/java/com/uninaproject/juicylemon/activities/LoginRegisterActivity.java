@@ -16,6 +16,7 @@ import com.uninaproject.juicylemon.daos.UserDAO;
 import com.uninaproject.juicylemon.events.UserAuthErrorEvent;
 import com.uninaproject.juicylemon.events.UserLoginEvent;
 import com.uninaproject.juicylemon.events.UserRegisterEvent;
+import com.uninaproject.juicylemon.lemonExceptions.InvalidTokenException;
 import com.uninaproject.juicylemon.lemonExceptions.UserException;
 import com.uninaproject.juicylemon.utils.LoginManager;
 import com.uninaproject.juicylemon.utils.Utils;
@@ -25,6 +26,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class LoginRegisterActivity extends AppCompatActivity {
 
@@ -45,9 +47,8 @@ public class LoginRegisterActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(this, DashboardActivity.class);
                 startActivity(intent);
-            } catch (Exception e) {
+            } catch (NoSuchElementException | InvalidTokenException e) {
                 Utils.showAlert(this, "Errore", "Token non valido");
-                throw new RuntimeException(e);
             }
         }
 
@@ -83,9 +84,7 @@ public class LoginRegisterActivity extends AppCompatActivity {
                     );
 
 
-                    Utils.showAlert(this, "Registrazione avvenuta con successo");
                 } catch (UserException e) {
-                    Utils.showAlert(this, e.getMessage());
                     return;
                 }
             }

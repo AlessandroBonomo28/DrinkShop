@@ -1,12 +1,17 @@
 package com.uninaproject.juicylemon.view_models;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.uninaproject.juicylemon.Controller;
+import com.uninaproject.juicylemon.events.CartPushedEvent;
 import com.uninaproject.juicylemon.model.Drink;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.Map;
 
@@ -30,7 +35,13 @@ public class CartViewModel extends ViewModel {
     }
 
     public void sendOrder(Context context) {
+        Log.d("CartViewModel", "sendOrder: " + Controller.getInstance().getCart().getDrinks().toString());
         Controller.getInstance().getOrderDAO().pushCurrentCartToServer(Controller.getInstance().getCart(), context);
+    }
+
+    public void clearCart() {
+        Controller.getInstance().getCart().clear();
+        drinks.postValue(Controller.getInstance().getCart().getDrinks());
     }
 
     public void removeDrink(Drink drink) {

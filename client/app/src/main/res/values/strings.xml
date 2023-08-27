@@ -16,4 +16,5 @@
     <string name="placeholder_text">Hello, User!</string>
     <string name="add_drink_to_cart">Add drink to cart</string>
     <string name="send_order">Send order</string>
+    <string name="non_product_in_cart">Non ci sono prodotti nel carrello</string>
 </resources>

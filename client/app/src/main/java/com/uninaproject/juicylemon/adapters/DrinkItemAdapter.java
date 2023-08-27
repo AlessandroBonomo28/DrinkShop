@@ -17,8 +17,16 @@ import java.util.List;
 import java.util.Optional;
 
 public class DrinkItemAdapter extends ArrayAdapter<Drink> {
+
+    private boolean isDataAcquistoVisible = true;
+
     public DrinkItemAdapter(Context context, List<Drink> drinks) {
         super(context, 0, drinks);
+    }
+
+    public DrinkItemAdapter(Context context, List<Drink> drinks, boolean isDataAcquistoVisible) {
+        super(context, 0, drinks);
+        this.isDataAcquistoVisible = isDataAcquistoVisible;
     }
 
     @NonNull
@@ -26,6 +34,6 @@ public class DrinkItemAdapter extends ArrayAdapter<Drink> {
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         Drink drink = getItem(position);
 
-        return new DrinkItem(getContext(), null, Optional.ofNullable(drink));
+        return new DrinkItem(getContext(), null, Optional.ofNullable(drink), isDataAcquistoVisible);
     }
 }

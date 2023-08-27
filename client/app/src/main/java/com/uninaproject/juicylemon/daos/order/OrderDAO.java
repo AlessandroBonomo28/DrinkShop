@@ -8,6 +8,6 @@ public interface OrderDAO {
 
     public void pushCurrentCartToServer(Cart cart, Context context);
 
-    public void fetchOrdersFromServer(Context context);
+    public void fetchDrinksLastOrderFromServer(Context context);
 
 }

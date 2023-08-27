@@ -41,8 +41,11 @@ public class DrinkItem extends ConstraintLayout {
 
     ImageView drinkImage;
 
-    public DrinkItem(@NonNull Context context, @Nullable AttributeSet attrs, Optional<Drink> drink) {
+    private boolean isDataAcquistoVisible = true;
+
+    public DrinkItem(@NonNull Context context, @Nullable AttributeSet attrs, Optional<Drink> drink, boolean isDataAcquistoVisible) {
         super(context, attrs);
+        this.isDataAcquistoVisible = isDataAcquistoVisible;
 
         // style the component
         setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.edit_text_border, null));
@@ -70,6 +73,9 @@ public class DrinkItem extends ConstraintLayout {
         drinkDate = findViewById(R.id.drink_date);
         drinkImage = findViewById(R.id.drink_image);
 
+        if (!isDataAcquistoVisible)
+            drinkDate.setVisibility(GONE);
+
         addToCartButton = findViewById(R.id.add_to_cart_button);
     }
 
@@ -90,7 +96,12 @@ public class DrinkItem extends ConstraintLayout {
             Snackbar.make(this, drink.getName() + " aggiunto al carrello", Snackbar.LENGTH_SHORT).show();
         });
 
+        // set the drink icon
         setDrinkIcon(drink);
+    }
+
+    public void hideDataAcquisto() {
+        drinkDate.setVisibility(GONE);
     }
 
     private void playAnimation() {

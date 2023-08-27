@@ -1,12 +1,14 @@
 package com.uninaproject.juicylemon.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ListView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -29,6 +31,8 @@ public class CartActivity extends AppCompatActivity {
 
     CartViewModel model;
 
+    ConstraintLayout layout;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +48,7 @@ public class CartActivity extends AppCompatActivity {
 
         // get the drink list from the controller
         ListView listView = findViewById(R.id.cart_list_view);
+        layout = findViewById(R.id.cart_layout);
 
         List<Drink> drinks = (List<Drink>) Objects.requireNonNull(model.getDrinks().getValue()).keySet().stream().map(drink -> (Drink) drink).collect(Collectors.toList());
         listView.setAdapter(new CartListViewAdapter(this, R.layout.cart_list_item, drinks));
@@ -56,6 +61,7 @@ public class CartActivity extends AppCompatActivity {
         Button pushButton = findViewById(R.id.cart_push_button);
         pushButton.setOnClickListener(v -> {
             model.sendOrder(this);
+            model.clearCart();
         });
     }
 
@@ -71,12 +77,14 @@ public class CartActivity extends AppCompatActivity {
 
     @Subscribe
     public void onCartPushedToServer(CartPushedEvent event) {
-        Snackbar.make(findViewById(R.id.cart_list_view), "Cart pushed to server", Snackbar.LENGTH_LONG).show();
+        System.out.println("Cart pushed to server");
+        Log.d("CartActivity", "onCartPushedToServer: " + event.toString());
+        Snackbar.make(layout, "Ordine inviato", Snackbar.LENGTH_LONG).show();
     }
 
     @Subscribe
     public void onCartPushedError(CartPushErrorEvent event) {
-        Snackbar.make(findViewById(R.id.cart_list_view), event.getMessage(), Snackbar.LENGTH_LONG).show();
+        Snackbar.make(layout, event.getMessage(), Snackbar.LENGTH_LONG).show();
     }
 
     @Override

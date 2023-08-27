@@ -80,7 +80,7 @@ public class UserDAO implements IUserDAO {
             e.printStackTrace();
         }
 
-        RequestSender.sendRequestForJsonObject(context, API_BASE_URL + "register", Request.Method.POST, body, requestListeners);
+        RequestSender.sendRequestForJsonObject(context, API_BASE_URL + "register", Request.Method.POST, body, null ,requestListeners);
 
     }
 }

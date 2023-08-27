@@ -95,7 +95,7 @@ public class DrinksListView  extends AppCompatActivity {
 
         model.getDrinks().setValue(event.getDrinks());
         model.setDefaultDrinks(event.getDrinks());
-        drinksListView.setAdapter(new DrinkItemAdapter(this, model.getDrinks().getValue()));
+        drinksListView.setAdapter(new DrinkItemAdapter(this, model.getDrinks().getValue(), false));
     }
 
     @Override
