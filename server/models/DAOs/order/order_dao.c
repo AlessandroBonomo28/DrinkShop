@@ -61,7 +61,7 @@ PGresult* getOrderItemsByOrderId(PGconn* connection, int id, float *totalAmount)
     // bisogna selezionare in questo modo per evitare di avere attributi con lo stesso nome
     const char* query = (
         "SELECT \"OrderItems\".*, \"Drinks\".\"id\" as \"id_drink\", \"Drinks\".\"name\", \
-         \"Drinks\".\"description\", \"Drinks\".\"image_url\", \"Drinks\".\"price\" \
+         \"Drinks\".\"description\", \"Drinks\".\"image_url\", \"Drinks\".\"price\" , \"Drinks\".\"drink_type\" \
         FROM \"OrderItems\" \
         INNER JOIN \"Drinks\" ON \"OrderItems\".\"id_item\" = \"Drinks\".\"id\" \
         WHERE \"id_order\" = $1;"
