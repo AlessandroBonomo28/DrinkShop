@@ -12,6 +12,7 @@ import com.uninaproject.juicylemon.Controller;
 import com.uninaproject.juicylemon.R;
 import com.uninaproject.juicylemon.adapters.DrinkItemAdapter;
 import com.uninaproject.juicylemon.events.DrinkFetchedEvent;
+import com.uninaproject.juicylemon.events.FetchedLastOrderFromServer;
 import com.uninaproject.juicylemon.model.Drink;
 import com.uninaproject.juicylemon.model.DrinkType;
 import com.uninaproject.juicylemon.utils.Utils;
@@ -31,6 +32,8 @@ public class DashboardActivity  extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        listView = findViewById(R.id.dashboard_list_view);
+
         Toolbar toolbar = findViewById(R.id.navbar_dashboard);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
@@ -49,6 +52,32 @@ public class DashboardActivity  extends AppCompatActivity {
             startActivity(intent);
         });
 
+        Controller.getInstance().getOrderDAO().fetchDrinksLastOrderFromServer(this);
+
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            Drink drink = (Drink) parent.getItemAtPosition(position);
+            Intent intent = new Intent(DashboardActivity.this, DetailActivity.class);
+            intent.putExtra("drink", drink);
+            startActivity(intent);
+        });
+
     }
 
+    @Subscribe
+    public void onFetchedDrinks(FetchedLastOrderFromServer event) {
+        DrinkItemAdapter adapter = new DrinkItemAdapter(this, event.getDrinksFetched(), true);
+        listView.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
 }

@@ -37,6 +37,8 @@
         android:textSize="18sp" />
 
     <ListView
+        android:divider="@android:color/transparent"
+        android:dividerHeight="10sp"
         android:id="@+id/dashboard_list_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

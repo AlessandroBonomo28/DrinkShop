@@ -17,6 +17,7 @@ import com.uninaproject.juicylemon.adapters.CartListViewAdapter;
 import com.uninaproject.juicylemon.events.CartDrinkAmountChangedEvent;
 import com.uninaproject.juicylemon.events.CartPushErrorEvent;
 import com.uninaproject.juicylemon.events.CartPushedEvent;
+import com.uninaproject.juicylemon.events.CartUpdateEvent;
 import com.uninaproject.juicylemon.model.Drink;
 import com.uninaproject.juicylemon.view_models.CartViewModel;
 
@@ -61,6 +62,7 @@ public class CartActivity extends AppCompatActivity {
         Button pushButton = findViewById(R.id.cart_push_button);
         pushButton.setOnClickListener(v -> {
             model.sendOrder(this);
+            EventBus.getDefault().post(new CartUpdateEvent(0));
             model.clearCart();
         });
     }

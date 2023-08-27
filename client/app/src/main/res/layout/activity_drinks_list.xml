@@ -26,6 +26,8 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
+        android:divider="@android:color/transparent"
+        android:dividerHeight="10sp"
         android:id="@+id/drinks_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

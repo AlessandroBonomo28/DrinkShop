@@ -1,8 +1,13 @@
 package com.uninaproject.juicylemon.components;
 
+import static com.uninaproject.juicylemon.utils.Utils.API_BASE_URL;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -15,16 +20,16 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.res.ResourcesCompat;
 
+import com.android.volley.Request;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.google.android.material.snackbar.Snackbar;
 import com.uninaproject.juicylemon.Controller;
 import com.uninaproject.juicylemon.R;
-import com.uninaproject.juicylemon.events.DrinkImageEvent;
-import com.uninaproject.juicylemon.model.DrinkType;
+import com.uninaproject.juicylemon.utils.RequestSender;
 import com.uninaproject.juicylemon.utils.Utils;
 import com.uninaproject.juicylemon.model.Drink;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
+import com.uninaproject.juicylemon.utils.VolleyRequestHandler;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -39,7 +44,7 @@ public class DrinkItem extends ConstraintLayout {
     Drink drink;
     ImageButton addToCartButton;
 
-    ImageView drinkImage;
+    ImageView drinkImageView;
 
     private boolean isDataAcquistoVisible = true;
 
@@ -53,13 +58,11 @@ public class DrinkItem extends ConstraintLayout {
         // set android:descendantFocusability="blocksDescendants"
         setDescendantFocusability(FOCUS_BLOCK_DESCENDANTS);
 
-
         // inflate the component
         initializeViews(context);
 
         // set the drink
         drink.ifPresent(this::setDrink);
-
 
 
     }
@@ -71,7 +74,7 @@ public class DrinkItem extends ConstraintLayout {
         drinkName = findViewById(R.id.drink_name);
         drinkPrice = findViewById(R.id.drink_price);
         drinkDate = findViewById(R.id.drink_date);
-        drinkImage = findViewById(R.id.drink_image);
+        drinkImageView = findViewById(R.id.drink_image);
 
         if (!isDataAcquistoVisible)
             drinkDate.setVisibility(GONE);
@@ -112,11 +115,22 @@ public class DrinkItem extends ConstraintLayout {
     }
 
     private void setDrinkIcon(Drink drink) {
-        if (drink.getType() == DrinkType.COCKTAIL)
-            drinkImage.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.image_cocktails, null));
-        else
-            drinkImage.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.image_tre_frullati, null));
+
+                VolleyRequestHandler.getInstance(getContext()).getImageLoader().get(API_BASE_URL + "drink/image/" + drink.getId(), new ImageLoader.ImageListener() {
+                    @Override
+                    public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                        Bitmap bitmap = response.getBitmap();
+                        if (bitmap != null)
+                            drinkImageView.setImageBitmap(bitmap);
+                    }
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("VOLLEY", error.getMessage());
+                    }
+                });
 
     }
+
 
 }

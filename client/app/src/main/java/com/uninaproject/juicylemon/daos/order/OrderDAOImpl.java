@@ -1,6 +1,9 @@
 package com.uninaproject.juicylemon.daos.order;
 
+import static com.uninaproject.juicylemon.utils.Utils.API_BASE_URL;
+
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.uninaproject.juicylemon.Controller;
@@ -25,10 +28,38 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public class OrderDAOImpl implements OrderDAO {
+    // TODO: forse da fare un refactor
     @Override
     public void pushCurrentCartToServer(Cart cart, Context context) {
         if (cart.getDrinks().isEmpty())
             return;
+
+        Runnable runnable = () -> {
+            JSONObject body = new JSONObject();
+            try {
+                body.put("amount", 1000);
+                body.put("card_holder", "alex");
+                body.put("card_number", "1234567891112130");
+                body.put("CVV", "123");
+                body.put("expiration_date", "01/21");
+
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + LoginManager.getInstance().getTokenPayload().rawToken);
+
+
+                RequestSender.sendRequestForJsonObject(context, API_BASE_URL + "pay", Request.Method.POST, body, headers, new RequestSender.RequestListeners<>(
+                                response -> {
+                                    Log.d("CartViewModel", "sendOrder: " + response.toString());
+                                },
+                                error -> {
+                                    Log.d("CartViewModel", "sendOrder: " + error.toString());
+                                }
+                        )
+                );
+
+            } catch (JSONException ignored) {
+            }
+        };
 
         String token = LoginManager.getInstance().getTokenPayload().rawToken;
         Map<String, String> headers = new HashMap<>();
@@ -60,6 +91,8 @@ public class OrderDAOImpl implements OrderDAO {
 
         });
 
+        Thread thread = new Thread(runnable);
+        thread.start();
         EventBus.getDefault().post(new CartPushedEvent());
     }
 
@@ -74,25 +107,22 @@ public class OrderDAOImpl implements OrderDAO {
                 response -> {
                     JSONArray drinks = response.optJSONArray("drinks");
 
-                    if (drinks == null)
+                    if (drinks == null) {
+                        EventBus.getDefault().post(new FetchedLastOrderFromServer(new ArrayList<>()));
                         return;
+                    }
 
                     List<Drink> drinksList = new ArrayList<>();
                     Stream.iterate(0, i -> i + 1).limit(drinks.length()).forEach(i -> {
                         JSONObject drink = drinks.optJSONObject(i);
-
-                        if (drink == null)
-                            return;
-                        //TODO: controllare se esiste il campo drink_type
-                        drinksList.add(Drink.fromJSON(drink));
-
+                        drinksList.add(Drink.fromJSON(drink, "id_drink"));
                     });
 
-
+                    System.out.println(drinksList);
                     EventBus.getDefault().post(new FetchedLastOrderFromServer(drinksList));
                 },
                 error -> {
-                    throw new RuntimeException(error.getMessage());
+                    EventBus.getDefault().post(new FetchedLastOrderFromServer(new ArrayList<>()));
                 }
         ));
     }

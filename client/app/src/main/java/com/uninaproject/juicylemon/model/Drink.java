@@ -31,11 +31,15 @@ public class Drink implements Serializable {
     }
 
     public static Drink fromJSON(JSONObject object) {
+        return fromJSON(object, "id");
+    }
+
+    public static Drink fromJSON(JSONObject object, String overrideIdName) {
         try {
 
             DrinkType drinkType = object.getString("drink_type").equals("cocktail") ? DrinkType.COCKTAIL : DrinkType.FRULLATO;
 
-            return new Drink(object.getInt("id"), object.getString("name"), Float.parseFloat(object.getString("price")), object.getString("description"), drinkType);
+            return new Drink(object.getInt(overrideIdName), object.getString("name"), Float.parseFloat(object.getString("price")), object.getString("description"), drinkType);
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
