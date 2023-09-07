@@ -9,6 +9,7 @@ import android.widget.ListView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.uninaproject.juicylemon.Controller;
@@ -37,6 +38,12 @@ public class DrinksListView  extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drinks_list);
+
+        Toolbar toolbar = findViewById(R.id.drink_list_view_navbar);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_back_arrow_24);
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+
 
         model = new ViewModelProvider(this).get(DrinksListViewModel.class);
 

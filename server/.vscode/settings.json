@@ -1,0 +1,8 @@
+{
+    "editor.acceptSuggestionOnEnter": "on",
+    "files.associations": {
+        "*.excalidraw": "json",
+        "*.excalidrawlib": "json",
+        "datetime_helper.h": "c"
+    }
+}

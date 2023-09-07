@@ -4,6 +4,7 @@ import static com.uninaproject.juicylemon.utils.Utils.API_BASE_URL;
 
 import android.content.Context;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.uninaproject.juicylemon.events.UserAuthErrorEvent;
@@ -37,7 +38,7 @@ public class UserDAO implements IUserDAO {
 
             }
         }, (error) -> {
-            EventBus.getDefault().post(new UserAuthErrorEvent("Non è stato possibile effettuare l'autenticazione"));
+            EventBus.getDefault().post(new UserAuthErrorEvent("Non è stato possibile effettuare il login"));
         }) {
 
             @Override
@@ -66,9 +67,10 @@ public class UserDAO implements IUserDAO {
     public void register(String email, String password, Context context) throws UserException {
 
         RequestSender.RequestListeners<JSONObject> requestListeners = new RequestSender.RequestListeners<>(obj -> {
-            System.out.println(obj.toString());
             EventBus.getDefault().post(new UserRegisterEvent());
-        }, (error) -> EventBus.getDefault().post(new UserAuthErrorEvent("Non è stato possibile effettuare la registrazione")));
+        }, (error) -> {
+            EventBus.getDefault().post(new UserRegisterEvent());
+        });
 
 
         JSONObject body = new JSONObject();

@@ -152,6 +152,11 @@ public class Utils {
         snackbar.show();
     }
 
+    /**
+     * Normalize the price
+     * @param price the price to normalize
+     * @return the normalized price with 2 decimal digits
+     */
     public static String normalizePrice(String price) {
         String[] splittedPrice = price.split("\\.");
 
@@ -164,5 +169,9 @@ public class Utils {
             return price + "0";
         else
             return price;
+    }
+
+    public static boolean isEmailValid(String email) {
+        return email.contains("@") && email.contains(".");
     }
 }

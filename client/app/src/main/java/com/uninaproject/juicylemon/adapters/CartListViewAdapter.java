@@ -46,7 +46,7 @@ public class CartListViewAdapter extends ArrayAdapter<Drink> {
         }
 
         drinkName.setText(drink.getName());
-        drinkCounter.setText(String.valueOf(Controller.getInstance().getCart().getDrinks().get(drink)));
+        drinkCounter.setText(String.valueOf(Controller.getInstance().getCart().getDrinksMap().get(drink)));
 
         removeButton.setOnClickListener(v -> {
             EventBus.getDefault().post(new CartDrinkAmountChangedEvent(drink, 1,CartDrinkAmountChangedEvent.Action.REMOVE));

@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.hardware.biometrics.BiometricPrompt;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -58,6 +59,14 @@ public class LoginRegisterActivity extends AppCompatActivity {
         loginFields.add(findViewById(R.id.email_login_edittext));
         loginFields.add(findViewById(R.id.password_login_edittext));
 
+        loginFields.get(1).setOnKeyListener((v, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                btnLogin.performClick();
+                return true;
+            }
+            return false;
+        });
+
         // Register Fields
         registerFields.add(findViewById(R.id.email_register_edittext));
         registerFields.add(findViewById(R.id.password_register_edittext));
@@ -76,6 +85,11 @@ public class LoginRegisterActivity extends AppCompatActivity {
                     return;
                 }
 
+                if (!Utils.isEmailValid(String.valueOf(registerFields.get(0).getText()))) {
+                    Utils.showAlert(this, "Email non valida");
+                    return;
+                }
+
                 try {
                     userDAO.register(
                             registerFields.get(0).getText().toString(),
@@ -85,6 +99,7 @@ public class LoginRegisterActivity extends AppCompatActivity {
 
 
                 } catch (UserException e) {
+                    Utils.showAlert(this, e.getMessage());
                     return;
                 }
             }

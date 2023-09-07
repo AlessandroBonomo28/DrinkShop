@@ -7,6 +7,7 @@
     android:layout_margin="10dp">
 
     <com.uninaproject.juicylemon.components.Navbar
+        android:id="@+id/drink_list_view_navbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"

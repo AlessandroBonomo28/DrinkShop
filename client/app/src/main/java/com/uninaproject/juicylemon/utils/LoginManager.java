@@ -1,7 +1,11 @@
 package com.uninaproject.juicylemon.utils;
 
 import com.uninaproject.juicylemon.daos.TokenPayload;
+import com.uninaproject.juicylemon.model.Drink;
 import com.uninaproject.juicylemon.model.User;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoginManager {
 
@@ -10,9 +14,12 @@ public class LoginManager {
     User user;
     TokenPayload tokenPayload;
 
+    private List<Drink> localLastOrder;
+
     private LoginManager() {
         user = null;
         tokenPayload = null;
+        localLastOrder = new ArrayList<>();
 
     }
 
@@ -34,6 +41,14 @@ public class LoginManager {
 
     public User getUser() {
         return user;
+    }
+
+    public void setLocalLastOrder(List<Drink> localLastOrder) {
+        this.localLastOrder = localLastOrder;
+    }
+
+    public List<Drink> getLocalLastOrder() {
+        return localLastOrder;
     }
 
     public TokenPayload getTokenPayload() {

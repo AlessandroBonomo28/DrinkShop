@@ -11,11 +11,9 @@ import androidx.appcompat.widget.Toolbar;
 import com.uninaproject.juicylemon.Controller;
 import com.uninaproject.juicylemon.R;
 import com.uninaproject.juicylemon.adapters.DrinkItemAdapter;
-import com.uninaproject.juicylemon.events.DrinkFetchedEvent;
 import com.uninaproject.juicylemon.events.FetchedLastOrderFromServer;
 import com.uninaproject.juicylemon.model.Drink;
 import com.uninaproject.juicylemon.model.DrinkType;
-import com.uninaproject.juicylemon.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -65,6 +63,7 @@ public class DashboardActivity  extends AppCompatActivity {
 
     @Subscribe
     public void onFetchedDrinks(FetchedLastOrderFromServer event) {
+        System.out.println("Fetched drinks");
         DrinkItemAdapter adapter = new DrinkItemAdapter(this, event.getDrinksFetched(), true);
         listView.setAdapter(adapter);
     }
@@ -79,5 +78,11 @@ public class DashboardActivity  extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Controller.getInstance().getOrderDAO().fetchDrinksLastOrderFromServer(this);
     }
 }

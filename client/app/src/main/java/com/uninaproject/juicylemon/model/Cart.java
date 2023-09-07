@@ -7,7 +7,6 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 public class Cart {
 
@@ -60,8 +59,12 @@ public class Cart {
         EventBus.getDefault().post(new CartUpdateEvent(getTotalSize()));
     }
 
-    public Map<Drink, Integer> getDrinks() {
+    public Map<Drink, Integer> getDrinksMap() {
         return drinkInCarrello;
+    }
+
+    public List<Drink> getDrinksList() {
+        return (List<Drink>) drinkInCarrello.keySet();
     }
 
     public void clear() {

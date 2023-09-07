@@ -24,6 +24,7 @@ import com.uninaproject.juicylemon.view_models.CartViewModel;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -51,11 +52,11 @@ public class CartActivity extends AppCompatActivity {
         ListView listView = findViewById(R.id.cart_list_view);
         layout = findViewById(R.id.cart_layout);
 
-        List<Drink> drinks = (List<Drink>) Objects.requireNonNull(model.getDrinks().getValue()).keySet().stream().map(drink -> (Drink) drink).collect(Collectors.toList());
+        List<Drink> drinks = new ArrayList<>(Objects.requireNonNull(model.getDrinks().getValue()).keySet());
         listView.setAdapter(new CartListViewAdapter(this, R.layout.cart_list_item, drinks));
 
         model.getDrinks().observe(this, drinksMap -> {
-            List<Drink> drinks1 = Objects.requireNonNull(model.getDrinks().getValue()).keySet().stream().map(drink -> (Drink) drink).collect(Collectors.toList());
+            List<Drink> drinks1 = new ArrayList<>(Objects.requireNonNull(model.getDrinks().getValue()).keySet());
             listView.setAdapter(new CartListViewAdapter(this, R.layout.cart_list_item, drinks1));
         });
 
