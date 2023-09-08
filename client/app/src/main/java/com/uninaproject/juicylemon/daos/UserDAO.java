@@ -3,6 +3,7 @@ package com.uninaproject.juicylemon.daos;
 import static com.uninaproject.juicylemon.utils.Utils.API_BASE_URL;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -19,12 +20,7 @@ import org.json.JSONObject;
 
 public class UserDAO implements IUserDAO {
     @Override
-    public TokenPayload login(String email, String password, Context context) throws UserException {
-
-        System.out.println("LOGIN");
-
-        if (email.isEmpty() || password.isEmpty())
-            throw new UserException("Utente inesistente");
+    public TokenPayload login(String email, String password, Context context) {
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 API_BASE_URL + "login", obj -> {
@@ -64,12 +60,13 @@ public class UserDAO implements IUserDAO {
     }
 
     @Override
-    public void register(String email, String password, Context context) throws UserException {
+    public void register(String email, String password, Context context) {
 
-        RequestSender.RequestListeners<JSONObject> requestListeners = new RequestSender.RequestListeners<>(obj -> {
+        RequestSender.RequestListeners<String> requestListeners = new RequestSender.RequestListeners<>(obj -> {
             EventBus.getDefault().post(new UserRegisterEvent());
         }, (error) -> {
-            EventBus.getDefault().post(new UserRegisterEvent());
+            Log.e("UserDAO", "register: " + error.toString());
+            EventBus.getDefault().post(new UserAuthErrorEvent("Non è stato possibile effettuare la registrazione"));
         });
 
 
@@ -82,7 +79,6 @@ public class UserDAO implements IUserDAO {
             e.printStackTrace();
         }
 
-        RequestSender.sendRequestForJsonObject(context, API_BASE_URL + "register", Request.Method.POST, body, null ,requestListeners);
-
+        RequestSender.sendRequestForString(context, API_BASE_URL + "register", Request.Method.POST, body, null, requestListeners);
     }
 }

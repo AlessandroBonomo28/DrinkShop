@@ -144,7 +144,10 @@ public class RequestSender {
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                return headers;
+                if (headers == null)
+                    return super.getHeaders();
+                else
+                    return headers;
             }
         };
 

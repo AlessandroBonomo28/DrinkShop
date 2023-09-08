@@ -50,6 +50,7 @@ public class DetailActivity extends AppCompatActivity {
         Controller controller = Controller.getInstance();
 
         TextView drinkName = findViewById(R.id.drinkDetailName);
+        TextView drinkPrice = findViewById(R.id.drink_detail_price);
         TextView drinkDescription = findViewById(R.id.drink_detail_description);
         CoordinatorLayout coordinatorLayout = findViewById(R.id.coordinator_detail);
         FloatingActionButton fabAddToCart = findViewById(R.id.fab_detail_add_to_cart);
@@ -66,6 +67,7 @@ public class DetailActivity extends AppCompatActivity {
         // setting variables
         drinkName.setText(selectedDrink.getName());
         drinkDescription.setText(selectedDrink.getDescription());
+        drinkPrice.setText("€" +Utils.normalizePrice(String.valueOf(selectedDrink.getPrice())));
 
         fabAddToCart.setOnClickListener(v -> {
             model.addDrinkToCart(selectedDrink);

@@ -90,32 +90,27 @@ public class LoginRegisterActivity extends AppCompatActivity {
                     return;
                 }
 
-                try {
-                    userDAO.register(
-                            registerFields.get(0).getText().toString(),
-                            registerFields.get(1).getText().toString(),
-                            this
-                    );
-
-
-                } catch (UserException e) {
-                    Utils.showAlert(this, e.getMessage());
-                    return;
-                }
+                userDAO.register(
+                        registerFields.get(0).getText().toString(),
+                        registerFields.get(1).getText().toString(),
+                        this
+                );
             }
 
             // LOGIN ROUTE
             if (emptyFieldsLogin == 0 && emptyFieldsRegister > 0) {
-                try {
+                    String email = loginFields.get(0).getText().toString();
+                    String password = loginFields.get(1).getText().toString();
+
+                    if (!Utils.isEmailValid(email)) {
+                        Utils.showAlert(this, "Email non valida");
+                        return;
+                    }
+
                     userDAO.login(
                             loginFields.get(0).getText().toString(),
                             loginFields.get(1).getText().toString(),
                             this);
-
-                } catch (UserException e) {
-                    Utils.showAlert(this, e.getMessage());
-                    return;
-                }
             }
 
             if (emptyFieldsLogin > 0 && emptyFieldsRegister > 0) {
