@@ -34,7 +34,7 @@
         android:layout_height="match_parent"
         android:divider="@android:color/transparent"
         android:dividerHeight="10sp"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="80dp"
         app:layout_constraintBottom_toTopOf="@+id/cart_push_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

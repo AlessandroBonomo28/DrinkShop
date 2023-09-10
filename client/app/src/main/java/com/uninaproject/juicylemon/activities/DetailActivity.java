@@ -71,7 +71,7 @@ public class DetailActivity extends AppCompatActivity {
 
         fabAddToCart.setOnClickListener(v -> {
             model.addDrinkToCart(selectedDrink);
-            Snackbar.make(coordinatorLayout, "Drink added to cart", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(coordinatorLayout, String.format("%s aggiunto al carrello", selectedDrink.getName()), Snackbar.LENGTH_SHORT).show();
         });
     }
 

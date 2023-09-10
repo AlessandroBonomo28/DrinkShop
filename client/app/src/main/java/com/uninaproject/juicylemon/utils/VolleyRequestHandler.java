@@ -22,7 +22,7 @@ public class VolleyRequestHandler {
         imageLoader = new ImageLoader(requestQueue,
                 new ImageLoader.ImageCache() {
                     private final LruCache<String, Bitmap>
-                            cache = new LruCache<>(20);
+                            cache = new LruCache<>(30);
 
                     @Override
                     public Bitmap getBitmap(String url) {

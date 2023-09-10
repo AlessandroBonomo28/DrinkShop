@@ -14,12 +14,9 @@ public class LoginManager {
     User user;
     TokenPayload tokenPayload;
 
-    private List<Drink> localLastOrder;
-
     private LoginManager() {
         user = null;
         tokenPayload = null;
-        localLastOrder = new ArrayList<>();
 
     }
 
@@ -42,15 +39,7 @@ public class LoginManager {
     public User getUser() {
         return user;
     }
-
-    public void setLocalLastOrder(List<Drink> localLastOrder) {
-        this.localLastOrder = localLastOrder;
-    }
-
-    public List<Drink> getLocalLastOrder() {
-        return localLastOrder;
-    }
-
+    
     public TokenPayload getTokenPayload() {
         return tokenPayload;
     }

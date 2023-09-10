@@ -2,6 +2,7 @@ package com.uninaproject.juicylemon.components;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.ImageButton;
@@ -84,7 +85,6 @@ public class Navbar extends Toolbar {
                 cart_counter.setText(String.valueOf(size));
         });
     }
-
 
     void initCartCounter() {
         if (viewModel.getCartSize().getValue() != null && viewModel.getCartSize().getValue() == 0) {

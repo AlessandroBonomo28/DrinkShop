@@ -34,6 +34,7 @@ import com.uninaproject.juicylemon.utils.VolleyRequestHandler;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Optional;
 
 public class DrinkItem extends ConstraintLayout {
@@ -116,19 +117,18 @@ public class DrinkItem extends ConstraintLayout {
 
     private void setDrinkIcon(Drink drink) {
 
-                VolleyRequestHandler.getInstance(getContext()).getImageLoader().get(API_BASE_URL + "drink/image/" + drink.getId(), new ImageLoader.ImageListener() {
-                    @Override
-                    public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                        Bitmap bitmap = response.getBitmap();
-                        if (bitmap != null)
-                            drinkImageView.setImageBitmap(bitmap);
-                    }
+        VolleyRequestHandler.getInstance(getContext()).getImageLoader().get(API_BASE_URL + "drink/image/" + drink.getId(), new ImageLoader.ImageListener() {
+            @Override
+            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                Bitmap bitmap = response.getBitmap();
+                if (bitmap != null)
+                    drinkImageView.setImageBitmap(bitmap);
+            }
 
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("VOLLEY", error.getMessage());
-                    }
-                });
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        });
 
     }
 
