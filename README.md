@@ -64,3 +64,6 @@ docker compose up
  - IP spam filter
  - Incomplete request detection
  - check for mem leaks 💀
+
+### Note finali
+Progetto presentato il 9 ottobre 2023.
