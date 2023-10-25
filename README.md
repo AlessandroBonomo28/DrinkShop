@@ -1,5 +1,7 @@
 # Drink Shop 🍹
- Drink shop con architettura 3 tier client-server-data. Android Java client + C Http Socket Server + Postgres DB. [Download documentation](https://github.com/AlessandroBonomo28/DrinkShop/raw/main/Documentazione%20Juicy%20Lemon.docx)
+Drink shop con architettura 3 tier client-server-data. Android Java client + C Http Socket Server + Postgres DB. 
+
+Per tutti i dettagli implementativi [Download documentation](https://github.com/AlessandroBonomo28/DrinkShop/raw/main/Documentazione%20Juicy%20Lemon.docx)
  
 Per informazioni sulle API del server in C vedi [API docs](docs/routes.md)
 
