@@ -57,10 +57,14 @@ docker compose up
  - Custom socket timeout
  - Gestione interrupt sigterm di terminazione (esempio CTRL+C)
  - Messaggi di stato del server sulle connessioni attive e eventi
- ### 404 Server custom response
- Quando il router non trova la route richiesta serve il client con un codice 404 e questa immagine:
+ ### Server custom responses
+ Quando il router non trova la route richiesta serve il client immagini personalizzate:
+ 
+<img width="472" height="262" alt="custom-error-code" src="https://github.com/user-attachments/assets/3d6ee428-280e-48e0-bbab-9e9c8c030991" />
 
-![egg](https://github.com/AlessandroBonomo28/DrinkShop/assets/75626033/f99197cd-edd3-4355-9ca0-2bce1d719721)
+### altre immagini si possono reperire su:
+- https://http.cat/
+- https://http.dog/
 
  ## Come si potrebbe migliorare
  - IP spam filter
